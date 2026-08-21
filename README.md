@@ -21,12 +21,7 @@ This repository contains our solution developed for the Odoo Hiring Hackathon 20
 
 
 #  Tech Stack
-- Python
-- Odoo Framework
-- PostgreSQL
-- XML
-- JavaScript
-- Git & GitHub
+
   
 
 
