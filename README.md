@@ -1,6 +1,6 @@
-# Odoo Hiring Hackathon 2026
+# Odoo x LDCE Hackathon 2026
 
-#  Team Name: StarCoders
+#  Team Name: We3
 #  Team Leader: Krisha Dhanani
    Team Members: Hasti Vaghasiya
                  jenisha Korat
