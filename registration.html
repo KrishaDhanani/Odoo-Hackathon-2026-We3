@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GlobeTrotter - Registration</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+
+            /* SAME LOGIN PAGE THEME */
+            background:
+                linear-gradient(
+                    180deg,
+                    #202965 0%,
+                    #3e4387 34%,
+                    #bd6c8c 67%,
+                    #ffad63 100%
+                );
+
+            color: #111;
+
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+
+        /* =========================
+           SKY BACKGROUND
+        ========================== */
+
+        .sky {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: .65;
+        }
+
+        .star:nth-child(1) {
+            top: 12%;
+            left: 8%;
+        }
+
+        .star:nth-child(2) {
+            top: 20%;
+            left: 28%;
+        }
+
+        .star:nth-child(3) {
+            top: 10%;
+            right: 20%;
+        }
+
+        .star:nth-child(4) {
+            top: 34%;
+            right: 8%;
+        }
+
+        .star:nth-child(5) {
+            top: 45%;
+            left: 17%;
+        }
+
+        .star:nth-child(6) {
+            top: 28%;
+            left: 55%;
+        }
+
+
+        /* =========================
+           CLOUDS
+        ========================== */
+
+        .cloud {
+            position: absolute;
+
+            width: 95px;
+            height: 32px;
+
+            background: rgba(255,255,255,.45);
+
+            border-radius: 50px;
+
+            filter: blur(.2px);
+
+            animation: cloudMove 12s ease-in-out infinite;
+        }
+
+        .cloud::before,
+        .cloud::after {
+            content: "";
+
+            position: absolute;
+
+            background: rgba(255,255,255,.45);
+
+            border-radius: 50%;
+        }
+
+        .cloud::before {
+            width: 55px;
+            height: 55px;
+
+            left: 15px;
+            bottom: 5px;
+        }
+
+        .cloud::after {
+            width: 45px;
+            height: 45px;
+
+            right: 12px;
+            bottom: 5px;
+        }
+
+        .cloud.one {
+            top: 18%;
+            right: 22%;
+        }
+
+        .cloud.two {
+            top: 38%;
+            right: 15%;
+
+            transform: scale(.9);
+
+            animation-delay: -4s;
+        }
+
+        .cloud.three {
+            top: 25%;
+            left: 6%;
+
+            transform: scale(.7);
+
+            animation-delay: -7s;
+        }
+
+        @keyframes cloudMove {
+
+            0%, 100% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(30px);
+            }
+        }
+
+
+        /* =========================
+           DASHED FLIGHT PATH
+        ========================== */
+
+        .flight-path {
+            position: absolute;
+
+            width: 130%;
+            height: 300px;
+
+            left: -15%;
+            top: 38%;
+
+            border-top: 4px dotted rgba(255,255,255,.55);
+
+            transform: rotate(-22deg);
+        }
+
+        .flight-dot {
+            position: absolute;
+
+            right: 5%;
+            top: -11px;
+
+            width: 20px;
+            height: 20px;
+
+            border-radius: 50%;
+
+            background: #20d2e5;
+
+            box-shadow:
+                0 0 18px rgba(32,210,229,.7);
+        }
+
+
+        /* =========================
+           MOUNTAINS
+        ========================== */
+
+        .mountains {
+            position: fixed;
+
+            bottom: 0;
+            left: 0;
+
+            width: 100%;
+            height: 90px;
+
+            z-index: 1;
+        }
+
+        .mountain {
+            position: absolute;
+
+            bottom: 0;
+
+            width: 0;
+            height: 0;
+
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-bottom: 80px solid rgba(70,55,50,.65);
+        }
+
+        .mountain:nth-child(1) {
+            left: -100px;
+        }
+
+        .mountain:nth-child(2) {
+            left: 250px;
+
+            border-left-width: 190px;
+            border-right-width: 190px;
+            border-bottom-width: 100px;
+        }
+
+        .mountain:nth-child(3) {
+            right: 200px;
+
+            border-left-width: 180px;
+            border-right-width: 180px;
+            border-bottom-width: 95px;
+        }
+
+        .mountain:nth-child(4) {
+            right: -80px;
+
+            border-left-width: 190px;
+            border-right-width: 190px;
+            border-bottom-width: 75px;
+        }
+
+
+        /* =========================
+           MAIN
+        ========================== */
+
+        .page {
+            position: relative;
+            z-index: 5;
+
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 40px 20px;
+        }
+
+
+        /* =========================
+           REGISTRATION CARD
+        ========================== */
+
+        .registration-card {
+            width: 100%;
+            max-width: 650px;
+
+            background: rgba(255,255,255,.96);
+
+            border-radius: 26px;
+
+            padding: 38px 40px 35px;
+
+            box-shadow:
+                0 25px 60px rgba(0,0,0,.20);
+
+            animation: cardAppear .7s ease;
+
+            position: relative;
+        }
+
+        @keyframes cardAppear {
+
+            from {
+                opacity: 0;
+                transform:
+                    translateY(35px)
+                    scale(.96);
+            }
+
+            to {
+                opacity: 1;
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+        }
+
+
+        /* =========================
+           LOGO
+        ========================== */
+
+        .logo-area {
+            text-align: center;
+
+            margin-bottom: 25px;
+        }
+
+        .logo {
+            width: 72px;
+            height: 72px;
+
+            margin: 0 auto 13px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            font-size: 35px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #168895,
+                    #f27d5b
+                );
+
+            box-shadow:
+                0 10px 25px rgba(0,0,0,.15);
+
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .logo-area h1 {
+            font-size: 30px;
+
+            font-weight: 800;
+
+            margin-bottom: 6px;
+        }
+
+        .logo-area p {
+            color: #718096;
+
+            font-size: 15px;
+        }
+
+
+        /* =========================
+           TRAVEL LINE
+        ========================== */
+
+        .travel-line {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            margin: 22px 0 28px;
+        }
+
+        .travel-line .line {
+            flex: 1;
+
+            height: 2px;
+
+            border-top:
+                2px dashed #d8e0e8;
+        }
+
+        .travel-line .start {
+            width: 10px;
+            height: 10px;
+
+            border-radius: 50%;
+
+            background: #ff7656;
+        }
+
+        .travel-line .end {
+            width: 10px;
+            height: 10px;
+
+            border-radius: 50%;
+
+            background: #16bdd5;
+        }
+
+        .plane {
+            font-size: 21px;
+
+            animation:
+                planeMove 2.5s ease-in-out infinite;
+        }
+
+        @keyframes planeMove {
+
+            0%, 100% {
+                transform: translateX(-5px) rotate(-8deg);
+            }
+
+            50% {
+                transform: translateX(5px) rotate(5deg);
+            }
+        }
+
+
+        /* =========================
+           TITLE
+        ========================== */
+
+        .screen-title {
+            text-align: center;
+
+            font-size: 23px;
+
+            color: #172033;
+
+            margin-bottom: 7px;
+        }
+
+        .screen-subtitle {
+            text-align: center;
+
+            color: #718096;
+
+            font-size: 14px;
+
+            margin-bottom: 25px;
+        }
+
+
+        /* =========================
+           PHOTO
+        ========================== */
+
+        .photo-section {
+            text-align: center;
+
+            margin-bottom: 25px;
+        }
+
+        .photo {
+            width: 88px;
+            height: 88px;
+
+            margin: 0 auto 10px;
+
+            border-radius: 50%;
+
+            border:
+                2px dashed #8ea2b6;
+
+            background: #f4f7fa;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 34px;
+
+            color: #718096;
+
+            cursor: pointer;
+
+            overflow: hidden;
+
+            transition: .3s ease;
+        }
+
+        .photo:hover {
+            transform: scale(1.05);
+
+            border-color: #138496;
+        }
+
+        .photo img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+        .photo-label {
+            font-size: 12px;
+
+            color: #718096;
+        }
+
+
+        /* =========================
+           FORM GRID
+        ========================== */
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 17px;
+        }
+
+        .field {
+            display: flex;
+
+            flex-direction: column;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 13px;
+
+            font-weight: 700;
+
+            color: #64748b;
+
+            margin-bottom: 7px;
+        }
+
+        input,
+        select,
+        textarea {
+
+            width: 100%;
+
+            border: 1px solid #d6e0eb;
+
+            border-radius: 12px;
+
+            background: #eef4fb;
+
+            color: #172033;
+
+            padding: 13px 14px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            transition: .25s ease;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+
+            border-color: #148b9c;
+
+            background: #f7fbff;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(20,139,156,.10);
+        }
+
+        textarea {
+            min-height: 110px;
+
+            resize: vertical;
+        }
+
+
+        /* =========================
+           REGISTER BUTTON
+        ========================== */
+
+        .register-btn {
+
+            width: 100%;
+
+            margin-top: 23px;
+
+            border: none;
+
+            border-radius: 13px;
+
+            padding: 15px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #138496,
+                    #08798a
+                );
+
+            font-size: 15px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 12px 25px
+                rgba(19,132,150,.25);
+
+            transition: .3s ease;
+        }
+
+        .register-btn:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 17px 30px
+                rgba(19,132,150,.35);
+        }
+
+        .register-btn:active {
+            transform: translateY(0);
+        }
+
+
+        /* =========================
+           MESSAGE
+        ========================== */
+
+        .message {
+
+            display: none;
+
+            text-align: center;
+
+            margin-top: 16px;
+
+            padding: 11px;
+
+            border-radius: 10px;
+
+            font-size: 13px;
+        }
+
+        .message.success {
+
+            display: block;
+
+            color: #087443;
+
+            background: #e8f8ef;
+        }
+
+        .message.error {
+
+            display: block;
+
+            color: #c0392b;
+
+            background: #fff0ee;
+        }
+
+
+        /* =========================
+           BACK LOGIN
+        ========================== */
+
+        .divider {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin: 25px 0 18px;
+
+            color: #138496;
+        }
+
+        .divider::before,
+        .divider::after {
+
+            content: "";
+
+            flex: 1;
+
+            border-top:
+                2px dashed #dce4eb;
+        }
+
+        .back-login {
+
+            display: block;
+
+            text-align: center;
+
+            text-decoration: none;
+
+            color: #138496;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+        .back-login:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================== */
+
+        @media (max-width: 650px) {
+
+            .page {
+                padding: 25px 14px;
+            }
+
+            .registration-card {
+                padding:
+                    30px 22px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .logo-area h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- SKY -->
+
+    <div class="sky">
+
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+
+        <div class="cloud one"></div>
+        <div class="cloud two"></div>
+        <div class="cloud three"></div>
+
+        <div class="flight-path">
+            <div class="flight-dot"></div>
+        </div>
+
+    </div>
+
+
+    <!-- MOUNTAINS -->
+
+    <div class="mountains">
+
+        <div class="mountain"></div>
+        <div class="mountain"></div>
+        <div class="mountain"></div>
+        <div class="mountain"></div>
+
+    </div>
+
+
+    <!-- PAGE -->
+
+    <main class="page">
+
+        <section class="registration-card">
+
+
+            <!-- LOGO -->
+
+            <div class="logo-area">
+
+                <div class="logo">
+                    🌍
+                </div>
+
+                <h1>
+                    GlobeTrotter
+                </h1>
+
+                <p>
+                    Plan multi-city trips, on budget, together.
+                </p>
+
+            </div>
+
+
+            <!-- TRAVEL LINE -->
+
+            <div class="travel-line">
+
+                <span class="start"></span>
+
+                <div class="line"></div>
+
+                <span class="plane">✈️</span>
+
+                <div class="line"></div>
+
+                <span class="end"></span>
+
+            </div>
+
+
+            <!-- TITLE -->
+
+            <h2 class="screen-title">
+                Create Your Account
+            </h2>
+
+            <p class="screen-subtitle">
+                Join GlobeTrotter and start planning your journey.
+            </p>
+
+
+            <!-- PHOTO -->
+
+            <div class="photo-section">
+
+                <label
+                    for="photoInput"
+                    class="photo"
+                    id="photoBox"
+                >
+                    📷
+                </label>
+
+                <input
+                    type="file"
+                    id="photoInput"
+                    accept="image/*"
+                    hidden
+                >
+
+                <div class="photo-label">
+                    Add Profile Photo
+                </div>
+
+            </div>
+
+
+            <!-- FORM -->
+
+            <form id="registrationForm">
+
+                <div class="form-grid">
+
+
+                    <!-- FIRST NAME -->
+
+                    <div class="field">
+
+                        <label for="firstName">
+                            First Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="firstName"
+                            placeholder="First Name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- LAST NAME -->
+
+                    <div class="field">
+
+                        <label for="lastName">
+                            Last Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="lastName"
+                            placeholder="Last Name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="field">
+
+                        <label for="email">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="Email Address"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- PHONE -->
+
+                    <div class="field">
+
+                        <label for="phone">
+                            Phone Number
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="phone"
+                            placeholder="Phone Number"
+                        >
+
+                    </div>
+
+
+                    <!-- CITY -->
+
+                    <div class="field">
+
+                        <label for="city">
+                            City
+                        </label>
+
+                        <input
+                            type="text"
+                            id="city"
+                            placeholder="City"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- COUNTRY -->
+
+                    <div class="field">
+
+                        <label for="country">
+                            Country
+                        </label>
+
+                        <input
+                            type="text"
+                            id="country"
+                            placeholder="Country"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="field">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Create Password"
+                            minlength="6"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- CONFIRM PASSWORD -->
+
+                    <div class="field">
+
+                        <label for="confirmPassword">
+                            Confirm Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="Confirm Password"
+                            minlength="6"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- ADDITIONAL INFORMATION -->
+
+                    <div class="field full">
+
+                        <label for="additionalInfo">
+                            Additional Information
+                        </label>
+
+                        <textarea
+                            id="additionalInfo"
+                            placeholder="Tell us something about yourself, your travel interests..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <!-- REGISTER -->
+
+                <button type="submit"
+        class="register-btn">
+    Register User ✈
+</button>
+
+
+            </form>
+
+
+            <!-- MESSAGE -->
+
+            <div
+                id="message"
+                class="message"
+            ></div>
+
+
+            <!-- DIVIDER -->
+
+            <div class="divider">
+                <span>✈</span>
+            </div>
+
+
+            <!-- BACK LOGIN -->
+
+            <a
+                href="index.html"
+                class="back-login"
+            >
+                ← Already have an account? Login
+            </a>
+
+
+        </section>
+
+    </main>
+
+
+    <script src="app-api.js"></script>
+    <script>
+
+        const photoInput =
+            document.getElementById("photoInput");
+
+        const photoBox =
+            document.getElementById("photoBox");
+
+
+        /* =========================
+           PROFILE PHOTO PREVIEW
+        ========================== */
+
+        photoInput.addEventListener(
+            "change",
+            function () {
+
+                const file =
+                    this.files[0];
+
+                if (!file) return;
+
+                const reader =
+                    new FileReader();
+
+                reader.onload =
+                    function (e) {
+
+                        photoBox.innerHTML =
+                            `<img src="${e.target.result}" alt="Profile Photo">`;
+
+                    };
+
+                reader.readAsDataURL(file);
+
+            }
+        );
+
+
+        /* =========================
+           REGISTRATION
+        ========================== */
+
+        const form =
+            document.getElementById(
+                "registrationForm"
+            );
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const firstName =
+                    document.getElementById(
+                        "firstName"
+                    ).value.trim();
+
+                const lastName =
+                    document.getElementById(
+                        "lastName"
+                    ).value.trim();
+
+                const email =
+                    document.getElementById(
+                        "email"
+                    ).value.trim();
+
+                const phone =
+                    document.getElementById(
+                        "phone"
+                    ).value.trim();
+
+                const city =
+                    document.getElementById(
+                        "city"
+                    ).value.trim();
+
+                const country =
+                    document.getElementById(
+                        "country"
+                    ).value.trim();
+
+                const password =
+                    document.getElementById(
+                        "password"
+                    ).value;
+
+                const confirmPassword =
+                    document.getElementById(
+                        "confirmPassword"
+                    ).value;
+
+                const additionalInfo =
+                    document.getElementById(
+                        "additionalInfo"
+                    ).value.trim();
+
+
+                /* PASSWORD CHECK */
+
+                if (
+                    password !==
+                    confirmPassword
+                ) {
+
+                    showMessage(
+                        "Passwords do not match.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                if (password.length < 6) {
+
+                    showMessage(
+                        "Password must contain at least 6 characters.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                const userData = {
+
+                    name: `${firstName} ${lastName}`.trim(),
+                    email,
+                    password,
+                    phone,
+                    city,
+                    country,
+                    additionalInfo
+
+                };
+
+
+                try {
+
+                    const data =
+                        await API.post(
+                            "/api/auth/register",
+                            userData
+                        );
+
+                    API.setSession(
+                        data.token,
+                        data.user
+                    );
+
+                    showMessage(
+                        "Registration successful! Redirecting to your dashboard...",
+                        "success"
+                    );
+
+
+                    setTimeout(
+                        function () {
+
+                            window.location.href =
+                                "dashboard.html";
+
+                        },
+                        1500
+                    );
+
+                } catch (error) {
+
+                    showMessage(
+                        error.message ||
+                            "Registration failed. Please try again.",
+                        "error"
+                    );
+
+                }
+
+            }
+        );
+
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.textContent =
+                text;
+
+            message.className =
+                "message " + type;
+
+        }
+
+    </script>
+
+</body>
+</html>
