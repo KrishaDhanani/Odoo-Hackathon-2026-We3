@@ -1,0 +1,3042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GlobeTrotter — Explore Activities</title>
+
+<style>
+:root{
+  --primary:#0e7c8c;
+  --primary-dark:#075e6b;
+  --cyan:#22d3ee;
+  --accent:#ff7959;
+  --dark:#172033;
+  --muted:#687487;
+  --border:#e3e8ed;
+  --green:#2e9e5b;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+}
+
+body{
+  color:var(--dark);
+  background:#10183a;
+  overflow-x:hidden;
+}
+
+.page{
+  min-height:100vh;
+  position:relative;
+  overflow:hidden;
+  padding-bottom:90px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #192453 0%,
+      #3b3c83 23%,
+      #76508f 43%,
+      #c96d85 63%,
+      #ed9869 81%,
+      #f8c873 100%
+    );
+}
+
+
+/* =========================
+   STARS
+========================= */
+
+.stars{
+  position:absolute;
+  inset:0;
+  height:60%;
+
+  background-image:
+    radial-gradient(1px 1px at 7% 16%,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 18% 31%,#fff,transparent),
+    radial-gradient(1px 1px at 29% 11%,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 42% 28%,#fff,transparent),
+    radial-gradient(1px 1px at 56% 17%,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 69% 34%,#fff,transparent),
+    radial-gradient(1px 1px at 82% 14%,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 94% 27%,#fff,transparent);
+
+  opacity:.65;
+
+  animation:
+    starsPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes starsPulse{
+  from{opacity:.35}
+  to{opacity:.9}
+}
+
+
+/* =========================
+   CLOUDS
+========================= */
+
+.cloud{
+  position:absolute;
+  width:125px;
+  height:32px;
+  border-radius:40px;
+  background:rgba(255,255,255,.42);
+}
+
+.cloud::before,
+.cloud::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  background:inherit;
+}
+
+.cloud::before{
+  width:58px;
+  height:58px;
+  left:13px;
+  top:-26px;
+}
+
+.cloud::after{
+  width:43px;
+  height:43px;
+  right:11px;
+  top:-18px;
+}
+
+.cloud.one{
+  top:16%;
+  left:-160px;
+  animation:cloudMove 40s linear infinite;
+}
+
+.cloud.two{
+  top:34%;
+  left:-180px;
+  opacity:.3;
+  transform:scale(.65);
+  animation:
+    cloudMove 55s linear infinite;
+  animation-delay:-20s;
+}
+
+@keyframes cloudMove{
+  from{transform:translateX(0)}
+  to{transform:translateX(135vw)}
+}
+
+
+/* =========================
+   PLANE
+========================= */
+
+.plane{
+  position:absolute;
+  left:-5%;
+  top:70%;
+  z-index:5;
+  font-size:27px;
+
+  animation:
+    planeMove 14s ease-in-out infinite;
+}
+
+@keyframes planeMove{
+  0%{
+    left:-5%;
+    top:72%;
+    transform:rotate(-8deg);
+  }
+
+  35%{
+    left:35%;
+    top:52%;
+    transform:rotate(-17deg);
+  }
+
+  70%{
+    left:70%;
+    top:37%;
+    transform:rotate(-10deg);
+  }
+
+  100%{
+    left:105%;
+    top:13%;
+    transform:rotate(-4deg);
+  }
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+  position:relative;
+  z-index:20;
+
+  width:min(
+    1180px,
+    calc(100% - 40px)
+  );
+
+  margin:auto;
+  padding-top:23px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo-area{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  color:white;
+}
+
+.logo{
+  width:52px;
+  height:52px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  font-size:1.5rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--accent)
+    );
+
+  box-shadow:
+    0 12px 30px
+    rgba(14,124,140,.35);
+
+  animation:
+    logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+  0%,100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-5px);
+  }
+}
+
+.logo-text{
+  font-size:1.2rem;
+  font-weight:800;
+}
+
+.logo-text span{
+  color:#5ee7f5;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.header-btn{
+  padding:10px 13px;
+
+  border-radius:10px;
+  border:
+    1px solid
+    rgba(255,255,255,.22);
+
+  color:white;
+
+  background:
+    rgba(255,255,255,.1);
+
+  backdrop-filter:blur(12px);
+
+  font-weight:700;
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+.header-btn:hover{
+  transform:translateY(-2px);
+  background:
+    rgba(255,255,255,.2);
+}
+
+.avatar{
+  width:40px;
+  height:40px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  color:white;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--cyan),
+      var(--primary)
+    );
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.main{
+  position:relative;
+  z-index:10;
+
+  width:min(
+    1180px,
+    calc(100% - 40px)
+  );
+
+  margin:35px auto 0;
+}
+
+.heading{
+  color:white;
+  margin-bottom:20px;
+
+  animation:
+    headingIn .8s ease;
+}
+
+.heading h1{
+  margin:0;
+
+  font-size:
+    clamp(
+      2rem,
+      4vw,
+      3rem
+    );
+
+  letter-spacing:-1px;
+}
+
+.heading h1 span{
+  color:#5ee7f5;
+}
+
+.heading p{
+  margin:7px 0 0;
+
+  color:
+    rgba(255,255,255,.72);
+
+  font-size:.9rem;
+}
+
+@keyframes headingIn{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+
+/* =========================
+   PANEL
+========================= */
+
+.panel{
+  background:
+    rgba(255,255,255,.97);
+
+  border-radius:25px;
+  padding:23px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.75);
+
+  box-shadow:
+    0 35px 90px
+    rgba(8,30,45,.3);
+
+  animation:
+    panelIn .85s
+    cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes panelIn{
+  from{
+    opacity:0;
+    transform:
+      translateY(35px)
+      scale(.97);
+  }
+
+  to{
+    opacity:1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =========================
+   CONTEXT
+========================= */
+
+.trip-context{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  gap:15px;
+
+  padding-bottom:18px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+}
+
+.context-left{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.context-icon{
+  width:46px;
+  height:46px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e5f7f9,
+      #fff0ea
+    );
+
+  font-size:1.25rem;
+}
+
+.context-text h2{
+  margin:0;
+  font-size:.95rem;
+}
+
+.context-text p{
+  margin:4px 0 0;
+  color:var(--muted);
+  font-size:.59rem;
+}
+
+.step{
+  padding:8px 11px;
+
+  border-radius:20px;
+
+  color:var(--primary);
+
+  background:#eaf7f9;
+
+  font-size:.59rem;
+  font-weight:800;
+}
+
+
+/* =========================
+   SELECTED CITY
+========================= */
+
+.selected-city{
+  margin-top:18px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:13px;
+
+  border-radius:13px;
+
+  background:
+    linear-gradient(
+      110deg,
+      #edf9fa,
+      #fff4ef
+    );
+
+  border:
+    1px solid
+    #dcebee;
+}
+
+.city-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.city-icon{
+  width:43px;
+  height:43px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:11px;
+
+  background:white;
+
+  font-size:1.4rem;
+
+  box-shadow:
+    0 5px 15px
+    rgba(0,0,0,.06);
+}
+
+.city-left strong{
+  display:block;
+  font-size:.75rem;
+}
+
+.city-left small{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:.55rem;
+}
+
+.change-city{
+  border:0;
+  background:white;
+
+  color:var(--primary);
+
+  border-radius:8px;
+
+  padding:8px 10px;
+
+  font-size:.55rem;
+  font-weight:800;
+
+  cursor:pointer;
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-section{
+  margin-top:18px;
+}
+
+.search-box{
+  position:relative;
+}
+
+.search-icon{
+  position:absolute;
+
+  left:17px;
+  top:50%;
+
+  transform:
+    translateY(-50%);
+
+  font-size:1rem;
+  color:var(--muted);
+
+  pointer-events:none;
+}
+
+.search-input{
+  width:100%;
+
+  padding:
+    16px
+    115px
+    16px
+    47px;
+
+  border:
+    1px solid
+    #d9e2e7;
+
+  border-radius:14px;
+
+  outline:none;
+
+  color:var(--dark);
+
+  background:#fbfcfd;
+
+  font-size:.76rem;
+
+  transition:.25s;
+}
+
+.search-input:focus{
+  border-color:
+    var(--primary);
+
+  background:white;
+
+  box-shadow:
+    0 0 0 4px
+    rgba(14,124,140,.08);
+}
+
+.clear-btn{
+  position:absolute;
+
+  right:62px;
+  top:50%;
+
+  transform:
+    translateY(-50%);
+
+  width:28px;
+  height:28px;
+
+  border:0;
+  border-radius:50%;
+
+  color:var(--muted);
+
+  background:#edf2f4;
+
+  cursor:pointer;
+
+  opacity:0;
+
+  transition:.2s;
+}
+
+.search-box.has-text
+.clear-btn{
+  opacity:1;
+}
+
+.search-btn{
+  position:absolute;
+
+  right:7px;
+  top:7px;
+  bottom:7px;
+
+  padding:0 16px;
+
+  border:0;
+  border-radius:9px;
+
+  color:white;
+  background:var(--primary);
+
+  font-size:.62rem;
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.search-btn:hover{
+  background:var(--primary-dark);
+  transform:translateY(-1px);
+}
+
+
+/* =========================
+   FILTERS
+========================= */
+
+.filter-row{
+  display:flex;
+  align-items:center;
+
+  gap:7px;
+
+  margin-top:14px;
+
+  overflow-x:auto;
+
+  padding-bottom:3px;
+
+  scrollbar-width:none;
+}
+
+.filter-row::-webkit-scrollbar{
+  display:none;
+}
+
+.filter-label{
+  color:var(--muted);
+  font-size:.59rem;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.filter{
+  padding:8px 11px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:20px;
+
+  background:white;
+
+  color:var(--muted);
+
+  font-size:.57rem;
+  font-weight:700;
+
+  white-space:nowrap;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.filter:hover{
+  border-color:#acd6dc;
+  color:var(--primary);
+}
+
+.filter.active{
+  border-color:var(--primary);
+  color:white;
+  background:var(--primary);
+
+  box-shadow:
+    0 4px 12px
+    rgba(14,124,140,.18);
+}
+
+
+/* =========================
+   ADD ACTIVITY
+========================= */
+
+.add-activity-section{
+  margin-top:14px;
+}
+
+.add-activity-form{
+  display:none;
+
+  margin-top:12px;
+  padding:14px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:13px;
+
+  background:#fbfcfd;
+}
+
+.add-activity-form.open{
+  display:block;
+}
+
+.add-activity-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(140px,1fr));
+
+  gap:10px;
+}
+
+.add-activity-grid input,
+.add-activity-grid select{
+  width:100%;
+
+  padding:10px 12px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:10px;
+
+  outline:none;
+
+  color:var(--dark);
+
+  background:white;
+
+  font-size:.68rem;
+}
+
+.add-activity-grid input:focus,
+.add-activity-grid select:focus{
+  border-color:var(--primary);
+}
+
+.add-activity-actions{
+  display:flex;
+
+  justify-content:flex-end;
+
+  gap:8px;
+
+  margin-top:12px;
+}
+
+.btn-primary{
+  border:0;
+  border-radius:9px;
+
+  padding:9px 15px;
+
+  color:white;
+  background:var(--primary);
+
+  font-size:.62rem;
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.btn-primary:hover{
+  background:var(--primary-dark);
+}
+
+.btn-ghost{
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:9px;
+
+  padding:9px 15px;
+
+  color:var(--muted);
+  background:white;
+
+  font-size:.62rem;
+  font-weight:800;
+
+  cursor:pointer;
+}
+
+.btn-ghost:hover{
+  border-color:#acd6dc;
+  color:var(--primary);
+}
+
+
+/* =========================
+   RESULT HEADER
+========================= */
+
+.result-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  margin-top:22px;
+  margin-bottom:13px;
+}
+
+.result-header h3{
+  margin:0;
+  font-size:.82rem;
+}
+
+.result-header span{
+  color:var(--muted);
+  font-size:.57rem;
+}
+
+.sort{
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:8px;
+
+  padding:7px 9px;
+
+  outline:none;
+
+  color:var(--muted);
+
+  background:white;
+
+  font-size:.56rem;
+}
+
+
+/* =========================
+   ACTIVITY GRID
+========================= */
+
+.activity-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:13px;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.activity-card{
+  position:relative;
+  overflow:hidden;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:17px;
+
+  background:white;
+
+  transition:
+    transform .28s,
+    box-shadow .28s,
+    border-color .28s;
+
+  animation:
+    cardIn .55s ease both;
+}
+
+.activity-card:nth-child(2){
+  animation-delay:.05s;
+}
+
+.activity-card:nth-child(3){
+  animation-delay:.1s;
+}
+
+.activity-card:nth-child(4){
+  animation-delay:.15s;
+}
+
+.activity-card:nth-child(5){
+  animation-delay:.2s;
+}
+
+.activity-card:nth-child(6){
+  animation-delay:.25s;
+}
+
+.activity-card:nth-child(7){
+  animation-delay:.3s;
+}
+
+.activity-card:nth-child(8){
+  animation-delay:.35s;
+}
+
+.activity-card:hover{
+  transform:translateY(-6px);
+
+  border-color:#acd8dd;
+
+  box-shadow:
+    0 18px 35px
+    rgba(14,124,140,.13);
+}
+
+@keyframes cardIn{
+  from{
+    opacity:0;
+    transform:translateY(15px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+
+/* =========================
+   ACTIVITY IMAGE
+========================= */
+
+.activity-image{
+  position:relative;
+
+  height:145px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  overflow:hidden;
+
+  font-size:4rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #d9f5f7,
+      #ffe4da
+    );
+}
+
+.activity-image::before{
+  content:"";
+
+  position:absolute;
+
+  width:180px;
+  height:180px;
+
+  border-radius:50%;
+
+  background:
+    rgba(255,255,255,.32);
+
+  top:-100px;
+  right:-50px;
+}
+
+.activity-image::after{
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  height:50px;
+
+  background:
+    linear-gradient(
+      transparent,
+      rgba(23,32,51,.12)
+    );
+}
+
+.activity-emoji{
+  position:relative;
+  z-index:2;
+
+  filter:
+    drop-shadow(
+      0 10px 10px
+      rgba(23,32,51,.12)
+    );
+
+  transition:.3s;
+}
+
+.activity-card:hover
+.activity-emoji{
+  transform:
+    scale(1.13)
+    translateY(-4px);
+}
+
+
+/* =========================
+   BADGE
+========================= */
+
+.activity-badge{
+  position:absolute;
+
+  top:10px;
+  left:10px;
+
+  z-index:4;
+
+  padding:6px 8px;
+
+  border-radius:7px;
+
+  color:white;
+
+  background:
+    rgba(23,32,51,.72);
+
+  backdrop-filter:blur(8px);
+
+  font-size:.5rem;
+  font-weight:800;
+}
+
+
+/* =========================
+   BODY
+========================= */
+
+.activity-body{
+  padding:13px;
+}
+
+.activity-title{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+
+  gap:8px;
+}
+
+.activity-title h4{
+  margin:0;
+  font-size:.78rem;
+}
+
+.activity-type{
+  margin-top:3px;
+  color:var(--muted);
+  font-size:.55rem;
+}
+
+.rating{
+  display:flex;
+  align-items:center;
+  gap:3px;
+
+  padding:5px 7px;
+
+  border-radius:7px;
+
+  background:#fff7e8;
+
+  color:#b77911;
+
+  font-size:.52rem;
+  font-weight:800;
+}
+
+
+/* =========================
+   DESCRIPTION
+========================= */
+
+.description{
+  margin-top:9px;
+
+  color:var(--muted);
+
+  font-size:.56rem;
+
+  line-height:1.45;
+
+  min-height:32px;
+}
+
+
+/* =========================
+   META
+========================= */
+
+.activity-meta{
+  display:flex;
+
+  gap:6px;
+
+  flex-wrap:wrap;
+
+  margin-top:10px;
+}
+
+.meta{
+  padding:5px 7px;
+
+  border-radius:6px;
+
+  color:var(--muted);
+
+  background:#f3f6f8;
+
+  font-size:.5rem;
+}
+
+.meta strong{
+  color:var(--dark);
+}
+
+
+/* =========================
+   PRICE
+========================= */
+
+.price-row{
+  display:flex;
+
+  align-items:center;
+  justify-content:space-between;
+
+  margin-top:12px;
+}
+
+.price{
+  font-size:.72rem;
+  font-weight:900;
+}
+
+.price small{
+  color:var(--muted);
+  font-size:.48rem;
+  font-weight:500;
+}
+
+.price-label{
+  color:var(--muted);
+  font-size:.5rem;
+}
+
+
+/* =========================
+   ADD BUTTON
+========================= */
+
+.add-btn{
+  width:100%;
+
+  margin-top:12px;
+
+  padding:9px;
+
+  border:
+    1px solid
+    var(--primary);
+
+  border-radius:9px;
+
+  color:var(--primary);
+
+  background:white;
+
+  font-size:.59rem;
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.22s;
+}
+
+.add-btn:hover{
+  color:white;
+  background:var(--primary);
+
+  transform:
+    translateY(-1px);
+}
+
+.add-btn.added{
+  color:white;
+  border-color:var(--green);
+  background:var(--green);
+}
+
+
+/* =========================
+   NO RESULTS
+========================= */
+
+.no-results{
+  display:none;
+
+  padding:45px 20px;
+
+  text-align:center;
+
+  color:var(--muted);
+
+  border:
+    1px dashed
+    #cbd8de;
+
+  border-radius:15px;
+
+  background:#fafcfd;
+}
+
+.no-results .icon{
+  font-size:2.2rem;
+  margin-bottom:8px;
+}
+
+.no-results strong{
+  display:block;
+  color:var(--dark);
+  font-size:.8rem;
+}
+
+.no-results p{
+  margin:5px 0 0;
+  font-size:.58rem;
+}
+
+
+/* =========================
+   BOTTOM INFO
+========================= */
+
+.info-strip{
+  display:flex;
+
+  align-items:center;
+  justify-content:space-between;
+
+  gap:15px;
+
+  margin-top:18px;
+  padding:14px;
+
+  border-radius:13px;
+
+  color:white;
+
+  background:
+    linear-gradient(
+      110deg,
+      var(--primary),
+      #1298a8,
+      var(--accent)
+    );
+
+  background-size:200% 100%;
+
+  animation:
+    gradientMove 5s ease infinite;
+}
+
+@keyframes gradientMove{
+  0%,100%{
+    background-position:0%;
+  }
+
+  50%{
+    background-position:100%;
+  }
+}
+
+.info-text strong{
+  display:block;
+  font-size:.68rem;
+}
+
+.info-text small{
+  display:block;
+
+  margin-top:3px;
+
+  opacity:.78;
+
+  font-size:.53rem;
+}
+
+.continue-btn{
+  border:0;
+
+  padding:10px 14px;
+
+  border-radius:9px;
+
+  color:var(--dark);
+
+  background:white;
+
+  font-size:.59rem;
+  font-weight:900;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.continue-btn:hover{
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 7px 16px
+    rgba(0,0,0,.13);
+}
+
+
+/* =========================
+   MOUNTAINS
+========================= */
+
+.mountains{
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:42px;
+
+  height:145px;
+
+  z-index:2;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15,22,45,.25),
+      rgba(10,16,32,.88)
+    );
+
+  clip-path:
+    polygon(
+      0 100%,
+      0 62%,
+      10% 38%,
+      20% 58%,
+      31% 15%,
+      43% 51%,
+      54% 30%,
+      66% 61%,
+      78% 21%,
+      89% 48%,
+      100% 32%,
+      100% 100%
+    );
+}
+
+
+/* =========================
+   ROAD
+========================= */
+
+.road{
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  height:42px;
+
+  z-index:3;
+
+  background:
+    linear-gradient(
+      180deg,
+      #292f3a,
+      #11151d
+    );
+}
+
+.road::before{
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  top:50%;
+
+  height:4px;
+
+  transform:
+    translateY(-50%);
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.6)
+      0 22px,
+      transparent
+      22px 47px
+    );
+
+  animation:
+    roadMove 1s linear infinite;
+}
+
+@keyframes roadMove{
+  to{
+    background-position:-47px 0;
+  }
+}
+
+.car{
+  position:absolute;
+
+  bottom:5px;
+
+  font-size:1.3rem;
+
+  animation:
+    carMove 11s linear infinite;
+}
+
+.bus{
+  position:absolute;
+
+  bottom:23px;
+
+  font-size:1.4rem;
+
+  animation:
+    carMove 16s linear infinite;
+}
+
+@keyframes carMove{
+  from{
+    transform:translateX(-120px);
+  }
+
+  to{
+    transform:translateX(110vw);
+  }
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+  position:fixed;
+
+  right:22px;
+  bottom:25px;
+
+  z-index:200;
+
+  padding:12px 16px;
+
+  border-radius:10px;
+
+  color:white;
+
+  background:#172033;
+
+  box-shadow:
+    0 15px 35px
+    rgba(0,0,0,.25);
+
+  font-size:.66rem;
+  font-weight:700;
+
+  opacity:0;
+
+  transform:
+    translateY(20px);
+
+  pointer-events:none;
+
+  transition:.3s;
+}
+
+.toast.show{
+  opacity:1;
+
+  transform:
+    translateY(0);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+
+  .activity-grid{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+}
+
+@media(max-width:650px){
+
+  .header{
+    width:
+      calc(100% - 25px);
+  }
+
+  .main{
+    width:
+      calc(100% - 25px);
+  }
+
+  .header-btn{
+    display:none;
+  }
+
+  .panel{
+    padding:14px;
+    border-radius:20px;
+  }
+
+  .trip-context{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .activity-grid{
+    grid-template-columns:1fr;
+  }
+
+  .info-strip{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .continue-btn{
+    width:100%;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *::before,
+  *::after{
+    animation:none!important;
+    transition:none!important;
+  }
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+  <div class="stars"></div>
+
+  <div class="cloud one"></div>
+  <div class="cloud two"></div>
+
+  <div class="plane">✈️</div>
+
+
+  <!-- HEADER -->
+
+  <header class="header">
+
+    <div class="logo-area">
+
+      <div class="logo">
+        🌍
+      </div>
+
+      <div class="logo-text">
+        Globe<span>Trotter</span>
+      </div>
+
+    </div>
+
+
+    <div class="header-actions">
+
+      <button
+        class="header-btn"
+        onclick="goBack()"
+      >
+        ← Cities
+      </button>
+
+      <button
+        class="header-btn"
+        onclick="goDashboard()"
+      >
+        Dashboard
+      </button>
+
+      <div class="avatar">
+        👤
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <section class="heading">
+
+      <h1>
+        Explore <span>Activities</span> ✨
+      </h1>
+
+      <p>
+        Add memorable experiences to each stop in your journey.
+      </p>
+
+    </section>
+
+
+    <section class="panel">
+
+
+      <!-- CONTEXT -->
+
+      <div class="trip-context">
+
+        <div class="context-left">
+
+          <div class="context-icon">
+            🎯
+          </div>
+
+          <div class="context-text">
+
+            <h2>
+              Build your daily experiences
+            </h2>
+
+            <p>
+              Choose activities based on type, duration and budget.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="step">
+          STEP 2 · ADD ACTIVITIES
+        </div>
+
+      </div>
+
+
+      <!-- SELECTED CITY -->
+
+      <div class="selected-city">
+
+        <div class="city-left">
+
+          <div class="city-icon">
+            🗼
+          </div>
+
+          <div>
+
+            <strong>
+              Paris, France
+            </strong>
+
+            <small>
+              Selected destination · Day 1–3
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="change-city"
+          onclick="changeCity()"
+        >
+          Change City
+        </button>
+
+      </div>
+
+
+      <!-- SEARCH -->
+
+      <div class="search-section">
+
+        <div
+          class="search-box"
+          id="searchBox"
+        >
+
+          <span class="search-icon">
+            🔎
+          </span>
+
+          <input
+            id="activitySearch"
+            class="search-input"
+            type="text"
+            placeholder="Search activities like museum, food tour, hiking..."
+            autocomplete="off"
+          >
+
+          <button
+            class="clear-btn"
+            onclick="clearSearch()"
+          >
+            ×
+          </button>
+
+          <button
+            class="search-btn"
+            onclick="searchActivities()"
+          >
+            Search
+          </button>
+
+        </div>
+
+
+        <!-- FILTERS -->
+
+        <div class="filter-row">
+
+          <span class="filter-label">
+            Type:
+          </span>
+
+          <button
+            class="filter active"
+            data-filter="all"
+          >
+            All
+          </button>
+
+          <button
+            class="filter"
+            data-filter="Sightseeing"
+          >
+            🏛 Sightseeing
+          </button>
+
+          <button
+            class="filter"
+            data-filter="Food"
+          >
+            🍴 Food
+          </button>
+
+          <button
+            class="filter"
+            data-filter="Adventure"
+          >
+            🧗 Adventure
+          </button>
+
+          <button
+            class="filter"
+            data-filter="Culture"
+          >
+            🎭 Culture
+          </button>
+
+          <button
+            class="filter"
+            data-filter="Relaxation"
+          >
+            🌿 Relaxation
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- ADD ACTIVITY -->
+
+      <div class="add-activity-section">
+
+        <button
+          type="button"
+          class="change-city"
+          id="openAddActivityBtn"
+        >
+          + Add Activity
+        </button>
+
+
+        <form
+          id="addActivityForm"
+          class="add-activity-form"
+        >
+
+          <div class="add-activity-grid">
+
+            <input
+              id="newActivityName"
+              type="text"
+              placeholder="Activity name *"
+              required
+            >
+
+            <input
+              id="newActivityCity"
+              type="text"
+              placeholder="City"
+            >
+
+            <select id="newActivityCategory">
+              <option value="">Category</option>
+              <option value="Sightseeing">🏛 Sightseeing</option>
+              <option value="Food">🍴 Food</option>
+              <option value="Adventure">🧗 Adventure</option>
+              <option value="Culture">🎭 Culture</option>
+              <option value="Relaxation">🌿 Relaxation</option>
+              <option value="Other">Other</option>
+            </select>
+
+            <input
+              id="newActivityCost"
+              type="number"
+              min="0"
+              step="1"
+              placeholder="Cost ($)"
+            >
+
+            <input
+              id="newActivityEmoji"
+              type="text"
+              maxlength="4"
+              placeholder="Emoji (optional)"
+            >
+
+          </div>
+
+
+          <div class="add-activity-actions">
+
+            <button
+              type="button"
+              class="btn-ghost"
+              id="cancelAddActivityBtn"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              class="btn-primary"
+            >
+              Save Activity
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+
+      <!-- RESULT HEADER -->
+
+      <div class="result-header">
+
+        <div>
+
+          <h3>
+            Recommended experiences
+          </h3>
+
+          <span id="resultCount">
+            8 activities found
+          </span>
+
+        </div>
+
+
+        <select
+          class="sort"
+          id="sortSelect"
+        >
+
+          <option value="recommended">
+            Sort: Recommended
+          </option>
+
+          <option value="price-low">
+            Price: Low to High
+          </option>
+
+          <option value="price-high">
+            Price: High to Low
+          </option>
+
+          <option value="name">
+            Name: A to Z
+          </option>
+
+          <option value="city">
+            City: A to Z
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- ACTIVITY GRID -->
+
+      <div
+        class="activity-grid"
+        id="activityGrid"
+      >
+      </div>
+
+
+      <!-- NO RESULTS -->
+
+      <div
+        class="no-results"
+        id="noResults"
+      >
+
+        <div class="icon">
+          🔎
+        </div>
+
+        <strong>
+          No activities found
+        </strong>
+
+        <p>
+          Try another activity or choose a different category.
+        </p>
+
+      </div>
+
+
+      <!-- INFO -->
+
+      <div class="info-strip">
+
+        <div class="info-text">
+
+          <strong>
+            ✨ Your itinerary is taking shape
+          </strong>
+
+          <small>
+            Add activities and organize them around your travel dates.
+          </small>
+
+        </div>
+
+
+        <button
+          class="continue-btn"
+          onclick="continueToPlanner()"
+        >
+          Continue to Planner →
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- BACKGROUND MOUNTAINS -->
+
+  <div class="mountains"></div>
+
+
+  <!-- ROAD -->
+
+  <div class="road">
+
+    <div class="bus">
+      🚌
+    </div>
+
+    <div class="car">
+      🚗
+    </div>
+
+  </div>
+
+
+  <!-- TOAST -->
+
+  <div
+    class="toast"
+    id="toast"
+  >
+    Activity added!
+  </div>
+
+</div>
+
+<script src="app-api.js"></script>
+
+<script>
+
+/* ==========================================
+   ELEMENTS
+========================================== */
+
+const searchInput =
+  document.getElementById(
+    "activitySearch"
+  );
+
+const searchBox =
+  document.getElementById(
+    "searchBox"
+  );
+
+const activityGrid =
+  document.getElementById(
+    "activityGrid"
+  );
+
+const noResults =
+  document.getElementById(
+    "noResults"
+  );
+
+const resultCount =
+  document.getElementById(
+    "resultCount"
+  );
+
+const sortSelect =
+  document.getElementById(
+    "sortSelect"
+  );
+
+const filters =
+  document.querySelectorAll(
+    ".filter"
+  );
+
+const openAddActivityBtn =
+  document.getElementById(
+    "openAddActivityBtn"
+  );
+
+const cancelAddActivityBtn =
+  document.getElementById(
+    "cancelAddActivityBtn"
+  );
+
+const addActivityForm =
+  document.getElementById(
+    "addActivityForm"
+  );
+
+let activeFilter = "all";
+
+let activitiesData = [];
+
+let toastTimer;
+
+
+/* ==========================================
+   HELPERS
+========================================== */
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+
+}
+
+
+/* ==========================================
+   SEARCH INPUT
+========================================== */
+
+searchInput.addEventListener(
+  "input",
+  function(){
+
+    if(
+      this.value.trim()
+    ){
+
+      searchBox.classList.add(
+        "has-text"
+      );
+
+    }else{
+
+      searchBox.classList.remove(
+        "has-text"
+      );
+
+    }
+
+    renderActivities();
+
+  }
+);
+
+
+/* ==========================================
+   ENTER
+========================================== */
+
+searchInput.addEventListener(
+  "keydown",
+  function(event){
+
+    if(
+      event.key === "Enter"
+    ){
+
+      searchActivities();
+
+    }
+
+  }
+);
+
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+function searchActivities(){
+
+  renderActivities();
+
+  const value =
+    searchInput.value.trim();
+
+  if(value){
+
+    showToast(
+      `Searching "${value}"...`
+    );
+
+  }
+
+}
+
+
+/* ==========================================
+   CLEAR
+========================================== */
+
+function clearSearch(){
+
+  searchInput.value = "";
+
+  searchBox.classList.remove(
+    "has-text"
+  );
+
+  renderActivities();
+
+  searchInput.focus();
+
+}
+
+
+/* ==========================================
+   FILTERS
+========================================== */
+
+filters.forEach(
+  filter => {
+
+    filter.addEventListener(
+      "click",
+      function(){
+
+        filters.forEach(
+          item =>
+            item.classList.remove(
+              "active"
+            )
+        );
+
+        this.classList.add(
+          "active"
+        );
+
+        activeFilter =
+          this.dataset.filter;
+
+        renderActivities();
+
+      }
+    );
+
+  }
+);
+
+
+/* ==========================================
+   FILTER + SORT + RENDER
+========================================== */
+
+function getVisibleActivities(){
+
+  const query =
+    searchInput.value
+      .trim()
+      .toLowerCase();
+
+  let list =
+    activitiesData.filter(
+      activity => {
+
+        const name =
+          String(
+            activity.name || ""
+          ).toLowerCase();
+
+        const category =
+          String(
+            activity.category || ""
+          ).toLowerCase();
+
+        const city =
+          String(
+            activity.city || ""
+          ).toLowerCase();
+
+        const matchesSearch =
+          !query ||
+          name.includes(query) ||
+          category.includes(query) ||
+          city.includes(query);
+
+        const matchesFilter =
+          activeFilter === "all" ||
+          (activity.category || "") ===
+            activeFilter;
+
+        return (
+          matchesSearch &&
+          matchesFilter
+        );
+
+      }
+    );
+
+  list = list.slice();
+
+  const mode =
+    sortSelect.value;
+
+  if(mode === "price-low"){
+
+    list.sort(
+      (a,b) =>
+        Number(a.cost || 0) -
+        Number(b.cost || 0)
+    );
+
+  }else if(mode === "price-high"){
+
+    list.sort(
+      (a,b) =>
+        Number(b.cost || 0) -
+        Number(a.cost || 0)
+    );
+
+  }else if(mode === "name"){
+
+    list.sort(
+      (a,b) =>
+        String(a.name || "")
+          .localeCompare(
+            b.name || ""
+          )
+    );
+
+  }else if(mode === "city"){
+
+    list.sort(
+      (a,b) =>
+        String(a.city || "")
+          .localeCompare(
+            b.city || ""
+          )
+    );
+
+  }
+
+  return list;
+
+}
+
+
+function cardHTML(activity){
+
+  const emoji =
+    activity.emoji || "📌";
+
+  const category =
+    activity.category || "Other";
+
+  const city =
+    activity.city || "";
+
+  const cost =
+    Number(activity.cost || 0);
+
+  const nameAttr =
+    escapeHtml(activity.name || "");
+
+  return `
+    <article class="activity-card" data-name="${nameAttr}" data-type="${escapeHtml(category)}">
+      <div class="activity-image">
+        <div class="activity-emoji">${emoji}</div>
+      </div>
+      <div class="activity-body">
+        <div class="activity-title">
+          <div>
+            <h4>${escapeHtml(activity.name || "")}</h4>
+            <div class="activity-type">${escapeHtml(category)}${city ? " · " + escapeHtml(city) : ""}</div>
+          </div>
+        </div>
+        <div class="activity-meta">
+          ${city ? `<div class="meta">📍 <strong>${escapeHtml(city)}</strong></div>` : ""}
+          <div class="meta">🏷 <strong>${escapeHtml(category)}</strong></div>
+        </div>
+        <div class="price-row">
+          <div class="price">$${cost}<small>/ person</small></div>
+        </div>
+        <button class="add-btn" data-name="${nameAttr}">+ Add Activity</button>
+      </div>
+    </article>
+  `;
+
+}
+
+
+function renderActivities(){
+
+  const visible =
+    getVisibleActivities();
+
+  if(activitiesData.length === 0){
+
+    activityGrid.innerHTML = "";
+
+    noResults.querySelector("strong").textContent =
+      "No activities yet — add the first one!";
+
+    noResults.querySelector("p").textContent =
+      "Use the + Add Activity button above to create one.";
+
+    noResults.style.display = "block";
+
+    resultCount.textContent =
+      "0 activities found";
+
+    return;
+
+  }
+
+  if(visible.length === 0){
+
+    activityGrid.innerHTML = "";
+
+    noResults.querySelector("strong").textContent =
+      "No activities found";
+
+    noResults.querySelector("p").textContent =
+      "Try another search or choose a different category.";
+
+    noResults.style.display = "block";
+
+  }else{
+
+    noResults.style.display = "none";
+
+    activityGrid.innerHTML =
+      visible.map(cardHTML).join("");
+
+  }
+
+  resultCount.textContent =
+    `${visible.length} ${
+      visible.length === 1
+        ? "activity"
+        : "activities"
+    } found`;
+
+  bindAddButtons();
+
+  restoreSavedActivities();
+
+}
+
+
+sortSelect.addEventListener(
+  "change",
+  renderActivities
+);
+
+
+/* ==========================================
+   LOAD FROM SERVER
+========================================== */
+
+async function loadActivities(){
+
+  try{
+
+    const data =
+      await API.get(
+        "/api/activities"
+      );
+
+    activitiesData =
+      (data && data.activities) ||
+      [];
+
+  }catch(error){
+
+    activitiesData = [];
+
+    showToast(
+      error.message ||
+        "Failed to load activities"
+    );
+
+  }
+
+  renderActivities();
+
+}
+
+
+/* ==========================================
+   CREATE ACTIVITY
+========================================== */
+
+openAddActivityBtn.addEventListener(
+  "click",
+  () => {
+
+    if(!API.isLoggedIn()){
+
+      API.requireAuth();
+
+      return;
+
+    }
+
+    addActivityForm.classList.toggle(
+      "open"
+    );
+
+  }
+);
+
+
+cancelAddActivityBtn.addEventListener(
+  "click",
+  () => {
+
+    addActivityForm.reset();
+
+    addActivityForm.classList.remove(
+      "open"
+    );
+
+  }
+);
+
+
+addActivityForm.addEventListener(
+  "submit",
+  async event => {
+
+    event.preventDefault();
+
+    if(!API.requireAuth()){
+
+      return;
+
+    }
+
+    const name =
+      document.getElementById(
+        "newActivityName"
+      ).value.trim();
+
+    if(!name){
+
+      showToast(
+        "Activity name is required"
+      );
+
+      return;
+
+    }
+
+    const city =
+      document.getElementById(
+        "newActivityCity"
+      ).value.trim();
+
+    const category =
+      document.getElementById(
+        "newActivityCategory"
+      ).value;
+
+    const cost =
+      Number(
+        document.getElementById(
+          "newActivityCost"
+        ).value || 0
+      );
+
+    const emoji =
+      document.getElementById(
+        "newActivityEmoji"
+      ).value.trim();
+
+    try{
+
+      const result =
+        await API.post(
+          "/api/activities",
+          {
+            name,
+            city,
+            category,
+            cost,
+            emoji: emoji || undefined
+          }
+        );
+
+      activitiesData.unshift(
+        result.activity
+      );
+
+      addActivityForm.reset();
+
+      addActivityForm.classList.remove(
+        "open"
+      );
+
+      renderActivities();
+
+      showToast(
+        `${result.activity.name} added ✨`
+      );
+
+    }catch(error){
+
+      showToast(
+        error.message ||
+          "Failed to add activity"
+      );
+
+    }
+
+  }
+);
+
+
+/* ==========================================
+   ADD TO TRIP
+========================================== */
+
+function bindAddButtons(){
+
+  activityGrid
+    .querySelectorAll(".add-btn")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () =>
+          addActivity(
+            button,
+            button.dataset.name
+          )
+      );
+
+    });
+
+}
+
+
+function addActivity(
+  button,
+  activity
+){
+
+  if(
+    button.classList.contains(
+      "added"
+    )
+  ){
+
+    button.classList.remove(
+      "added"
+    );
+
+    button.textContent =
+      "+ Add Activity";
+
+    removeActivity(
+      activity
+    );
+
+    showToast(
+      `${activity} removed`
+    );
+
+    return;
+
+  }
+
+
+  button.classList.add(
+    "added"
+  );
+
+  button.textContent =
+    "✓ Added";
+
+
+  saveActivity(
+    activity
+  );
+
+
+  showToast(
+    `${activity} added ✨`
+  );
+
+}
+
+
+/* ==========================================
+   LOCAL STORAGE
+========================================== */
+
+const ACTIVITY_KEY =
+  "globetrotter_trip_activities";
+
+
+function getSavedActivities(){
+
+  try{
+
+    return JSON.parse(
+      localStorage.getItem(
+        ACTIVITY_KEY
+      ) || "[]"
+    );
+
+  }catch{
+
+    return [];
+
+  }
+
+}
+
+
+function saveActivity(
+  activity
+){
+
+  const activities =
+    getSavedActivities();
+
+
+  if(
+    !activities.includes(
+      activity
+    )
+  ){
+
+    activities.push(
+      activity
+    );
+
+  }
+
+
+  localStorage.setItem(
+    ACTIVITY_KEY,
+    JSON.stringify(
+      activities
+    )
+  );
+
+}
+
+
+function removeActivity(
+  activity
+){
+
+  const activities =
+    getSavedActivities()
+      .filter(
+        item =>
+          item !== activity
+      );
+
+
+  localStorage.setItem(
+    ACTIVITY_KEY,
+    JSON.stringify(
+      activities
+    )
+  );
+
+}
+
+
+/* ==========================================
+   RESTORE
+========================================== */
+
+function restoreSavedActivities(){
+
+  const saved =
+    getSavedActivities();
+
+
+  activityGrid
+    .querySelectorAll(
+      ".activity-card"
+    )
+    .forEach(
+      card => {
+
+        const name =
+          card.dataset.name;
+
+        const button =
+          card.querySelector(
+            ".add-btn"
+          );
+
+
+        if(
+          saved.includes(name)
+        ){
+
+          button.classList.add(
+            "added"
+          );
+
+          button.textContent =
+            "✓ Added";
+
+        }
+
+      }
+    );
+
+}
+
+
+/* ==========================================
+   TOAST
+========================================== */
+
+function showToast(
+  message
+){
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+
+  toast.textContent =
+    message;
+
+
+  toast.classList.add(
+    "show"
+  );
+
+
+  clearTimeout(
+    toastTimer
+  );
+
+
+  toastTimer =
+    setTimeout(
+      () => {
+
+        toast.classList.remove(
+          "show"
+        );
+
+      },
+      2200
+    );
+
+}
+
+
+/* ==========================================
+   NAVIGATION
+========================================== */
+
+function goBack(){
+
+  window.location.href =
+    "city-search.html";
+
+}
+
+
+function goDashboard(){
+
+  window.location.href =
+    "dashboard.html";
+
+}
+
+
+function changeCity(){
+
+  showToast(
+    "Opening city selection..."
+  );
+
+  setTimeout(
+    () => {
+
+      window.location.href =
+        "city-search.html";
+
+    },
+    500
+  );
+
+}
+
+
+function continueToPlanner(){
+
+  const activities =
+    getSavedActivities();
+
+
+  if(
+    activities.length === 0
+  ){
+
+    showToast(
+      "Add at least one activity first ✨"
+    );
+
+    return;
+
+  }
+
+
+  showToast(
+    `${activities.length} ${
+      activities.length === 1
+        ? "activity"
+        : "activities"
+    } added to your trip`
+  );
+
+
+  setTimeout(
+    () => {
+
+      window.location.href =
+        "itinerary-planner.html";
+
+    },
+    700
+  );
+
+}
+
+
+/* ==========================================
+   INIT
+========================================== */
+
+loadActivities();
+
+
+/* ==========================================
+   KEYBOARD SHORTCUT
+========================================== */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key === "/"
+    ){
+
+      event.preventDefault();
+
+      searchInput.focus();
+
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>

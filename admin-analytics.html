@@ -1,0 +1,2229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GlobeTrotter — Admin Analytics</title>
+
+<style>
+
+:root{
+  --primary:#0e7c8c;
+  --primary-dark:#075e6b;
+  --cyan:#22d3ee;
+  --accent:#ff7959;
+  --purple:#76549a;
+  --green:#2e9e5b;
+  --dark:#172033;
+  --muted:#687487;
+  --border:#e2e8ec;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  Arial,sans-serif;
+}
+
+body{
+  background:#111a3d;
+  color:var(--dark);
+}
+
+.page{
+  min-height:100vh;
+  position:relative;
+  overflow:hidden;
+
+  background:
+  linear-gradient(
+    180deg,
+    #172451 0%,
+    #41427e 30%,
+    #85548b 55%,
+    #dc7779 76%,
+    #f3b16b 100%
+  );
+}
+
+
+/* =========================
+   BACKGROUND
+========================= */
+
+.stars{
+  position:absolute;
+  inset:0;
+  height:55%;
+
+  background-image:
+  radial-gradient(1px 1px at 7% 13%,#fff,transparent),
+  radial-gradient(1px 1px at 18% 28%,#fff,transparent),
+  radial-gradient(1px 1px at 31% 11%,#fff,transparent),
+  radial-gradient(1px 1px at 43% 27%,#fff,transparent),
+  radial-gradient(1px 1px at 56% 16%,#fff,transparent),
+  radial-gradient(1px 1px at 68% 30%,#fff,transparent),
+  radial-gradient(1px 1px at 81% 12%,#fff,transparent),
+  radial-gradient(1px 1px at 94% 25%,#fff,transparent);
+
+  animation:
+  starGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes starGlow{
+
+  from{opacity:.2}
+  to{opacity:.85}
+
+}
+
+.cloud{
+  position:absolute;
+
+  width:135px;
+  height:30px;
+
+  border-radius:50px;
+
+  background:
+  rgba(255,255,255,.15);
+}
+
+.cloud:before,
+.cloud:after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  background:inherit;
+}
+
+.cloud:before{
+  width:55px;
+  height:55px;
+  left:15px;
+  top:-25px;
+}
+
+.cloud:after{
+  width:43px;
+  height:43px;
+  right:12px;
+  top:-20px;
+}
+
+.cloud.one{
+  left:-170px;
+  top:18%;
+  animation:
+  cloudMove 45s linear infinite;
+}
+
+.cloud.two{
+  left:-200px;
+  top:36%;
+  opacity:.18;
+  transform:scale(.7);
+  animation:
+  cloudMove 58s linear infinite;
+  animation-delay:-18s;
+}
+
+@keyframes cloudMove{
+
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(130vw);
+  }
+
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+
+  position:relative;
+  z-index:20;
+
+  width:
+  min(
+    1180px,
+    calc(100% - 40px)
+  );
+
+  margin:auto;
+
+  padding-top:22px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+}
+
+.logo-area{
+
+  display:flex;
+  align-items:center;
+  gap:11px;
+
+  color:white;
+}
+
+.logo{
+
+  width:50px;
+  height:50px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:
+  linear-gradient(
+    135deg,
+    var(--primary),
+    var(--accent)
+  );
+
+  box-shadow:
+  0 12px 30px
+  rgba(0,0,0,.2);
+
+  animation:
+  logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+
+  0%,100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-5px);
+  }
+
+}
+
+.logo-text{
+  font-size:1.18rem;
+  font-weight:800;
+}
+
+.logo-text span{
+  color:#5ee7f5;
+}
+
+.admin-badge{
+
+  margin-left:7px;
+
+  padding:
+  4px 7px;
+
+  border-radius:5px;
+
+  background:
+  rgba(255,255,255,.13);
+
+  color:#a8f5fb;
+
+  font-size:.4rem;
+
+  letter-spacing:.5px;
+}
+
+.header-actions{
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.header-btn{
+
+  padding:
+  9px 13px;
+
+  border:
+  1px solid
+  rgba(255,255,255,.2);
+
+  border-radius:9px;
+
+  background:
+  rgba(255,255,255,.1);
+
+  color:white;
+
+  backdrop-filter:
+  blur(10px);
+
+  font-size:.53rem;
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+.header-btn:hover{
+
+  background:
+  rgba(255,255,255,.2);
+
+  transform:
+  translateY(-2px);
+}
+
+.admin-avatar{
+
+  width:39px;
+  height:39px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:
+  linear-gradient(
+    135deg,
+    var(--accent),
+    var(--purple)
+  );
+
+  color:white;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.main{
+
+  position:relative;
+  z-index:10;
+
+  width:
+  min(
+    1120px,
+    calc(100% - 40px)
+  );
+
+  margin:
+  35px auto 100px;
+}
+
+
+/* =========================
+   TITLE
+========================= */
+
+.page-title{
+
+  color:white;
+
+  margin-bottom:18px;
+
+  display:flex;
+
+  align-items:flex-end;
+
+  justify-content:space-between;
+
+  gap:20px;
+
+  animation:
+  titleIn .7s ease;
+}
+
+@keyframes titleIn{
+
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+}
+
+.page-title h1{
+
+  margin:0;
+
+  font-size:
+  clamp(
+    1.8rem,
+    4vw,
+    2.55rem
+  );
+
+  letter-spacing:-1px;
+}
+
+.page-title h1 span{
+  color:#5ee7f5;
+}
+
+.page-title p{
+
+  margin:
+  7px 0 0;
+
+  color:
+  rgba(255,255,255,.7);
+
+  font-size:.6rem;
+}
+
+.date-select{
+
+  padding:
+  9px 11px;
+
+  border:
+  1px solid
+  rgba(255,255,255,.2);
+
+  border-radius:9px;
+
+  background:
+  rgba(255,255,255,.1);
+
+  color:white;
+
+  outline:none;
+
+  font-size:.48rem;
+
+  backdrop-filter:blur(10px);
+
+  cursor:pointer;
+}
+
+.date-select option{
+  color:var(--dark);
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.dashboard{
+
+  padding:18px;
+
+  border-radius:23px;
+
+  background:
+  rgba(255,255,255,.97);
+
+  box-shadow:
+  0 35px 90px
+  rgba(8,30,45,.3);
+
+  animation:
+  panelIn .85s
+  cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes panelIn{
+
+  from{
+    opacity:0;
+    transform:
+    translateY(30px)
+    scale(.97);
+  }
+
+  to{
+    opacity:1;
+    transform:
+    translateY(0)
+    scale(1);
+  }
+
+}
+
+
+/* =========================
+   KPI CARDS
+========================= */
+
+.kpis{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(4,1fr);
+
+  gap:9px;
+}
+
+.kpi{
+
+  position:relative;
+
+  padding:14px;
+
+  overflow:hidden;
+
+  border:
+  1px solid
+  var(--border);
+
+  border-radius:14px;
+
+  background:#fbfcfd;
+
+  transition:.3s;
+}
+
+.kpi:hover{
+
+  transform:
+  translateY(-5px);
+
+  box-shadow:
+  0 15px 30px
+  rgba(0,0,0,.08);
+}
+
+.kpi:after{
+
+  content:"";
+
+  position:absolute;
+
+  width:80px;
+  height:80px;
+
+  right:-30px;
+  top:-30px;
+
+  border-radius:50%;
+
+  background:
+  rgba(14,124,140,.06);
+}
+
+.kpi-top{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+}
+
+.kpi-icon{
+
+  width:34px;
+  height:34px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:9px;
+
+  background:#eaf7f8;
+
+  font-size:.95rem;
+}
+
+.kpi:nth-child(2)
+.kpi-icon{
+  background:#fff0ec;
+}
+
+.kpi:nth-child(3)
+.kpi-icon{
+  background:#f1ebf7;
+}
+
+.kpi:nth-child(4)
+.kpi-icon{
+  background:#eaf7ef;
+}
+
+.kpi-change{
+
+  padding:
+  4px 6px;
+
+  border-radius:5px;
+
+  background:#eaf7ef;
+
+  color:var(--green);
+
+  font-size:.4rem;
+
+  font-weight:900;
+}
+
+.kpi-change.down{
+
+  background:#fff0ed;
+  color:#d35b48;
+}
+
+.kpi strong{
+
+  display:block;
+
+  margin-top:10px;
+
+  font-size:1.15rem;
+}
+
+.kpi-label{
+
+  display:block;
+
+  margin-top:3px;
+
+  color:var(--muted);
+
+  font-size:.43rem;
+
+  font-weight:900;
+}
+
+
+/* =========================
+   CHART GRID
+========================= */
+
+.chart-grid{
+
+  display:grid;
+
+  grid-template-columns:
+  1.45fr .8fr;
+
+  gap:13px;
+
+  margin-top:13px;
+}
+
+.card{
+
+  padding:16px;
+
+  border:
+  1px solid
+  var(--border);
+
+  border-radius:15px;
+
+  background:#fbfcfd;
+}
+
+.card-title{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  margin-bottom:13px;
+}
+
+.card-title h2{
+
+  margin:0;
+
+  font-size:.7rem;
+}
+
+.card-title span{
+
+  color:var(--muted);
+
+  font-size:.42rem;
+}
+
+
+/* =========================
+   BAR CHART
+========================= */
+
+.chart{
+
+  height:220px;
+
+  position:relative;
+
+  display:flex;
+
+  align-items:flex-end;
+
+  gap:12px;
+
+  padding:
+  10px 8px 24px;
+
+  border-bottom:
+  1px solid
+  #dce4e7;
+
+  background:
+  repeating-linear-gradient(
+    to top,
+    transparent 0 43px,
+    rgba(104,116,135,.08) 44px
+  );
+}
+
+.bar-wrap{
+
+  height:100%;
+
+  flex:1;
+
+  display:flex;
+
+  align-items:flex-end;
+
+  justify-content:center;
+
+  position:relative;
+}
+
+.bar{
+
+  width:
+  min(32px,70%);
+
+  border-radius:
+  7px 7px 0 0;
+
+  background:
+  linear-gradient(
+    180deg,
+    var(--cyan),
+    var(--primary)
+  );
+
+  transform-origin:bottom;
+
+  animation:
+  barGrow 1.2s
+  cubic-bezier(.16,1,.3,1);
+
+  transition:.25s;
+
+  position:relative;
+}
+
+.bar:hover{
+
+  filter:
+  brightness(1.1);
+
+  transform:
+  scaleX(1.08);
+}
+
+.bar:before{
+
+  content:
+  attr(data-value);
+
+  position:absolute;
+
+  top:-18px;
+
+  left:50%;
+
+  transform:
+  translateX(-50%);
+
+  color:var(--muted);
+
+  font-size:.38rem;
+
+  font-weight:900;
+
+  opacity:0;
+
+  transition:.2s;
+}
+
+.bar:hover:before{
+  opacity:1;
+}
+
+@keyframes barGrow{
+
+  from{
+    transform:scaleY(0);
+  }
+
+  to{
+    transform:scaleY(1);
+  }
+
+}
+
+.month{
+
+  position:absolute;
+
+  bottom:-19px;
+
+  left:50%;
+
+  transform:
+  translateX(-50%);
+
+  color:var(--muted);
+
+  font-size:.4rem;
+}
+
+
+/* =========================
+   DONUT
+========================= */
+
+.donut-area{
+
+  min-height:220px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:18px;
+}
+
+.donut{
+
+  width:145px;
+  height:145px;
+
+  border-radius:50%;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  background:
+  conic-gradient(
+    var(--primary) 0 42%,
+    var(--accent) 42% 67%,
+    var(--purple) 67% 84%,
+    var(--green) 84% 100%
+  );
+
+  animation:
+  donutIn 1.2s ease;
+}
+
+@keyframes donutIn{
+
+  from{
+    transform:
+    rotate(-90deg)
+    scale(.5);
+
+    opacity:0;
+  }
+
+  to{
+    transform:
+    rotate(0)
+    scale(1);
+
+    opacity:1;
+  }
+
+}
+
+.donut-inner{
+
+  width:91px;
+  height:91px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:white;
+}
+
+.donut-inner strong{
+  font-size:1.1rem;
+}
+
+.donut-inner span{
+
+  margin-top:2px;
+
+  color:var(--muted);
+
+  font-size:.38rem;
+}
+
+.legend{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:8px;
+}
+
+.legend-item{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:6px;
+
+  font-size:.42rem;
+
+  font-weight:800;
+}
+
+.legend-dot{
+
+  width:8px;
+  height:8px;
+
+  border-radius:50%;
+}
+
+.dot-one{
+  background:var(--primary);
+}
+
+.dot-two{
+  background:var(--accent);
+}
+
+.dot-three{
+  background:var(--purple);
+}
+
+.dot-four{
+  background:var(--green);
+}
+
+
+/* =========================
+   LOWER GRID
+========================= */
+
+.lower-grid{
+
+  display:grid;
+
+  grid-template-columns:
+  1fr 1fr;
+
+  gap:13px;
+
+  margin-top:13px;
+}
+
+
+/* =========================
+   DESTINATIONS
+========================= */
+
+.destination{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:9px;
+
+  padding:9px 0;
+
+  border-bottom:
+  1px solid
+  var(--border);
+}
+
+.destination:last-child{
+  border-bottom:0;
+}
+
+.destination-rank{
+
+  width:25px;
+  height:25px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:7px;
+
+  background:#eef7f8;
+
+  color:var(--primary);
+
+  font-size:.45rem;
+
+  font-weight:900;
+}
+
+.destination-info{
+
+  flex:1;
+}
+
+.destination-info strong{
+
+  display:block;
+
+  font-size:.48rem;
+}
+
+.destination-info span{
+
+  display:block;
+
+  margin-top:3px;
+
+  color:var(--muted);
+
+  font-size:.39rem;
+}
+
+.destination-count{
+
+  font-size:.45rem;
+
+  font-weight:900;
+
+  color:var(--primary);
+}
+
+
+/* =========================
+   ACTIVITY
+========================= */
+
+.activity-list{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:9px;
+}
+
+.activity{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:9px;
+
+  padding:8px;
+
+  border-radius:9px;
+
+  background:white;
+
+  border:
+  1px solid
+  var(--border);
+}
+
+.activity-avatar{
+
+  width:32px;
+  height:32px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:
+  linear-gradient(
+    135deg,
+    var(--cyan),
+    var(--primary)
+  );
+
+  color:white;
+
+  font-size:.7rem;
+}
+
+.activity:nth-child(2)
+.activity-avatar{
+  background:
+  linear-gradient(
+    135deg,
+    var(--accent),
+    #df4f79
+  );
+}
+
+.activity:nth-child(3)
+.activity-avatar{
+  background:
+  linear-gradient(
+    135deg,
+    var(--purple),
+    #9c6cad
+  );
+}
+
+.activity-info{
+  flex:1;
+}
+
+.activity-info strong{
+
+  display:block;
+
+  font-size:.45rem;
+}
+
+.activity-info span{
+
+  display:block;
+
+  margin-top:3px;
+
+  color:var(--muted);
+
+  font-size:.38rem;
+}
+
+.activity-time{
+
+  color:#9ba5b1;
+
+  font-size:.36rem;
+}
+
+
+/* =========================
+   PERFORMANCE
+========================= */
+
+.performance{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(3,1fr);
+
+  gap:8px;
+}
+
+.performance-item{
+
+  padding:11px;
+
+  border-radius:9px;
+
+  background:white;
+
+  border:
+  1px solid
+  var(--border);
+
+  text-align:center;
+}
+
+.performance-item strong{
+
+  display:block;
+
+  font-size:.75rem;
+}
+
+.performance-item span{
+
+  display:block;
+
+  margin-top:3px;
+
+  color:var(--muted);
+
+  font-size:.38rem;
+}
+
+
+/* =========================
+   ADMIN ACTIONS
+========================= */
+
+.admin-actions{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(4,1fr);
+
+  gap:8px;
+
+  margin-top:13px;
+}
+
+.action{
+
+  padding:11px;
+
+  border:
+  1px solid
+  var(--border);
+
+  border-radius:10px;
+
+  background:white;
+
+  cursor:pointer;
+
+  text-align:center;
+
+  transition:.25s;
+}
+
+.action:hover{
+
+  transform:
+  translateY(-3px);
+
+  border-color:
+  #b5dfe3;
+
+  box-shadow:
+  0 10px 22px
+  rgba(0,0,0,.06);
+}
+
+.action-icon{
+  font-size:1rem;
+}
+
+.action strong{
+
+  display:block;
+
+  margin-top:5px;
+
+  font-size:.44rem;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status-bar{
+
+  margin-top:13px;
+
+  padding:
+  10px 12px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  border-radius:9px;
+
+  background:#eef8f1;
+
+  border:
+  1px solid
+  #d7eddf;
+}
+
+.status-left{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:7px;
+}
+
+.status-dot{
+
+  width:8px;
+  height:8px;
+
+  border-radius:50%;
+
+  background:#37ad62;
+
+  box-shadow:
+  0 0 0 4px
+  rgba(55,173,98,.12);
+
+  animation:
+  statusPulse 2s infinite;
+}
+
+@keyframes statusPulse{
+
+  0%,100%{
+    box-shadow:
+    0 0 0 3px
+    rgba(55,173,98,.1);
+  }
+
+  50%{
+    box-shadow:
+    0 0 0 7px
+    rgba(55,173,98,.02);
+  }
+
+}
+
+.status-bar strong{
+
+  font-size:.44rem;
+}
+
+.status-bar span{
+
+  color:#4e7c5c;
+
+  font-size:.4rem;
+}
+
+
+/* =========================
+   MOUNTAINS
+========================= */
+
+.mountains{
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  height:120px;
+
+  z-index:2;
+
+  background:
+  rgba(12,18,38,.72);
+
+  clip-path:
+  polygon(
+    0 100%,
+    0 64%,
+    10% 41%,
+    20% 62%,
+    31% 18%,
+    43% 55%,
+    54% 31%,
+    67% 62%,
+    79% 24%,
+    90% 51%,
+    100% 35%,
+    100% 100%
+  );
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+
+  position:fixed;
+
+  right:22px;
+  bottom:22px;
+
+  z-index:100;
+
+  padding:
+  11px 15px;
+
+  border-radius:9px;
+
+  background:#172033;
+
+  color:white;
+
+  box-shadow:
+  0 15px 35px
+  rgba(0,0,0,.25);
+
+  font-size:.58rem;
+
+  font-weight:700;
+
+  opacity:0;
+
+  transform:
+  translateY(20px);
+
+  pointer-events:none;
+
+  transition:.3s;
+}
+
+.toast.show{
+
+  opacity:1;
+
+  transform:
+  translateY(0);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+
+  .chart-grid,
+  .lower-grid{
+    grid-template-columns:1fr;
+  }
+
+  .kpis{
+    grid-template-columns:
+    repeat(2,1fr);
+  }
+
+  .admin-actions{
+    grid-template-columns:
+    repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:650px){
+
+  .header,
+  .main{
+    width:
+    calc(100% - 24px);
+  }
+
+  .header-btn{
+    display:none;
+  }
+
+  .page-title{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .date-select{
+    width:100%;
+  }
+
+  .dashboard{
+    padding:13px;
+  }
+
+  .kpis{
+    grid-template-columns:1fr;
+  }
+
+  .donut-area{
+    flex-direction:column;
+  }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+  <div class="stars"></div>
+
+  <div class="cloud one"></div>
+  <div class="cloud two"></div>
+
+
+  <!-- HEADER -->
+
+  <header class="header">
+
+    <div class="logo-area">
+
+      <div class="logo">
+        🌍
+      </div>
+
+      <div class="logo-text">
+        Globe<span>Trotter</span>
+        <span class="admin-badge">
+          ADMIN
+        </span>
+      </div>
+
+    </div>
+
+
+    <div class="header-actions">
+
+      <button
+        class="header-btn"
+        onclick="goDashboard()"
+      >
+        Dashboard
+      </button>
+
+      <button
+        class="header-btn"
+        onclick="showToast('Reports opened 📊')"
+      >
+        Reports
+      </button>
+
+      <div class="admin-avatar">
+        🛡️
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+
+    <!-- TITLE -->
+
+    <div class="page-title">
+
+      <div>
+
+        <h1>
+          Admin <span>Analytics</span>
+        </h1>
+
+        <p>
+          Monitor platform activity, users, trips and destination trends.
+        </p>
+
+      </div>
+
+
+      <select
+        class="date-select"
+        onchange="changePeriod(this)"
+      >
+
+        <option>
+          Last 30 Days
+        </option>
+
+        <option>
+          Last 7 Days
+        </option>
+
+        <option>
+          Last 90 Days
+        </option>
+
+        <option>
+          This Year
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- ACCESS DENIED -->
+
+    <section class="dashboard" id="accessDenied" style="display:none;">
+
+      <div style="padding:60px 20px;text-align:center;">
+
+        <h2 style="margin:0 0 10px;color:var(--dark);font-size:1rem;">
+          Admin access required
+        </h2>
+
+        <p style="margin:0 0 18px;color:var(--muted);font-size:.55rem;">
+          You don't have permission to view this page.
+        </p>
+
+        <button
+          class="header-btn"
+          style="background:var(--primary);color:white;border-color:var(--primary);"
+          onclick="goDashboard()"
+        >
+          Go to Dashboard
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- DASHBOARD -->
+
+    <section class="dashboard" id="dashboardContent" style="display:none;">
+
+
+      <!-- KPI -->
+
+      <div class="kpis">
+
+
+        <div class="kpi">
+
+          <div class="kpi-top">
+
+            <div class="kpi-icon">
+              👥
+            </div>
+
+          </div>
+
+          <strong id="kpiUsers">
+            —
+          </strong>
+
+          <span class="kpi-label">
+            TOTAL USERS
+          </span>
+
+        </div>
+
+
+        <div class="kpi">
+
+          <div class="kpi-top">
+
+            <div class="kpi-icon">
+              ✈️
+            </div>
+
+          </div>
+
+          <strong id="kpiTrips">
+            —
+          </strong>
+
+          <span class="kpi-label">
+            TRIPS CREATED
+          </span>
+
+        </div>
+
+
+        <div class="kpi">
+
+          <div class="kpi-top">
+
+            <div class="kpi-icon">
+              📍
+            </div>
+
+          </div>
+
+          <strong id="kpiItineraryItems">
+            —
+          </strong>
+
+          <span class="kpi-label">
+            ITINERARY ITEMS
+          </span>
+
+        </div>
+
+
+        <div class="kpi">
+
+          <div class="kpi-top">
+
+            <div class="kpi-icon">
+              💰
+            </div>
+
+          </div>
+
+          <strong id="kpiBudget">
+            —
+          </strong>
+
+          <span class="kpi-label">
+            TOTAL BUDGET
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- CHARTS -->
+
+      <div class="chart-grid">
+
+
+        <!-- USER GROWTH -->
+
+        <div class="card">
+
+          <div class="card-title">
+
+            <h2>
+              👥 Users by Role
+            </h2>
+
+            <span>
+              BY ROLE
+            </span>
+
+          </div>
+
+
+          <div class="chart" id="roleChart"></div>
+
+        </div>
+
+
+        <!-- TRIP STATUS -->
+
+        <div class="card">
+
+          <div class="card-title">
+
+            <h2>
+              🧭 Trips by Status
+            </h2>
+
+            <span>
+              ALL TRIPS
+            </span>
+
+          </div>
+
+
+          <div class="donut-area">
+
+            <div class="donut" id="statusDonut">
+
+              <div class="donut-inner">
+
+                <strong id="statusDonutTotal">
+                  0
+                </strong>
+
+                <span>
+                  TRIPS
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="legend" id="statusLegend"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- LOWER -->
+
+      <div class="lower-grid">
+
+
+        <!-- DESTINATIONS -->
+
+        <div class="card">
+
+          <div class="card-title">
+
+            <h2>
+              🔥 Top Destinations
+            </h2>
+
+            <span>
+              BY TRIP VISITS
+            </span>
+
+          </div>
+
+
+          <div id="destinationsList"></div>
+
+        </div>
+
+
+        <!-- ACTIVITY -->
+
+        <div class="card">
+
+          <div class="card-title">
+
+            <h2>
+              ⚡ Recent Activity
+            </h2>
+
+            <span>
+              NO DATA
+            </span>
+
+          </div>
+
+
+          <div class="activity-list" id="activityList">
+
+            <p style="color:var(--muted);font-size:.45rem;margin:0;padding:8px 0;">
+              No activity data available
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ADMIN ACTIONS -->
+
+      <div class="card" style="margin-top:13px;">
+
+        <div class="admin-actions">
+
+
+          <div
+            class="action"
+            onclick="adminAction('Users')"
+          >
+
+            <div class="action-icon">
+              👥
+            </div>
+
+            <strong>
+              Manage Users
+            </strong>
+
+          </div>
+
+
+          <div
+            class="action"
+            onclick="adminAction('Destinations')"
+          >
+
+            <div class="action-icon">
+              📍
+            </div>
+
+            <strong>
+              Destinations
+            </strong>
+
+          </div>
+
+
+          <div
+            class="action"
+            onclick="adminAction('Reports')"
+          >
+
+            <div class="action-icon">
+              📑
+            </div>
+
+            <strong>
+              Generate Report
+            </strong>
+
+          </div>
+
+
+          <div
+            class="action"
+            onclick="adminAction('Settings')"
+          >
+
+            <div class="action-icon">
+              ⚙️
+            </div>
+
+            <strong>
+              Admin Settings
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="status-bar">
+
+          <div class="status-left">
+
+            <div class="status-dot"></div>
+
+            <strong>
+              All systems operational
+            </strong>
+
+          </div>
+
+          <span>
+            Last updated just now
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <div class="mountains"></div>
+
+
+  <div
+    class="toast"
+    id="toast"
+  >
+    Done!
+  </div>
+
+</div>
+
+
+<script src="app-api.js"></script>
+<script>
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function goDashboard(){
+
+  window.location.href =
+    "dashboard.html";
+
+}
+
+
+/* =========================
+   ACCESS CONTROL
+========================= */
+
+function showAccessDenied(){
+
+  document.getElementById("dashboardContent").style.display = "none";
+  document.getElementById("accessDenied").style.display = "block";
+
+}
+
+
+/* =========================
+   ANALYTICS RENDER
+========================= */
+
+const CHART_COLORS = ["var(--primary)", "var(--accent)", "var(--purple)", "var(--green)", "var(--cyan)"];
+
+function renderKpis(totals){
+
+  document.getElementById("kpiUsers").textContent = (totals.users || 0).toLocaleString();
+  document.getElementById("kpiTrips").textContent = (totals.trips || 0).toLocaleString();
+  document.getElementById("kpiItineraryItems").textContent = (totals.itineraryItems || 0).toLocaleString();
+  document.getElementById("kpiBudget").textContent = "$" + (totals.budget || 0).toLocaleString();
+
+}
+
+function renderRoleChart(usersByRole){
+
+  const chart = document.getElementById("roleChart");
+  chart.innerHTML = "";
+
+  if (!usersByRole.length){
+    chart.innerHTML = '<p style="margin:auto;color:var(--muted);font-size:.45rem;">No data yet</p>';
+    return;
+  }
+
+  const max = Math.max.apply(null, usersByRole.map(function(r){ return r.count; }));
+
+  usersByRole.forEach(function(r){
+
+    const wrap = document.createElement("div");
+    wrap.className = "bar-wrap";
+
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    bar.style.height = (max > 0 ? Math.max(4, Math.round((r.count / max) * 100)) : 4) + "%";
+    bar.setAttribute("data-value", r.count);
+
+    const label = document.createElement("span");
+    label.className = "month";
+    label.textContent = r.role;
+
+    wrap.appendChild(bar);
+    wrap.appendChild(label);
+    chart.appendChild(wrap);
+
+  });
+
+}
+
+function renderStatusDonut(tripsByStatus){
+
+  const donut = document.getElementById("statusDonut");
+  const totalEl = document.getElementById("statusDonutTotal");
+  const legend = document.getElementById("statusLegend");
+
+  legend.innerHTML = "";
+
+  const total = tripsByStatus.reduce(function(sum, s){ return sum + s.count; }, 0);
+  totalEl.textContent = total.toLocaleString();
+
+  if (!tripsByStatus.length || total === 0){
+    donut.style.background = "#e2e8ec";
+    legend.innerHTML = '<div class="legend-item">No data yet</div>';
+    return;
+  }
+
+  const stops = [];
+  let acc = 0;
+
+  tripsByStatus.forEach(function(s, i){
+
+    const color = CHART_COLORS[i % CHART_COLORS.length];
+    const start = (acc / total) * 100;
+    acc += s.count;
+    const end = (acc / total) * 100;
+
+    stops.push(color + " " + start.toFixed(2) + "% " + end.toFixed(2) + "%");
+
+    const pct = Math.round((s.count / total) * 100);
+
+    const item = document.createElement("div");
+    item.className = "legend-item";
+
+    const dot = document.createElement("div");
+    dot.className = "legend-dot";
+    dot.style.background = color;
+
+    item.appendChild(dot);
+    item.appendChild(document.createTextNode(s.status + " · " + pct + "%"));
+
+    legend.appendChild(item);
+
+  });
+
+  donut.style.background = "conic-gradient(" + stops.join(", ") + ")";
+
+}
+
+function renderTopCities(topCities){
+
+  const container = document.getElementById("destinationsList");
+  container.innerHTML = "";
+
+  if (!topCities.length){
+    container.innerHTML = '<p style="color:var(--muted);font-size:.45rem;margin:0;padding:8px 0;">No destination data yet</p>';
+    return;
+  }
+
+  topCities.forEach(function(c, i){
+
+    const row = document.createElement("div");
+    row.className = "destination";
+
+    const rank = document.createElement("div");
+    rank.className = "destination-rank";
+    rank.textContent = String(i + 1).padStart(2, "0");
+
+    const info = document.createElement("div");
+    info.className = "destination-info";
+
+    const strong = document.createElement("strong");
+    strong.textContent = c.city;
+    info.appendChild(strong);
+
+    const count = document.createElement("div");
+    count.className = "destination-count";
+    count.textContent = c.visits;
+
+    row.appendChild(rank);
+    row.appendChild(info);
+    row.appendChild(count);
+    container.appendChild(row);
+
+  });
+
+}
+
+function renderAnalytics(data){
+
+  renderKpis(data.totals || {});
+  renderRoleChart(data.usersByRole || []);
+  renderStatusDonut(data.tripsByStatus || []);
+  renderTopCities(data.topCities || []);
+
+  document.getElementById("dashboardContent").style.display = "block";
+
+}
+
+async function loadAnalytics(){
+
+  try {
+    const data = await API.get("/api/admin/analytics");
+    renderAnalytics(data);
+  } catch (error) {
+    showAccessDenied();
+  }
+
+}
+
+if (API.requireAuth()){
+
+  const currentUser = API.getUser();
+
+  if (currentUser && currentUser.role === "admin"){
+    loadAnalytics();
+  } else {
+    showAccessDenied();
+  }
+
+}
+
+
+/* =========================
+   PERIOD
+========================= */
+
+function changePeriod(select){
+
+  showToast(
+    "Analytics changed to " +
+    select.value
+  );
+
+}
+
+
+/* =========================
+   ADMIN ACTION
+========================= */
+
+function adminAction(action){
+
+  showToast(
+    action +
+    " section opened ⚙️"
+  );
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+let toastTimer;
+
+function showToast(message){
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+  toast.textContent =
+    message;
+
+  toast.classList.add(
+    "show"
+  );
+
+  clearTimeout(
+    toastTimer
+  );
+
+  toastTimer =
+    setTimeout(
+      function(){
+
+        toast.classList.remove(
+          "show"
+        );
+
+      },
+      2200
+    );
+
+}
+
+</script>
+
+</body>
+</html>

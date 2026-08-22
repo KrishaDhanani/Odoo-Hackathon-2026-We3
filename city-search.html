@@ -1,0 +1,3415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GlobeTrotter — Explore Cities</title>
+
+<style>
+
+/* =====================================================
+   ROOT
+===================================================== */
+
+:root{
+  --primary:#0e7c8c;
+  --primary-dark:#075e6b;
+  --cyan:#22d3ee;
+  --accent:#ff7959;
+
+  --dark:#172033;
+  --muted:#687487;
+  --border:#e3e8ed;
+
+  --light:#f6f9fb;
+
+  --green:#2e9e5b;
+  --yellow:#f2ad32;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  margin:0;
+  min-height:100%;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+}
+
+body{
+  color:var(--dark);
+
+  background:#10183a;
+
+  overflow-x:hidden;
+}
+
+
+/* =====================================================
+   PAGE BACKGROUND
+===================================================== */
+
+.page{
+
+  min-height:100vh;
+
+  position:relative;
+
+  overflow:hidden;
+
+  padding-bottom:90px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #192453 0%,
+      #3b3c83 23%,
+      #76508f 43%,
+      #c96d85 63%,
+      #ed9869 81%,
+      #f8c873 100%
+    );
+}
+
+
+/* =====================================================
+   STARS
+===================================================== */
+
+.stars{
+
+  position:absolute;
+
+  inset:0;
+
+  height:60%;
+
+  background-image:
+
+    radial-gradient(
+      1px 1px at 7% 16%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      1.5px 1.5px at 18% 31%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      1px 1px at 29% 11%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      1.5px 1.5px at 42% 28%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      1px 1px at 56% 17%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      1.5px 1.5px at 69% 34%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      1px 1px at 82% 14%,
+      #fff,
+      transparent
+    ),
+
+    radial-gradient(
+      1.5px 1.5px at 94% 27%,
+      #fff,
+      transparent
+    );
+
+  opacity:.65;
+
+  animation:
+    starsPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes starsPulse{
+
+  from{
+    opacity:.35;
+  }
+
+  to{
+    opacity:.9;
+  }
+
+}
+
+
+/* =====================================================
+   CLOUDS
+===================================================== */
+
+.cloud{
+
+  position:absolute;
+
+  width:125px;
+  height:32px;
+
+  border-radius:40px;
+
+  background:
+    rgba(255,255,255,.42);
+}
+
+.cloud::before,
+.cloud::after{
+
+  content:"";
+
+  position:absolute;
+
+  border-radius:50%;
+
+  background:inherit;
+}
+
+.cloud::before{
+
+  width:58px;
+  height:58px;
+
+  left:13px;
+  top:-26px;
+}
+
+.cloud::after{
+
+  width:43px;
+  height:43px;
+
+  right:11px;
+  top:-18px;
+}
+
+.cloud.one{
+
+  top:16%;
+
+  left:-160px;
+
+  animation:
+    cloudMove 40s linear infinite;
+}
+
+.cloud.two{
+
+  top:34%;
+
+  left:-180px;
+
+  opacity:.3;
+
+  transform:scale(.65);
+
+  animation:
+    cloudMove 55s linear infinite;
+
+  animation-delay:-20s;
+}
+
+@keyframes cloudMove{
+
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(135vw);
+  }
+
+}
+
+
+/* =====================================================
+   FLIGHT PATH
+===================================================== */
+
+.flight-path{
+
+  position:absolute;
+
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  pointer-events:none;
+}
+
+.flight-path path{
+
+  fill:none;
+
+  stroke:
+    rgba(255,255,255,.35);
+
+  stroke-width:3;
+
+  stroke-dasharray:
+    3 15;
+
+  stroke-linecap:round;
+}
+
+.plane{
+
+  position:absolute;
+
+  left:-5%;
+
+  top:70%;
+
+  z-index:5;
+
+  font-size:27px;
+
+  animation:
+    planeMove 14s ease-in-out infinite;
+}
+
+@keyframes planeMove{
+
+  0%{
+    left:-5%;
+    top:72%;
+    transform:rotate(-8deg);
+  }
+
+  35%{
+    left:35%;
+    top:52%;
+    transform:rotate(-17deg);
+  }
+
+  70%{
+    left:70%;
+    top:37%;
+    transform:rotate(-10deg);
+  }
+
+  100%{
+    left:105%;
+    top:13%;
+    transform:rotate(-4deg);
+  }
+
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.header{
+
+  position:relative;
+
+  z-index:20;
+
+  width:min(
+    1180px,
+    calc(100% - 40px)
+  );
+
+  margin:auto;
+
+  padding-top:23px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+}
+
+.logo-area{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:11px;
+
+  color:white;
+}
+
+.logo{
+
+  width:52px;
+  height:52px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  font-size:1.5rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--accent)
+    );
+
+  box-shadow:
+    0 12px 30px
+    rgba(14,124,140,.35);
+
+  animation:
+    logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+
+  0%,
+  100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-5px);
+  }
+
+}
+
+.logo-text{
+
+  font-size:1.2rem;
+
+  font-weight:800;
+}
+
+.logo-text span{
+  color:#5ee7f5;
+}
+
+.header-actions{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
+}
+
+.header-btn{
+
+  padding:10px 13px;
+
+  border-radius:10px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.22);
+
+  color:white;
+
+  background:
+    rgba(255,255,255,.1);
+
+  backdrop-filter:
+    blur(12px);
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+.header-btn:hover{
+
+  transform:translateY(-2px);
+
+  background:
+    rgba(255,255,255,.2);
+}
+
+.avatar{
+
+  width:40px;
+  height:40px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  color:white;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--cyan),
+      var(--primary)
+    );
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.main{
+
+  position:relative;
+
+  z-index:10;
+
+  width:min(
+    1180px,
+    calc(100% - 40px)
+  );
+
+  margin:35px auto 0;
+}
+
+
+/* =====================================================
+   HEADING
+===================================================== */
+
+.heading{
+
+  color:white;
+
+  margin-bottom:20px;
+
+  animation:
+    headingIn .8s ease;
+}
+
+.heading h1{
+
+  margin:0;
+
+  font-size:
+    clamp(
+      2rem,
+      4vw,
+      3rem
+    );
+
+  letter-spacing:-1px;
+}
+
+.heading h1 span{
+
+  color:#5ee7f5;
+}
+
+.heading p{
+
+  margin:7px 0 0;
+
+  color:
+    rgba(255,255,255,.72);
+
+  font-size:.9rem;
+}
+
+@keyframes headingIn{
+
+  from{
+    opacity:0;
+
+    transform:
+      translateY(20px);
+  }
+
+  to{
+    opacity:1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =====================================================
+   MAIN PANEL
+===================================================== */
+
+.panel{
+
+  background:
+    rgba(255,255,255,.97);
+
+  border-radius:25px;
+
+  padding:23px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.75);
+
+  box-shadow:
+    0 35px 90px
+    rgba(8,30,45,.3);
+
+  animation:
+    panelIn .85s
+    cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes panelIn{
+
+  from{
+
+    opacity:0;
+
+    transform:
+      translateY(35px)
+      scale(.97);
+  }
+
+  to{
+
+    opacity:1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+}
+
+
+/* =====================================================
+   TRIP CONTEXT
+===================================================== */
+
+.trip-context{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:15px;
+
+  padding-bottom:18px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+}
+
+.context-left{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:11px;
+}
+
+.context-icon{
+
+  width:46px;
+  height:46px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e5f7f9,
+      #fff0ea
+    );
+
+  font-size:1.25rem;
+}
+
+.context-text h2{
+
+  margin:0;
+
+  font-size:.95rem;
+}
+
+.context-text p{
+
+  margin:4px 0 0;
+
+  color:var(--muted);
+
+  font-size:.59rem;
+}
+
+.step{
+
+  padding:8px 11px;
+
+  border-radius:20px;
+
+  color:var(--primary);
+
+  background:#eaf7f9;
+
+  font-size:.59rem;
+
+  font-weight:800;
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.search-section{
+
+  margin-top:19px;
+}
+
+.search-box{
+
+  position:relative;
+}
+
+.search-icon{
+
+  position:absolute;
+
+  left:17px;
+
+  top:50%;
+
+  transform:
+    translateY(-50%);
+
+  font-size:1rem;
+
+  color:var(--muted);
+
+  pointer-events:none;
+}
+
+.search-input{
+
+  width:100%;
+
+  padding:
+    16px
+    115px
+    16px
+    47px;
+
+  border:
+    1px solid
+    #d9e2e7;
+
+  border-radius:14px;
+
+  outline:none;
+
+  color:var(--dark);
+
+  background:#fbfcfd;
+
+  font-size:.76rem;
+
+  transition:.25s;
+}
+
+.search-input:focus{
+
+  border-color:
+    var(--primary);
+
+  background:white;
+
+  box-shadow:
+    0 0 0 4px
+    rgba(14,124,140,.08);
+}
+
+.clear-btn{
+
+  position:absolute;
+
+  right:62px;
+
+  top:50%;
+
+  transform:
+    translateY(-50%);
+
+  width:28px;
+  height:28px;
+
+  border:0;
+
+  border-radius:50%;
+
+  color:var(--muted);
+
+  background:#edf2f4;
+
+  cursor:pointer;
+
+  opacity:0;
+
+  transition:.2s;
+}
+
+.search-box.has-text
+.clear-btn{
+
+  opacity:1;
+}
+
+.search-btn{
+
+  position:absolute;
+
+  right:7px;
+
+  top:7px;
+
+  bottom:7px;
+
+  padding:
+    0 16px;
+
+  border:0;
+
+  border-radius:9px;
+
+  color:white;
+
+  background:var(--primary);
+
+  font-size:.62rem;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.search-btn:hover{
+
+  background:
+    var(--primary-dark);
+
+  transform:
+    translateY(-1px);
+}
+
+
+/* =====================================================
+   FILTERS
+===================================================== */
+
+.filter-row{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:7px;
+
+  margin-top:14px;
+
+  overflow-x:auto;
+
+  padding-bottom:3px;
+
+  scrollbar-width:none;
+}
+
+.filter-row::-webkit-scrollbar{
+  display:none;
+}
+
+.filter-label{
+
+  color:var(--muted);
+
+  font-size:.59rem;
+
+  font-weight:800;
+
+  white-space:nowrap;
+}
+
+.filter{
+
+  padding:8px 11px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:20px;
+
+  background:white;
+
+  color:var(--muted);
+
+  font-size:.57rem;
+
+  font-weight:700;
+
+  white-space:nowrap;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.filter:hover{
+
+  border-color:
+    #acd6dc;
+
+  color:var(--primary);
+}
+
+.filter.active{
+
+  border-color:
+    var(--primary);
+
+  color:white;
+
+  background:
+    var(--primary);
+
+  box-shadow:
+    0 4px 12px
+    rgba(14,124,140,.18);
+}
+
+
+/* =====================================================
+   ADD CITY FORM
+===================================================== */
+
+.add-city-actions{
+
+  margin-top:14px;
+}
+
+.add-city-toggle{
+
+  padding:9px 14px;
+
+  border:
+    1px solid
+    var(--primary);
+
+  border-radius:20px;
+
+  color:var(--primary);
+
+  background:white;
+
+  font-size:.6rem;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.add-city-toggle:hover{
+
+  color:white;
+
+  background:
+    var(--primary);
+}
+
+.add-city-form{
+
+  display:none;
+
+  margin-top:14px;
+
+  padding:16px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:14px;
+
+  background:var(--light);
+}
+
+.add-city-form.open{
+  display:block;
+}
+
+.add-city-form label{
+
+  display:block;
+
+  margin-bottom:4px;
+
+  color:var(--muted);
+
+  font-size:.55rem;
+
+  font-weight:800;
+}
+
+.add-city-form input,
+.add-city-form select{
+
+  width:100%;
+
+  padding:9px 10px;
+
+  border:
+    1px solid
+    #d9e2e7;
+
+  border-radius:8px;
+
+  outline:none;
+
+  color:var(--dark);
+
+  background:white;
+
+  font-size:.68rem;
+}
+
+.add-city-form input:focus,
+.add-city-form select:focus{
+
+  border-color:
+    var(--primary);
+}
+
+.form-row{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(2,1fr);
+
+  gap:10px;
+
+  margin-bottom:10px;
+}
+
+.form-actions{
+
+  display:flex;
+
+  gap:8px;
+
+  justify-content:flex-end;
+}
+
+.form-actions button{
+
+  padding:9px 14px;
+
+  border-radius:8px;
+
+  font-size:.6rem;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.form-submit{
+
+  border:0;
+
+  color:white;
+
+  background:var(--primary);
+}
+
+.form-submit:hover{
+
+  background:
+    var(--primary-dark);
+}
+
+.form-cancel{
+
+  border:
+    1px solid
+    var(--border);
+
+  color:var(--muted);
+
+  background:white;
+}
+
+
+/* =====================================================
+   RESULT HEADER
+===================================================== */
+
+.result-header{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  margin-top:22px;
+
+  margin-bottom:13px;
+}
+
+.result-header h3{
+
+  margin:0;
+
+  font-size:.82rem;
+}
+
+.result-header span{
+
+  color:var(--muted);
+
+  font-size:.57rem;
+}
+
+.sort{
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:8px;
+
+  padding:7px 9px;
+
+  outline:none;
+
+  color:var(--muted);
+
+  background:white;
+
+  font-size:.56rem;
+}
+
+
+/* =====================================================
+   CITY GRID
+===================================================== */
+
+.city-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:13px;
+}
+
+
+/* =====================================================
+   CITY CARD
+===================================================== */
+
+.city-card{
+
+  position:relative;
+
+  overflow:hidden;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:17px;
+
+  background:white;
+
+  transition:
+    transform .28s,
+    box-shadow .28s,
+    border-color .28s;
+
+  animation:
+    cardIn .55s ease both;
+}
+
+.city-card:nth-child(2){
+  animation-delay:.05s;
+}
+
+.city-card:nth-child(3){
+  animation-delay:.1s;
+}
+
+.city-card:nth-child(4){
+  animation-delay:.15s;
+}
+
+.city-card:nth-child(5){
+  animation-delay:.2s;
+}
+
+.city-card:nth-child(6){
+  animation-delay:.25s;
+}
+
+.city-card:hover{
+
+  transform:
+    translateY(-6px);
+
+  border-color:
+    #acd8dd;
+
+  box-shadow:
+    0 18px 35px
+    rgba(14,124,140,.13);
+}
+
+@keyframes cardIn{
+
+  from{
+
+    opacity:0;
+
+    transform:
+      translateY(15px);
+  }
+
+  to{
+
+    opacity:1;
+
+    transform:
+      translateY(0);
+  }
+
+}
+
+
+/* =====================================================
+   CITY IMAGE AREA
+===================================================== */
+
+.city-image{
+
+  position:relative;
+
+  height:145px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  overflow:hidden;
+
+  font-size:4.2rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #d9f5f7,
+      #ffe4da
+    );
+}
+
+.city-image::before{
+
+  content:"";
+
+  position:absolute;
+
+  width:180px;
+  height:180px;
+
+  border-radius:50%;
+
+  background:
+    rgba(255,255,255,.32);
+
+  top:-100px;
+  right:-50px;
+}
+
+.city-image::after{
+
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  height:50px;
+
+  background:
+    linear-gradient(
+      transparent,
+      rgba(23,32,51,.12)
+    );
+}
+
+.city-emoji{
+
+  position:relative;
+
+  z-index:2;
+
+  filter:
+    drop-shadow(
+      0 10px 10px
+      rgba(23,32,51,.12)
+    );
+
+  transition:.3s;
+}
+
+.city-card:hover
+.city-emoji{
+
+  transform:
+    scale(1.13)
+    translateY(-4px);
+}
+
+
+/* =====================================================
+   POPULAR BADGE
+===================================================== */
+
+.popular{
+
+  position:absolute;
+
+  top:10px;
+  left:10px;
+
+  z-index:4;
+
+  padding:6px 8px;
+
+  border-radius:7px;
+
+  color:white;
+
+  background:
+    rgba(23,32,51,.72);
+
+  backdrop-filter:
+    blur(8px);
+
+  font-size:.5rem;
+
+  font-weight:800;
+}
+
+
+/* =====================================================
+   CITY BODY
+===================================================== */
+
+.city-body{
+
+  padding:13px;
+}
+
+.city-title{
+
+  display:flex;
+
+  align-items:flex-start;
+
+  justify-content:space-between;
+
+  gap:8px;
+}
+
+.city-title h4{
+
+  margin:0;
+
+  font-size:.8rem;
+}
+
+.country{
+
+  margin-top:3px;
+
+  color:var(--muted);
+
+  font-size:.55rem;
+}
+
+.city-rating{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:3px;
+
+  padding:5px 7px;
+
+  border-radius:7px;
+
+  background:#fff7e8;
+
+  color:#b77911;
+
+  font-size:.52rem;
+
+  font-weight:800;
+}
+
+
+/* =====================================================
+   META
+===================================================== */
+
+.city-meta{
+
+  display:flex;
+
+  gap:6px;
+
+  flex-wrap:wrap;
+
+  margin-top:11px;
+}
+
+.meta{
+
+  padding:5px 7px;
+
+  border-radius:6px;
+
+  color:var(--muted);
+
+  background:#f3f6f8;
+
+  font-size:.5rem;
+}
+
+.meta strong{
+
+  color:var(--dark);
+}
+
+
+/* =====================================================
+   COST BAR
+===================================================== */
+
+.cost-row{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  margin-top:12px;
+}
+
+.cost-label{
+
+  color:var(--muted);
+
+  font-size:.52rem;
+}
+
+.cost-icons{
+
+  display:flex;
+
+  gap:2px;
+}
+
+.cost-dot{
+
+  width:7px;
+  height:7px;
+
+  border-radius:50%;
+
+  background:#dbe4e8;
+}
+
+.cost-dot.on{
+
+  background:
+    var(--accent);
+
+  box-shadow:
+    0 2px 5px
+    rgba(255,121,89,.25);
+}
+
+
+/* =====================================================
+   ADD BUTTON
+===================================================== */
+
+.add-btn{
+
+  width:100%;
+
+  margin-top:13px;
+
+  padding:9px;
+
+  border:
+    1px solid
+    var(--primary);
+
+  border-radius:9px;
+
+  color:var(--primary);
+
+  background:white;
+
+  font-size:.59rem;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.22s;
+}
+
+.add-btn:hover{
+
+  color:white;
+
+  background:
+    var(--primary);
+
+  transform:
+    translateY(-1px);
+}
+
+.add-btn.added{
+
+  color:white;
+
+  border-color:
+    var(--green);
+
+  background:
+    var(--green);
+}
+
+
+/* =====================================================
+   NO RESULTS
+===================================================== */
+
+.no-results{
+
+  display:none;
+
+  padding:45px 20px;
+
+  text-align:center;
+
+  color:var(--muted);
+
+  border:
+    1px dashed
+    #cbd8de;
+
+  border-radius:15px;
+
+  background:#fafcfd;
+}
+
+.no-results .icon{
+
+  font-size:2.2rem;
+
+  margin-bottom:8px;
+}
+
+.no-results strong{
+
+  display:block;
+
+  color:var(--dark);
+
+  font-size:.8rem;
+}
+
+.no-results p{
+
+  margin:5px 0 0;
+
+  font-size:.58rem;
+}
+
+
+/* =====================================================
+   BOTTOM INFO
+===================================================== */
+
+.info-strip{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:15px;
+
+  margin-top:18px;
+
+  padding:14px;
+
+  border-radius:13px;
+
+  color:white;
+
+  background:
+    linear-gradient(
+      110deg,
+      var(--primary),
+      #1298a8,
+      var(--accent)
+    );
+
+  background-size:
+    200% 100%;
+
+  animation:
+    gradientMove 5s ease infinite;
+}
+
+@keyframes gradientMove{
+
+  0%,
+  100%{
+    background-position:0%;
+  }
+
+  50%{
+    background-position:100%;
+  }
+
+}
+
+.info-text strong{
+
+  display:block;
+
+  font-size:.68rem;
+}
+
+.info-text small{
+
+  display:block;
+
+  margin-top:3px;
+
+  opacity:.78;
+
+  font-size:.53rem;
+}
+
+.continue-btn{
+
+  border:0;
+
+  padding:10px 14px;
+
+  border-radius:9px;
+
+  color:var(--dark);
+
+  background:white;
+
+  font-size:.59rem;
+
+  font-weight:900;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.continue-btn:hover{
+
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 7px 16px
+    rgba(0,0,0,.13);
+}
+
+
+/* =====================================================
+   MOUNTAINS
+===================================================== */
+
+.mountains{
+
+  position:absolute;
+
+  left:0;
+  right:0;
+
+  bottom:42px;
+
+  height:145px;
+
+  z-index:2;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15,22,45,.25),
+      rgba(10,16,32,.88)
+    );
+
+  clip-path:
+    polygon(
+      0 100%,
+      0 62%,
+      10% 38%,
+      20% 58%,
+      31% 15%,
+      43% 51%,
+      54% 30%,
+      66% 61%,
+      78% 21%,
+      89% 48%,
+      100% 32%,
+      100% 100%
+    );
+}
+
+
+/* =====================================================
+   ROAD
+===================================================== */
+
+.road{
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  height:42px;
+
+  z-index:3;
+
+  background:
+    linear-gradient(
+      180deg,
+      #292f3a,
+      #11151d
+    );
+}
+
+.road::before{
+
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  top:50%;
+
+  height:4px;
+
+  transform:
+    translateY(-50%);
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.6)
+      0 22px,
+      transparent
+      22px 47px
+    );
+
+  animation:
+    roadMove 1s linear infinite;
+}
+
+@keyframes roadMove{
+
+  to{
+    background-position:
+      -47px 0;
+  }
+
+}
+
+.car{
+
+  position:absolute;
+
+  bottom:5px;
+
+  font-size:1.3rem;
+
+  animation:
+    carMove 11s linear infinite;
+}
+
+.bus{
+
+  position:absolute;
+
+  bottom:23px;
+
+  font-size:1.4rem;
+
+  animation:
+    carMove 16s linear infinite;
+}
+
+@keyframes carMove{
+
+  from{
+    transform:
+      translateX(-120px);
+  }
+
+  to{
+    transform:
+      translateX(110vw);
+  }
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+.toast{
+
+  position:fixed;
+
+  right:22px;
+  bottom:25px;
+
+  z-index:200;
+
+  padding:12px 16px;
+
+  border-radius:10px;
+
+  color:white;
+
+  background:#172033;
+
+  box-shadow:
+    0 15px 35px
+    rgba(0,0,0,.25);
+
+  font-size:.66rem;
+
+  font-weight:700;
+
+  opacity:0;
+
+  transform:
+    translateY(20px);
+
+  pointer-events:none;
+
+  transition:.3s;
+}
+
+.toast.show{
+
+  opacity:1;
+
+  transform:
+    translateY(0);
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:900px){
+
+  .city-grid{
+
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:650px){
+
+  .header{
+
+    width:
+      calc(100% - 25px);
+  }
+
+  .main{
+
+    width:
+      calc(100% - 25px);
+  }
+
+  .header-btn{
+
+    display:none;
+  }
+
+  .panel{
+
+    padding:14px;
+
+    border-radius:20px;
+  }
+
+  .trip-context{
+
+    align-items:flex-start;
+
+    flex-direction:column;
+  }
+
+  .city-grid{
+
+    grid-template-columns:1fr;
+  }
+
+  .info-strip{
+
+    align-items:flex-start;
+
+    flex-direction:column;
+  }
+
+  .continue-btn{
+
+    width:100%;
+  }
+
+}
+
+@media(max-width:450px){
+
+  .search-input{
+
+    padding-right:95px;
+  }
+
+  .search-btn{
+
+    padding:
+      0 11px;
+  }
+
+  .filter-row{
+
+    margin-right:-3px;
+  }
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *::before,
+  *::after{
+
+    animation:none!important;
+
+    transition:none!important;
+  }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+  <!-- BACKGROUND -->
+
+  <div class="stars"></div>
+
+  <div class="cloud one"></div>
+
+  <div class="cloud two"></div>
+
+
+  <!-- FLIGHT PATH -->
+
+  <svg
+    class="flight-path"
+    viewBox="0 0 1600 900"
+    preserveAspectRatio="xMidYMid slice"
+  >
+
+    <path
+      d="M70 770 C400 350 1000 300 1530 110"
+    />
+
+  </svg>
+
+  <div class="plane">
+    ✈️
+  </div>
+
+
+  <!-- HEADER -->
+
+  <header class="header">
+
+    <div class="logo-area">
+
+      <div class="logo">
+        🌍
+      </div>
+
+      <div class="logo-text">
+        Globe<span>Trotter</span>
+      </div>
+
+    </div>
+
+
+    <div class="header-actions">
+
+      <button
+        class="header-btn"
+        onclick="goBack()"
+      >
+        ← Itinerary
+      </button>
+
+      <button
+        class="header-btn"
+        onclick="goDashboard()"
+      >
+        Dashboard
+      </button>
+
+      <div class="avatar">
+        👤
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+
+    <section class="heading">
+
+      <h1>
+        Explore <span>Cities</span> 🌍
+      </h1>
+
+      <p>
+        Find your next stop and build a personalized multi-city journey.
+      </p>
+
+    </section>
+
+
+    <section class="panel">
+
+
+      <!-- TRIP CONTEXT -->
+
+      <div class="trip-context">
+
+        <div class="context-left">
+
+          <div class="context-icon">
+            🧳
+          </div>
+
+          <div class="context-text">
+
+            <h2>
+              European Summer Adventure
+            </h2>
+
+            <p>
+              Add a city to your trip and choose travel dates next.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="step">
+          STEP 1 · ADD STOP
+        </div>
+
+      </div>
+
+
+      <!-- SEARCH -->
+
+      <div class="search-section">
+
+        <div
+          class="search-box"
+          id="searchBox"
+        >
+
+          <span class="search-icon">
+            🔎
+          </span>
+
+          <input
+            id="citySearch"
+            class="search-input"
+            type="text"
+            placeholder="Search cities like Paris, Rome, Tokyo..."
+            autocomplete="off"
+          >
+
+          <button
+            class="clear-btn"
+            onclick="clearSearch()"
+            aria-label="Clear search"
+          >
+            ×
+          </button>
+
+          <button
+            class="search-btn"
+            onclick="searchCities()"
+          >
+            Search
+          </button>
+
+        </div>
+
+
+        <!-- FILTERS -->
+
+        <div class="filter-row">
+
+          <span class="filter-label">
+            Filter:
+          </span>
+
+          <button
+            class="filter active"
+            data-filter="all"
+          >
+            All
+          </button>
+
+          <button
+            class="filter"
+            data-filter="Mountains"
+          >
+            🏔 Mountains
+          </button>
+
+          <button
+            class="filter"
+            data-filter="Beach"
+          >
+            🏖 Beach
+          </button>
+
+          <button
+            class="filter"
+            data-filter="Heritage"
+          >
+            🏛 Heritage
+          </button>
+
+          <button
+            class="filter"
+            data-filter="City"
+          >
+            🏙 City
+          </button>
+
+          <button
+            class="filter"
+            data-filter="Culture"
+          >
+            🎭 Culture
+          </button>
+
+        </div>
+
+
+        <div class="add-city-actions">
+
+          <button
+            class="add-city-toggle"
+            id="addCityToggle"
+            type="button"
+          >
+            + Add a city
+          </button>
+
+        </div>
+
+
+        <form
+          class="add-city-form"
+          id="addCityForm"
+          novalidate
+        >
+
+          <div class="form-row">
+
+            <div>
+              <label for="newCityName">City name *</label>
+              <input id="newCityName" type="text" required placeholder="e.g. Vienna">
+            </div>
+
+            <div>
+              <label for="newCityCountry">Country</label>
+              <input id="newCityCountry" type="text" placeholder="e.g. Austria">
+            </div>
+
+          </div>
+
+          <div class="form-row">
+
+            <div>
+              <label for="newCityCategory">Category</label>
+              <select id="newCityCategory">
+                <option value="">Select category</option>
+                <option value="Mountains">Mountains</option>
+                <option value="Beach">Beach</option>
+                <option value="Heritage">Heritage</option>
+                <option value="City">City</option>
+                <option value="Culture">Culture</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="newCityRating">Rating (0–5)</label>
+              <input id="newCityRating" type="number" min="0" max="5" step="0.1" placeholder="e.g. 4.5">
+            </div>
+
+          </div>
+
+          <div class="form-row">
+
+            <div>
+              <label for="newCityEmoji">Emoji</label>
+              <input id="newCityEmoji" type="text" maxlength="4" placeholder="📍">
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="form-cancel" id="addCityCancel">Cancel</button>
+            <button type="submit" class="form-submit">Add City</button>
+          </div>
+
+        </form>
+
+      </div>
+
+
+      <!-- RESULTS HEADER -->
+
+      <div class="result-header">
+
+        <div>
+
+          <h3>
+            Popular destinations
+          </h3>
+
+          <span id="resultCount">
+            Loading cities...
+          </span>
+
+        </div>
+
+
+        <select
+          class="sort"
+          id="sortSelect"
+        >
+
+          <option value="name-asc">
+            Sort: Name (A–Z)
+          </option>
+
+          <option value="name-desc">
+            Name (Z–A)
+          </option>
+
+          <option value="rating-desc">
+            Rating: High to Low
+          </option>
+
+          <option value="rating-asc">
+            Rating: Low to High
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- CITY GRID -->
+
+      <div
+        class="city-grid"
+        id="cityGrid"
+      >
+      </div>
+
+
+      <!-- NO RESULTS -->
+
+      <div
+        class="no-results"
+        id="noResults"
+      >
+
+        <div class="icon" id="noResultsIcon">
+          🌎
+        </div>
+
+        <strong id="noResultsTitle">
+          No cities found
+        </strong>
+
+        <p id="noResultsText">
+          Try another city, country or category.
+        </p>
+
+      </div>
+
+
+      <!-- INFO -->
+
+      <div class="info-strip">
+
+        <div class="info-text">
+
+          <strong>
+            ✨ Build your journey your way
+          </strong>
+
+          <small>
+            Add stops now, then assign travel dates and activities to each city.
+          </small>
+
+        </div>
+
+
+        <button
+          class="continue-btn"
+          onclick="continueToItinerary()"
+        >
+          Continue to Itinerary →
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- MOUNTAINS -->
+
+  <div class="mountains"></div>
+
+
+  <!-- ROAD -->
+
+  <div class="road">
+
+    <div class="bus">
+      🚌
+    </div>
+
+    <div class="car">
+      🚗
+    </div>
+
+  </div>
+
+
+  <!-- TOAST -->
+
+  <div
+    class="toast"
+    id="toast"
+  >
+    City added!
+  </div>
+
+</div>
+
+
+<script src="app-api.js"></script>
+
+<script>
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const searchInput =
+  document.getElementById(
+    "citySearch"
+  );
+
+const searchBox =
+  document.getElementById(
+    "searchBox"
+  );
+
+const cityGrid =
+  document.getElementById(
+    "cityGrid"
+  );
+
+const noResults =
+  document.getElementById(
+    "noResults"
+  );
+
+const noResultsIcon =
+  document.getElementById(
+    "noResultsIcon"
+  );
+
+const noResultsTitle =
+  document.getElementById(
+    "noResultsTitle"
+  );
+
+const noResultsText =
+  document.getElementById(
+    "noResultsText"
+  );
+
+const resultCount =
+  document.getElementById(
+    "resultCount"
+  );
+
+const sortSelect =
+  document.getElementById(
+    "sortSelect"
+  );
+
+const filters =
+  document.querySelectorAll(
+    ".filter"
+  );
+
+const addCityToggle =
+  document.getElementById(
+    "addCityToggle"
+  );
+
+const addCityForm =
+  document.getElementById(
+    "addCityForm"
+  );
+
+const addCityCancel =
+  document.getElementById(
+    "addCityCancel"
+  );
+
+const newCityName =
+  document.getElementById(
+    "newCityName"
+  );
+
+const newCityCountry =
+  document.getElementById(
+    "newCityCountry"
+  );
+
+const newCityCategory =
+  document.getElementById(
+    "newCityCategory"
+  );
+
+const newCityRating =
+  document.getElementById(
+    "newCityRating"
+  );
+
+const newCityEmoji =
+  document.getElementById(
+    "newCityEmoji"
+  );
+
+
+let allCities = [];
+
+let activeFilter = "all";
+
+let toastTimer;
+
+
+/* =====================================================
+   ESCAPING HELPERS
+===================================================== */
+
+function escapeHtml(value){
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+}
+
+
+function escapeAttr(value){
+
+  return String(value)
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'");
+
+}
+
+
+/* =====================================================
+   FETCH CITIES
+===================================================== */
+
+async function fetchCities(){
+
+  try{
+
+    const data =
+      await API.get(
+        "/api/cities"
+      );
+
+    allCities =
+      data.cities || [];
+
+  }catch(err){
+
+    allCities = [];
+
+    showToast(
+      err.message ||
+      "Could not load cities"
+    );
+
+  }
+
+  renderGrid();
+
+}
+
+
+/* =====================================================
+   CARD MARKUP
+===================================================== */
+
+function cardHtml(city){
+
+  const name = city.name || "";
+  const country = city.country || "";
+  const category = city.category || "";
+  const emoji = city.emoji || "📍";
+
+  const hasRating =
+    city.rating !== undefined &&
+    city.rating !== null &&
+    city.rating !== "";
+
+  const rating =
+    hasRating
+      ? Number(city.rating)
+      : null;
+
+  const subtitle =
+    [country, category]
+      .filter(Boolean)
+      .join(" · ");
+
+  return `
+    <article
+      class="city-card"
+      data-name="${escapeHtml(name)}"
+      data-country="${escapeHtml(country)}"
+      data-category="${escapeHtml(category)}"
+      data-rating="${rating !== null ? rating : ""}"
+    >
+
+      <div class="city-image">
+
+        <div class="city-emoji">
+          ${escapeHtml(emoji)}
+        </div>
+
+      </div>
+
+
+      <div class="city-body">
+
+        <div class="city-title">
+
+          <div>
+
+            <h4>
+              ${escapeHtml(name)}
+            </h4>
+
+            ${
+              subtitle
+                ? `<div class="country">${escapeHtml(subtitle)}</div>`
+                : ""
+            }
+
+          </div>
+
+          ${
+            rating !== null
+              ? `<div class="city-rating">★ ${rating}</div>`
+              : ""
+          }
+
+        </div>
+
+
+        <button
+          class="add-btn"
+          onclick="addCity(this,'${escapeAttr(name)}')"
+        >
+          + Add to Trip
+        </button>
+
+      </div>
+
+    </article>
+  `;
+
+}
+
+
+/* =====================================================
+   SEARCH INPUT
+===================================================== */
+
+searchInput.addEventListener(
+  "input",
+  function(){
+
+    if(
+      this.value.trim()
+    ){
+
+      searchBox.classList.add(
+        "has-text"
+      );
+
+    }else{
+
+      searchBox.classList.remove(
+        "has-text"
+      );
+
+    }
+
+    renderGrid();
+
+  }
+);
+
+
+/* ENTER SEARCH */
+
+searchInput.addEventListener(
+  "keydown",
+  function(event){
+
+    if(
+      event.key === "Enter"
+    ){
+
+      searchCities();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function searchCities(){
+
+  renderGrid();
+
+  const value =
+    searchInput.value.trim();
+
+  if(value){
+
+    showToast(
+      `Searching for "${value}"...`
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   CLEAR SEARCH
+===================================================== */
+
+function clearSearch(){
+
+  searchInput.value = "";
+
+  searchBox.classList.remove(
+    "has-text"
+  );
+
+  renderGrid();
+
+  searchInput.focus();
+
+}
+
+
+/* =====================================================
+   FILTER BUTTONS
+===================================================== */
+
+filters.forEach(
+  filter => {
+
+    filter.addEventListener(
+      "click",
+      function(){
+
+        filters.forEach(
+          item =>
+            item.classList.remove(
+              "active"
+            )
+        );
+
+        this.classList.add(
+          "active"
+        );
+
+        activeFilter =
+          this.dataset.filter;
+
+        renderGrid();
+
+      }
+    );
+
+  }
+);
+
+
+/* =====================================================
+   SORT
+===================================================== */
+
+sortSelect.addEventListener(
+  "change",
+  renderGrid
+);
+
+
+function sortCities(list){
+
+  const mode =
+    sortSelect.value;
+
+  const sorted =
+    list.slice();
+
+  sorted.sort(
+    (a,b) => {
+
+      if(
+        mode === "name-desc"
+      ){
+
+        return (
+          (b.name || "")
+            .localeCompare(
+              a.name || ""
+            )
+        );
+
+      }
+
+
+      if(
+        mode === "rating-desc"
+      ){
+
+        return (
+          (Number(b.rating) || 0) -
+          (Number(a.rating) || 0)
+        );
+
+      }
+
+
+      if(
+        mode === "rating-asc"
+      ){
+
+        return (
+          (Number(a.rating) || 0) -
+          (Number(b.rating) || 0)
+        );
+
+      }
+
+
+      return (
+        (a.name || "")
+          .localeCompare(
+            b.name || ""
+          )
+      );
+
+    }
+  );
+
+  return sorted;
+
+}
+
+
+/* =====================================================
+   RENDER GRID
+===================================================== */
+
+function renderGrid(){
+
+  const query =
+    searchInput.value
+      .trim()
+      .toLowerCase();
+
+
+  let visible =
+    allCities.filter(
+      city => {
+
+        const name =
+          (city.name || "")
+            .toLowerCase();
+
+        const country =
+          (city.country || "")
+            .toLowerCase();
+
+        const category =
+          (city.category || "")
+            .toLowerCase();
+
+
+        const matchesSearch =
+          !query ||
+          name.includes(query) ||
+          country.includes(query) ||
+          category.includes(query);
+
+
+        const matchesFilter =
+          activeFilter === "all" ||
+          category ===
+            activeFilter.toLowerCase();
+
+
+        return (
+          matchesSearch &&
+          matchesFilter
+        );
+
+      }
+    );
+
+
+  visible =
+    sortCities(visible);
+
+
+  if(
+    allCities.length === 0
+  ){
+
+    cityGrid.innerHTML = "";
+
+    noResultsIcon.textContent = "🌍";
+
+    noResultsTitle.textContent =
+      "No cities yet";
+
+    noResultsText.textContent =
+      "Be the first to add one!";
+
+    noResults.style.display =
+      "block";
+
+  }else if(
+    visible.length === 0
+  ){
+
+    cityGrid.innerHTML = "";
+
+    noResultsIcon.textContent = "🌎";
+
+    noResultsTitle.textContent =
+      "No cities found";
+
+    noResultsText.textContent =
+      "Try another city, country or category.";
+
+    noResults.style.display =
+      "block";
+
+  }else{
+
+    noResults.style.display =
+      "none";
+
+    cityGrid.innerHTML =
+      visible
+        .map(cardHtml)
+        .join("");
+
+  }
+
+
+  resultCount.textContent =
+    `${visible.length} ${
+      visible.length === 1
+        ? "city"
+        : "cities"
+    } found`;
+
+
+  markSavedCities();
+
+}
+
+
+/* =====================================================
+   ADD CITY (TO TRIP)
+===================================================== */
+
+function addCity(
+  button,
+  city
+){
+
+  if(
+    button.classList.contains(
+      "added"
+    )
+  ){
+
+    button.classList.remove(
+      "added"
+    );
+
+    button.textContent =
+      "+ Add to Trip";
+
+    removeCity(city);
+
+    showToast(
+      `${city} removed from trip`
+    );
+
+    return;
+
+  }
+
+
+  button.classList.add(
+    "added"
+  );
+
+  button.textContent =
+    "✓ Added to Trip";
+
+
+  saveCity(city);
+
+
+  showToast(
+    `${city} added to your trip ✈️`
+  );
+
+}
+
+
+/* =====================================================
+   LOCAL STORAGE (TRIP CITIES)
+===================================================== */
+
+const CITY_KEY =
+  "globetrotter_trip_cities";
+
+
+function getSavedCities(){
+
+  try{
+
+    return JSON.parse(
+      localStorage.getItem(
+        CITY_KEY
+      ) || "[]"
+    );
+
+  }catch{
+
+    return [];
+
+  }
+
+}
+
+
+function saveCity(city){
+
+  const cities =
+    getSavedCities();
+
+
+  if(
+    !cities.includes(city)
+  ){
+
+    cities.push(city);
+
+  }
+
+
+  localStorage.setItem(
+    CITY_KEY,
+    JSON.stringify(cities)
+  );
+
+}
+
+
+function removeCity(city){
+
+  const cities =
+    getSavedCities()
+      .filter(
+        item =>
+          item !== city
+      );
+
+
+  localStorage.setItem(
+    CITY_KEY,
+    JSON.stringify(cities)
+  );
+
+}
+
+
+function markSavedCities(){
+
+  const saved =
+    getSavedCities();
+
+  cityGrid.querySelectorAll(
+    ".city-card"
+  ).forEach(
+    card => {
+
+      const name =
+        card.dataset.name;
+
+      const button =
+        card.querySelector(
+          ".add-btn"
+        );
+
+      if(
+        saved.includes(name)
+      ){
+
+        button.classList.add(
+          "added"
+        );
+
+        button.textContent =
+          "✓ Added to Trip";
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   ADD A NEW CITY
+===================================================== */
+
+addCityToggle.addEventListener(
+  "click",
+  () => {
+
+    addCityForm.classList.toggle(
+      "open"
+    );
+
+    if(
+      addCityForm.classList.contains(
+        "open"
+      )
+    ){
+
+      newCityName.focus();
+
+    }
+
+  }
+);
+
+
+addCityCancel.addEventListener(
+  "click",
+  () => {
+
+    addCityForm.classList.remove(
+      "open"
+    );
+
+    addCityForm.reset();
+
+  }
+);
+
+
+addCityForm.addEventListener(
+  "submit",
+  async function(event){
+
+    event.preventDefault();
+
+    if(
+      !API.isLoggedIn()
+    ){
+
+      showToast(
+        "Please log in to add a city"
+      );
+
+      setTimeout(
+        () => API.requireAuth(),
+        900
+      );
+
+      return;
+
+    }
+
+
+    const name =
+      newCityName.value.trim();
+
+    if(!name){
+
+      showToast(
+        "City name is required"
+      );
+
+      return;
+
+    }
+
+
+    const body = {
+
+      name,
+
+      country:
+        newCityCountry.value.trim(),
+
+      category:
+        newCityCategory.value,
+
+      rating:
+        newCityRating.value
+          ? Number(newCityRating.value)
+          : undefined,
+
+      emoji:
+        newCityEmoji.value.trim() ||
+        "📍"
+
+    };
+
+
+    try{
+
+      const data =
+        await API.post(
+          "/api/cities",
+          body
+        );
+
+      allCities.unshift(
+        data.city
+      );
+
+      renderGrid();
+
+      addCityForm.reset();
+
+      addCityForm.classList.remove(
+        "open"
+      );
+
+      showToast(
+        `${data.city.name} added!`
+      );
+
+    }catch(err){
+
+      showToast(
+        err.message ||
+        "Could not add city"
+      );
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function showToast(
+  message
+){
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+
+  toast.textContent =
+    message;
+
+
+  toast.classList.add(
+    "show"
+  );
+
+
+  clearTimeout(
+    toastTimer
+  );
+
+
+  toastTimer =
+    setTimeout(
+      () => {
+
+        toast.classList.remove(
+          "show"
+        );
+
+      },
+      2200
+    );
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function goBack(){
+
+  window.location.href =
+    "itinerary-view.html";
+
+}
+
+
+function goDashboard(){
+
+  window.location.href =
+    "dashboard.html";
+
+}
+
+
+function continueToItinerary(){
+
+  const cities =
+    getSavedCities();
+
+
+  if(
+    cities.length === 0
+  ){
+
+    showToast(
+      "Add at least one city first 🌍"
+    );
+
+    return;
+
+  }
+
+
+  showToast(
+    `${cities.length} ${
+      cities.length === 1
+        ? "city"
+        : "cities"
+    } ready for itinerary`
+  );
+
+
+  setTimeout(
+    () => {
+
+      window.location.href =
+        "itinerary.html";
+
+    },
+    700
+  );
+
+}
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+fetchCities();
+
+
+/* =====================================================
+   KEYBOARD SHORTCUT
+===================================================== */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      event.key === "/"
+    ){
+
+      event.preventDefault();
+
+      searchInput.focus();
+
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>
