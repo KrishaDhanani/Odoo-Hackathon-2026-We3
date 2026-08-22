@@ -1,0 +1,104 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "GlobeTrotter Admin",
+      "email": "admin@globetrotter.local",
+      "password_hash": "$2a$10$qZomdDJ8Tson8QDmUTwm8.tEdmoBnq2Quj0vsd3zSoJ3nAdauS0kC",
+      "role": "admin",
+      "avatar": "",
+      "bio": "Hackathon administrator",
+      "created_at": "2026-08-22T10:08:30.429Z"
+    },
+    {
+      "id": 2,
+      "name": "Dash Test",
+      "email": "dashtest1@example.com",
+      "password_hash": "$2a$10$GiV4xhtCrltpR0qS9hHZzemVrvVzMfp8y.W5ZZidWlsC.KQofrm.y",
+      "role": "user",
+      "avatar": "",
+      "bio": "",
+      "created_at": "2026-08-22T10:17:20.078Z"
+    },
+    {
+      "id": 3,
+      "name": "Dash Test 2",
+      "email": "dashtest2@example.com",
+      "password_hash": "$2a$10$gWkikXHog70PIZ08RUz7VeKQQ0c45gRBw.zoOAJe3fNhneDF/ApqW",
+      "role": "user",
+      "avatar": "",
+      "bio": "",
+      "created_at": "2026-08-22T10:36:15.853Z"
+    },
+    {
+      "id": 4,
+      "name": "Browser Test",
+      "email": "browsertest_1787395380232@example.com",
+      "password_hash": "$2a$10$lopiDED/VO3jc9ubdyT9m.1azaaTepnkwQO18Curugb6A4tZDDGna",
+      "role": "user",
+      "avatar": "",
+      "bio": "",
+      "created_at": "2026-08-22T10:43:00.318Z"
+    },
+    {
+      "id": 5,
+      "name": "Browser Test",
+      "email": "browsertest_1787395773469@example.com",
+      "password_hash": "$2a$10$noSIZfd4fXi/oswV9nydeeY3fEC/g0/7V8CQk0nA6IiI56MxkEbO6",
+      "role": "user",
+      "avatar": "",
+      "bio": "",
+      "created_at": "2026-08-22T10:49:33.561Z"
+    },
+    {
+      "id": 6,
+      "name": "Real Flow",
+      "email": "realflow_1787396680095@example.com",
+      "password_hash": "$2a$10$6YBlQi0IITtVlwr9MERTtu1OiBZPAk.YOhcAnuCNegnzR2N.fta92",
+      "role": "user",
+      "avatar": "",
+      "bio": "",
+      "created_at": "2026-08-22T11:04:41.925Z"
+    },
+    {
+      "id": 7,
+      "name": "Krisha Dhanani",
+      "email": "krishadhanani0931@gmail.com",
+      "password_hash": "$2a$10$Qtcw3qHSRln9NIRlyd/lNuzLz78wr3gisjslQc2mL1kmct1W9wZsS",
+      "role": "user",
+      "avatar": "",
+      "bio": "",
+      "created_at": "2026-08-22T11:09:37.193Z"
+    }
+  ],
+  "trips": [
+    {
+      "id": 2,
+      "user_id": 7,
+      "title": "udaipur",
+      "description": "everything",
+      "start_date": "2026-08-23",
+      "end_date": "2026-08-26",
+      "budget": 5000,
+      "currency": "INR",
+      "status": "planned",
+      "cover_emoji": "🌍",
+      "created_at": "2026-08-22T11:10:50.014Z",
+      "updated_at": "2026-08-22T11:10:50.014Z"
+    }
+  ],
+  "itinerary_items": [],
+  "saved_places": [],
+  "shared_itineraries": [],
+  "cities": [],
+  "activities": [],
+  "counters": {
+    "users": 8,
+    "trips": 3,
+    "itinerary_items": 3,
+    "saved_places": 1,
+    "shared_itineraries": 1,
+    "cities": 1,
+    "activities": 1
+  }
+}
