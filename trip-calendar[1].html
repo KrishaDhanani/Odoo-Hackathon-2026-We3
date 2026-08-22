@@ -1,0 +1,2431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GlobeTrotter — Trip Calendar</title>
+
+<style>
+
+:root{
+  --primary:#0e7c8c;
+  --primary-dark:#075e6b;
+  --cyan:#22d3ee;
+  --accent:#ff7959;
+  --dark:#172033;
+  --muted:#687487;
+  --border:#e2e8ec;
+  --green:#2e9e5b;
+  --light:#f7fafb;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  margin:0;
+  min-height:100%;
+  font-family:
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  Arial,
+  sans-serif;
+}
+
+body{
+  background:#111a3d;
+  color:var(--dark);
+}
+
+.page{
+  min-height:100vh;
+  position:relative;
+  overflow:hidden;
+
+  background:
+  linear-gradient(
+    180deg,
+    #172451 0%,
+    #3d3d7c 30%,
+    #805189 55%,
+    #d8767b 75%,
+    #f3ad6d 100%
+  );
+}
+
+
+/* =========================
+   STARS
+========================= */
+
+.stars{
+  position:absolute;
+  inset:0;
+  height:55%;
+
+  background-image:
+  radial-gradient(1px 1px at 7% 14%,#fff,transparent),
+  radial-gradient(1px 1px at 18% 27%,#fff,transparent),
+  radial-gradient(1px 1px at 29% 11%,#fff,transparent),
+  radial-gradient(1px 1px at 41% 31%,#fff,transparent),
+  radial-gradient(1px 1px at 53% 17%,#fff,transparent),
+  radial-gradient(1px 1px at 66% 29%,#fff,transparent),
+  radial-gradient(1px 1px at 78% 12%,#fff,transparent),
+  radial-gradient(1px 1px at 91% 26%,#fff,transparent);
+
+  animation:
+  starsGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes starsGlow{
+
+  from{
+    opacity:.25;
+  }
+
+  to{
+    opacity:.9;
+  }
+
+}
+
+
+/* =========================
+   CLOUDS
+========================= */
+
+.cloud{
+  position:absolute;
+
+  width:130px;
+  height:30px;
+
+  border-radius:40px;
+
+  background:
+  rgba(255,255,255,.2);
+}
+
+.cloud:before,
+.cloud:after{
+  content:"";
+
+  position:absolute;
+
+  border-radius:50%;
+
+  background:inherit;
+}
+
+.cloud:before{
+  width:55px;
+  height:55px;
+
+  left:14px;
+  top:-25px;
+}
+
+.cloud:after{
+  width:43px;
+  height:43px;
+
+  right:10px;
+  top:-19px;
+}
+
+.cloud.one{
+
+  left:-170px;
+  top:18%;
+
+  animation:
+  cloudMove 42s linear infinite;
+}
+
+.cloud.two{
+
+  left:-200px;
+  top:35%;
+
+  opacity:.2;
+
+  transform:scale(.7);
+
+  animation:
+  cloudMove 55s linear infinite;
+
+  animation-delay:-15s;
+}
+
+@keyframes cloudMove{
+
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(130vw);
+  }
+
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+
+  position:relative;
+
+  z-index:20;
+
+  width:
+  min(
+    1180px,
+    calc(100% - 40px)
+  );
+
+  margin:auto;
+
+  padding-top:22px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+}
+
+.logo-area{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:11px;
+
+  color:white;
+}
+
+.logo{
+
+  width:50px;
+  height:50px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:
+  linear-gradient(
+    135deg,
+    var(--primary),
+    var(--accent)
+  );
+
+  box-shadow:
+  0 12px 30px
+  rgba(0,0,0,.2);
+
+  animation:
+  logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+
+  0%,100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-5px);
+  }
+
+}
+
+.logo-text{
+
+  font-size:1.18rem;
+
+  font-weight:800;
+}
+
+.logo-text span{
+  color:#5ee7f5;
+}
+
+.header-actions{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
+}
+
+.header-btn{
+
+  padding:9px 13px;
+
+  border:
+  1px solid
+  rgba(255,255,255,.2);
+
+  border-radius:9px;
+
+  color:white;
+
+  background:
+  rgba(255,255,255,.1);
+
+  backdrop-filter:blur(10px);
+
+  font-size:.58rem;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+.header-btn:hover{
+
+  background:
+  rgba(255,255,255,.2);
+
+  transform:
+  translateY(-2px);
+}
+
+.avatar{
+
+  width:39px;
+  height:39px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:
+  linear-gradient(
+    135deg,
+    var(--cyan),
+    var(--primary)
+  );
+
+  color:white;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.main{
+
+  position:relative;
+
+  z-index:10;
+
+  width:
+  min(
+    1180px,
+    calc(100% - 40px)
+  );
+
+  margin:
+  35px auto 90px;
+}
+
+
+/* =========================
+   PAGE TITLE
+========================= */
+
+.page-title{
+
+  color:white;
+
+  margin-bottom:18px;
+
+  animation:
+  titleIn .7s ease;
+}
+
+@keyframes titleIn{
+
+  from{
+    opacity:0;
+    transform:
+    translateY(20px);
+  }
+
+  to{
+    opacity:1;
+    transform:
+    translateY(0);
+  }
+
+}
+
+.title-row{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:15px;
+}
+
+.page-title h1{
+
+  margin:0;
+
+  font-size:
+  clamp(
+    1.9rem,
+    4vw,
+    2.6rem
+  );
+
+  letter-spacing:-1px;
+}
+
+.page-title h1 span{
+
+  color:#5ee7f5;
+}
+
+.page-title p{
+
+  margin:
+  7px 0 0;
+
+  color:
+  rgba(255,255,255,.7);
+
+  font-size:.65rem;
+}
+
+.new-trip{
+
+  padding:
+  10px 14px;
+
+  border:0;
+
+  border-radius:9px;
+
+  background:white;
+
+  color:var(--dark);
+
+  font-size:.55rem;
+
+  font-weight:900;
+
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+.new-trip:hover{
+
+  transform:
+  translateY(-3px);
+
+  box-shadow:
+  0 10px 25px
+  rgba(0,0,0,.18);
+}
+
+
+/* =========================
+   MAIN PANEL
+========================= */
+
+.panel{
+
+  padding:20px;
+
+  border-radius:23px;
+
+  background:
+  rgba(255,255,255,.97);
+
+  box-shadow:
+  0 35px 90px
+  rgba(8,30,45,.3);
+
+  animation:
+  panelIn .85s
+  cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes panelIn{
+
+  from{
+
+    opacity:0;
+
+    transform:
+    translateY(30px)
+    scale(.97);
+  }
+
+  to{
+
+    opacity:1;
+
+    transform:
+    translateY(0)
+    scale(1);
+  }
+
+}
+
+
+/* =========================
+   CALENDAR TOP
+========================= */
+
+.calendar-toolbar{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:12px;
+
+  padding-bottom:15px;
+
+  border-bottom:
+  1px solid
+  var(--border);
+}
+
+.month-control{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
+}
+
+.month-control button{
+
+  width:32px;
+  height:32px;
+
+  border:
+  1px solid
+  var(--border);
+
+  border-radius:8px;
+
+  background:white;
+
+  color:var(--dark);
+
+  font-size:.8rem;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.month-control button:hover{
+
+  color:white;
+
+  background:
+  var(--primary);
+
+  border-color:
+  var(--primary);
+}
+
+.month-name{
+
+  min-width:145px;
+
+  text-align:center;
+
+  font-size:.9rem;
+
+  font-weight:900;
+}
+
+.today-btn{
+
+  padding:
+  8px 11px;
+
+  border:
+  1px solid
+  #b8dfe3;
+
+  border-radius:8px;
+
+  background:#eef9fa;
+
+  color:var(--primary);
+
+  font-size:.52rem;
+
+  font-weight:900;
+
+  cursor:pointer;
+}
+
+
+/* =========================
+   CALENDAR LAYOUT
+========================= */
+
+.calendar-layout{
+
+  display:grid;
+
+  grid-template-columns:
+  1fr 280px;
+
+  gap:16px;
+
+  margin-top:17px;
+}
+
+
+/* =========================
+   CALENDAR
+========================= */
+
+.calendar{
+
+  padding:14px;
+
+  border:
+  1px solid
+  var(--border);
+
+  border-radius:16px;
+
+  background:#fbfcfd;
+}
+
+.weekdays{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(7,1fr);
+
+  margin-bottom:7px;
+}
+
+.weekday{
+
+  padding:8px 2px;
+
+  text-align:center;
+
+  color:var(--muted);
+
+  font-size:.48rem;
+
+  font-weight:900;
+}
+
+.days{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(7,1fr);
+
+  gap:5px;
+}
+
+.day{
+
+  min-height:77px;
+
+  position:relative;
+
+  padding:7px;
+
+  border:
+  1px solid
+  #edf0f2;
+
+  border-radius:9px;
+
+  background:white;
+
+  cursor:pointer;
+
+  transition:.22s;
+
+  overflow:hidden;
+}
+
+.day:hover{
+
+  transform:
+  translateY(-3px);
+
+  border-color:
+  #a9d9de;
+
+  box-shadow:
+  0 8px 18px
+  rgba(0,0,0,.06);
+}
+
+.day-number{
+
+  width:22px;
+  height:22px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  border-radius:50%;
+
+  font-size:.5rem;
+
+  font-weight:800;
+}
+
+.day.other{
+
+  opacity:.35;
+}
+
+.day.today .day-number{
+
+  color:white;
+
+  background:
+  var(--primary);
+
+  box-shadow:
+  0 4px 10px
+  rgba(14,124,140,.25);
+}
+
+.day.has-trip{
+
+  background:
+  linear-gradient(
+    145deg,
+    #f2fbfc,
+    #fff
+  );
+}
+
+.event{
+
+  margin-top:6px;
+
+  padding:
+  4px 5px;
+
+  border-radius:5px;
+
+  color:white;
+
+  background:
+  var(--primary);
+
+  font-size:.4rem;
+
+  font-weight:800;
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+}
+
+.event.orange{
+
+  background:
+  var(--accent);
+}
+
+.event.purple{
+
+  background:#76549a;
+}
+
+.event.green{
+
+  background:
+  var(--green);
+}
+
+
+/* =========================
+   SIDE PANEL
+========================= */
+
+.side{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:12px;
+}
+
+.side-card{
+
+  padding:15px;
+
+  border:
+  1px solid
+  var(--border);
+
+  border-radius:15px;
+
+  background:white;
+}
+
+.side-card h3{
+
+  margin:0;
+
+  font-size:.7rem;
+}
+
+.side-card > p{
+
+  margin:
+  5px 0 12px;
+
+  color:var(--muted);
+
+  font-size:.48rem;
+}
+
+
+/* UPCOMING */
+
+.upcoming{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:9px;
+}
+
+.upcoming-item{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:9px;
+
+  padding:9px;
+
+  border-radius:10px;
+
+  background:#f8fafb;
+
+  border:
+  1px solid
+  var(--border);
+
+  transition:.22s;
+}
+
+.upcoming-item:hover{
+
+  transform:
+  translateX(3px);
+
+  border-color:
+  #b1dce0;
+}
+
+.date-box{
+
+  width:39px;
+  height:39px;
+
+  flex-shrink:0;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  justify-content:center;
+
+  border-radius:8px;
+
+  color:white;
+
+  background:
+  var(--primary);
+}
+
+.date-box.orange{
+  background:var(--accent);
+}
+
+.date-box.purple{
+  background:#76549a;
+}
+
+.date-box strong{
+  font-size:.7rem;
+}
+
+.date-box span{
+  font-size:.38rem;
+}
+
+.upcoming-info strong{
+
+  display:block;
+
+  font-size:.53rem;
+}
+
+.upcoming-info span{
+
+  display:block;
+
+  margin-top:3px;
+
+  color:var(--muted);
+
+  font-size:.43rem;
+}
+
+
+/* LEGEND */
+
+.legend{
+
+  display:grid;
+
+  grid-template-columns:
+  1fr 1fr;
+
+  gap:7px;
+}
+
+.legend-item{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:6px;
+
+  font-size:.46rem;
+
+  color:var(--muted);
+}
+
+.legend-dot{
+
+  width:8px;
+  height:8px;
+
+  border-radius:50%;
+
+  background:
+  var(--primary);
+}
+
+.legend-dot.orange{
+  background:var(--accent);
+}
+
+.legend-dot.purple{
+  background:#76549a;
+}
+
+.legend-dot.green{
+  background:var(--green);
+}
+
+
+/* =========================
+   QUICK STATS
+========================= */
+
+.quick-stats{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(3,1fr);
+
+  gap:8px;
+
+  margin-top:15px;
+}
+
+.quick-stat{
+
+  padding:12px;
+
+  text-align:center;
+
+  border:
+  1px solid
+  var(--border);
+
+  border-radius:11px;
+
+  background:#fbfcfd;
+}
+
+.quick-stat strong{
+
+  display:block;
+
+  font-size:.9rem;
+}
+
+.quick-stat span{
+
+  display:block;
+
+  margin-top:4px;
+
+  color:var(--muted);
+
+  font-size:.43rem;
+
+  font-weight:800;
+}
+
+
+/* =========================
+   BOTTOM CTA
+========================= */
+
+.cta{
+
+  margin-top:15px;
+
+  padding:17px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:15px;
+
+  border-radius:14px;
+
+  color:white;
+
+  background:
+  linear-gradient(
+    110deg,
+    var(--primary),
+    #1595a4,
+    var(--accent)
+  );
+
+  background-size:
+  200% 100%;
+
+  animation:
+  gradientMove 5s ease infinite;
+}
+
+@keyframes gradientMove{
+
+  0%,100%{
+    background-position:0%;
+  }
+
+  50%{
+    background-position:100%;
+  }
+
+}
+
+.cta strong{
+
+  display:block;
+
+  font-size:.7rem;
+}
+
+.cta small{
+
+  display:block;
+
+  margin-top:4px;
+
+  opacity:.75;
+
+  font-size:.48rem;
+}
+
+.cta button{
+
+  padding:
+  10px 14px;
+
+  border:0;
+
+  border-radius:9px;
+
+  background:white;
+
+  color:var(--dark);
+
+  font-size:.52rem;
+
+  font-weight:900;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.cta button:hover{
+
+  transform:
+  translateY(-2px)
+  scale(1.02);
+}
+
+
+/* =========================
+   MOUNTAINS
+========================= */
+
+.mountains{
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  height:125px;
+
+  z-index:2;
+
+  background:
+  rgba(12,18,38,.72);
+
+  clip-path:
+  polygon(
+    0 100%,
+    0 63%,
+    10% 40%,
+    20% 61%,
+    31% 16%,
+    43% 54%,
+    54% 31%,
+    67% 61%,
+    79% 23%,
+    90% 50%,
+    100% 34%,
+    100% 100%
+  );
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+
+  position:fixed;
+
+  right:22px;
+  bottom:22px;
+
+  z-index:100;
+
+  padding:
+  11px 15px;
+
+  border-radius:9px;
+
+  background:#172033;
+
+  color:white;
+
+  box-shadow:
+  0 15px 35px
+  rgba(0,0,0,.25);
+
+  font-size:.58rem;
+
+  font-weight:700;
+
+  opacity:0;
+
+  transform:
+  translateY(20px);
+
+  pointer-events:none;
+
+  transition:.3s;
+}
+
+.toast.show{
+
+  opacity:1;
+
+  transform:
+  translateY(0);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:950px){
+
+  .calendar-layout{
+
+    grid-template-columns:1fr;
+  }
+
+}
+
+@media(max-width:700px){
+
+  .header,
+  .main{
+
+    width:
+    calc(100% - 24px);
+  }
+
+  .header-btn{
+
+    display:none;
+  }
+
+  .title-row{
+
+    align-items:flex-start;
+
+    flex-direction:column;
+  }
+
+  .new-trip{
+
+    width:100%;
+  }
+
+  .panel{
+
+    padding:13px;
+  }
+
+  .calendar{
+
+    padding:8px;
+  }
+
+  .day{
+
+    min-height:55px;
+
+    padding:4px;
+  }
+
+  .event{
+
+    font-size:.34rem;
+
+    padding:3px;
+  }
+
+  .weekday{
+
+    font-size:.4rem;
+  }
+
+  .quick-stats{
+
+    grid-template-columns:1fr;
+  }
+
+  .cta{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+  }
+
+  .cta button{
+
+    width:100%;
+  }
+
+}
+
+@media(max-width:500px){
+
+  .month-name{
+
+    min-width:110px;
+
+    font-size:.72rem;
+  }
+
+  .day{
+
+    min-height:45px;
+  }
+
+  .event{
+
+    display:none;
+  }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+  <div class="stars"></div>
+
+  <div class="cloud one"></div>
+  <div class="cloud two"></div>
+
+
+  <!-- HEADER -->
+
+  <header class="header">
+
+    <div class="logo-area">
+
+      <div class="logo">
+        🌍
+      </div>
+
+      <div class="logo-text">
+        Globe<span>Trotter</span>
+      </div>
+
+    </div>
+
+
+    <div class="header-actions">
+
+      <button
+        class="header-btn"
+        onclick="goDashboard()"
+      >
+        Dashboard
+      </button>
+
+      <button
+        class="header-btn"
+        onclick="newTrip()"
+      >
+        + New Trip
+      </button>
+
+      <div class="avatar">
+        👤
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+
+    <!-- TITLE -->
+
+    <div class="page-title">
+
+      <div class="title-row">
+
+        <div>
+
+          <h1>
+            Trip <span>Calendar</span>
+          </h1>
+
+          <p>
+            Organize your adventures, trips and travel plans in one place.
+          </p>
+
+        </div>
+
+
+        <button
+          class="new-trip"
+          onclick="newTrip()"
+        >
+          ✈️ Plan New Trip
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- PANEL -->
+
+    <section class="panel">
+
+
+      <!-- TOOLBAR -->
+
+      <div class="calendar-toolbar">
+
+        <div class="month-control">
+
+          <button
+            onclick="previousMonth()"
+          >
+            ‹
+          </button>
+
+          <div
+            class="month-name"
+            id="monthName"
+          >
+            March 2026
+          </div>
+
+          <button
+            onclick="nextMonth()"
+          >
+            ›
+          </button>
+
+        </div>
+
+
+        <button
+          class="today-btn"
+          onclick="goToday()"
+        >
+          Today
+        </button>
+
+      </div>
+
+
+      <!-- CALENDAR -->
+
+      <div class="calendar-layout">
+
+
+        <div>
+
+
+          <div class="calendar">
+
+            <div class="weekdays">
+
+              <div class="weekday">
+                SUN
+              </div>
+
+              <div class="weekday">
+                MON
+              </div>
+
+              <div class="weekday">
+                TUE
+              </div>
+
+              <div class="weekday">
+                WED
+              </div>
+
+              <div class="weekday">
+                THU
+              </div>
+
+              <div class="weekday">
+                FRI
+              </div>
+
+              <div class="weekday">
+                SAT
+              </div>
+
+            </div>
+
+
+            <div
+              class="days"
+              id="calendarDays"
+            ></div>
+
+          </div>
+
+
+          <!-- QUICK STATS -->
+
+          <div class="quick-stats">
+
+            <div class="quick-stat">
+
+              <strong id="statTripsMonth">
+                0
+              </strong>
+
+              <span>
+                TRIPS THIS MONTH
+              </span>
+
+            </div>
+
+
+            <div class="quick-stat">
+
+              <strong id="statTravelDays">
+                0
+              </strong>
+
+              <span>
+                TRAVEL DAYS
+              </span>
+
+            </div>
+
+
+            <div class="quick-stat">
+
+              <strong>
+                04
+              </strong>
+
+              <span>
+                DESTINATIONS
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- SIDE -->
+
+        <aside class="side">
+
+
+          <!-- UPCOMING -->
+
+          <div class="side-card">
+
+            <h3>
+              ✈️ Upcoming Trips
+            </h3>
+
+            <p>
+              Your next adventures
+            </p>
+
+
+            <div
+              class="upcoming"
+              id="upcomingList"
+            ></div>
+
+          </div>
+
+
+          <!-- LEGEND -->
+
+          <div class="side-card">
+
+            <h3>
+              🎨 Trip Categories
+            </h3>
+
+            <p>
+              Your calendar legend
+            </p>
+
+
+            <div class="legend">
+
+              <div class="legend-item">
+
+                <div class="legend-dot"></div>
+
+                Upcoming / Planned
+
+              </div>
+
+
+              <div class="legend-item">
+
+                <div class="legend-dot green"></div>
+
+                Completed
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- MINI CARD -->
+
+          <div class="side-card">
+
+            <h3>
+              🌎 Travel Goal
+            </h3>
+
+            <p>
+              Your yearly exploration
+            </p>
+
+
+            <div style="
+              height:7px;
+              border-radius:10px;
+              background:#eaf0f2;
+              overflow:hidden;
+            ">
+
+              <div
+                id="goalBarFill"
+                style="
+                width:0%;
+                height:100%;
+                border-radius:10px;
+                background:
+                linear-gradient(
+                  90deg,
+                  var(--primary),
+                  var(--cyan)
+                );
+                animation:
+                progress 2s ease;
+              "></div>
+
+            </div>
+
+
+            <div style="
+              display:flex;
+              justify-content:space-between;
+              margin-top:7px;
+              font-size:.45rem;
+              color:var(--muted);
+              font-weight:700;
+            ">
+
+              <span id="goalCountLabel">
+                0 / 12 trips
+              </span>
+
+              <span id="goalPercentLabel">
+                0%
+              </span>
+
+            </div>
+
+          </div>
+
+        </aside>
+
+      </div>
+
+
+      <!-- CTA -->
+
+      <div class="cta">
+
+        <div>
+
+          <strong>
+            🌍 Ready for another adventure?
+          </strong>
+
+          <small>
+            Pick a destination and start planning your next unforgettable trip.
+          </small>
+
+        </div>
+
+
+        <button
+          onclick="newTrip()"
+        >
+          Plan New Trip →
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <div class="mountains"></div>
+
+
+  <div
+    class="toast"
+    id="toast"
+  >
+    Done!
+  </div>
+
+</div>
+
+
+<script src="app-api.js"></script>
+<script>
+
+API.requireAuth();
+
+/* =========================
+   CALENDAR DATA
+========================= */
+
+let currentDate =
+  new Date();
+
+currentDate.setDate(1);
+
+
+/* Real trips for the user, loaded from the API */
+
+let allTrips = [];
+
+let monthEvents = {};
+
+let calendarRequestId = 0;
+
+const monthNames = [
+
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+
+];
+
+
+function parseDateOnly(value){
+
+  if(!value) return null;
+
+  const parts =
+    String(value)
+      .slice(0,10)
+      .split("-")
+      .map(Number);
+
+  if(parts.length !== 3 || parts.some(isNaN)) return null;
+
+  return new Date(
+    parts[0],
+    parts[1]-1,
+    parts[2]
+  );
+
+}
+
+
+function dateKey(date){
+
+  return (
+    date.getFullYear() +
+    "-" +
+    String(date.getMonth()+1).padStart(2,"0") +
+    "-" +
+    String(date.getDate()).padStart(2,"0")
+  );
+
+}
+
+
+function tripColor(trip){
+
+  return (
+    String(trip.status || "").toLowerCase() === "completed"
+  ) ? "green" : "";
+
+}
+
+
+/* =========================
+   LOAD MONTH EVENTS
+========================= */
+
+async function loadMonthEvents(year,month){
+
+  const monthParam =
+    year + "-" + String(month+1).padStart(2,"0");
+
+  let events = [];
+
+  try{
+
+    const data =
+      await API.get("/api/calendar?month=" + monthParam);
+
+    events = data.events || [];
+
+  }catch(error){
+
+    showToast(error.message || "Couldn't load trips");
+
+  }
+
+  const map = {};
+
+  events.forEach(trip => {
+
+    const start =
+      parseDateOnly(trip.start_date) ||
+      parseDateOnly(trip.end_date);
+
+    const end =
+      parseDateOnly(trip.end_date) ||
+      start;
+
+    if(!start) return;
+
+    const cursor = new Date(start);
+
+    while(cursor <= end){
+
+      const key = dateKey(cursor);
+
+      if(!map[key]) map[key] = [];
+
+      map[key].push(trip);
+
+      cursor.setDate(cursor.getDate()+1);
+
+    }
+
+  });
+
+  return map;
+
+}
+
+
+/* =========================
+   RENDER CALENDAR
+========================= */
+
+async function renderCalendar(){
+
+  const requestId = ++calendarRequestId;
+
+  const year =
+    currentDate.getFullYear();
+
+  const month =
+    currentDate.getMonth();
+
+
+  document.getElementById(
+    "monthName"
+  ).textContent =
+    monthNames[month] +
+    " " +
+    year;
+
+
+  const events = await loadMonthEvents(year,month);
+
+  if(requestId !== calendarRequestId) return;
+
+  monthEvents = events;
+
+
+  const container =
+    document.getElementById(
+      "calendarDays"
+    );
+
+  container.innerHTML="";
+
+
+  const firstDay =
+    new Date(
+      year,
+      month,
+      1
+    ).getDay();
+
+
+  const daysInMonth =
+    new Date(
+      year,
+      month + 1,
+      0
+    ).getDate();
+
+
+  const previousMonthDays =
+    new Date(
+      year,
+      month,
+      0
+    ).getDate();
+
+
+  /* Previous month */
+
+  for(
+    let i=firstDay-1;
+    i>=0;
+    i--
+  ){
+
+    const day =
+      document.createElement(
+        "div"
+      );
+
+    day.className =
+      "day other";
+
+    day.innerHTML =
+      `<div class="day-number">
+        ${previousMonthDays-i}
+      </div>`;
+
+    container.appendChild(day);
+
+  }
+
+
+  /* Current month */
+
+  let tripDaysThisMonth = 0;
+
+  const tripIdsThisMonth = new Set();
+
+  for(
+    let date=1;
+    date<=daysInMonth;
+    date++
+  ){
+
+    const day =
+      document.createElement(
+        "div"
+      );
+
+    const key =
+      `${year}-${String(month+1).padStart(2,"0")}-${String(date).padStart(2,"0")}`;
+
+    const dayTrips =
+      monthEvents[key] || [];
+
+
+    day.className =
+      "day";
+
+
+    /* Today */
+
+    const today =
+      new Date();
+
+    if(
+      date === today.getDate() &&
+      month === today.getMonth() &&
+      year === today.getFullYear()
+    ){
+
+      day.classList.add(
+        "today"
+      );
+
+    }
+
+
+    /* Event */
+
+    if(dayTrips.length){
+
+      day.classList.add(
+        "has-trip"
+      );
+
+      tripDaysThisMonth++;
+
+      dayTrips.forEach(trip => tripIdsThisMonth.add(trip.id));
+
+    }
+
+
+    day.innerHTML =
+      `<div class="day-number">
+        ${date}
+      </div>`;
+
+
+    dayTrips.forEach(trip => {
+
+      const event =
+        document.createElement(
+          "div"
+        );
+
+      event.className =
+        "event " +
+        tripColor(trip);
+
+      event.textContent =
+        trip.title;
+
+
+      day.appendChild(
+        event
+      );
+
+    });
+
+
+    day.addEventListener(
+      "click",
+      function(){
+
+        selectDay(
+          date,
+          month,
+          year
+        );
+
+      }
+    );
+
+
+    container.appendChild(
+      day
+    );
+
+  }
+
+
+  /* Fill next month */
+
+  const totalCells =
+    firstDay +
+    daysInMonth;
+
+
+  const remaining =
+    42 -
+    totalCells;
+
+
+  for(
+    let i=1;
+    i<=remaining;
+    i++
+  ){
+
+    const day =
+      document.createElement(
+        "div"
+      );
+
+    day.className =
+      "day other";
+
+    day.innerHTML =
+      `<div class="day-number">
+        ${i}
+      </div>`;
+
+    container.appendChild(
+      day
+    );
+
+  }
+
+  updateQuickStats(tripIdsThisMonth.size, tripDaysThisMonth);
+
+}
+
+
+/* =========================
+   MONTH NAVIGATION
+========================= */
+
+function previousMonth(){
+
+  currentDate.setMonth(
+    currentDate.getMonth()-1
+  );
+
+  renderCalendar();
+
+}
+
+
+function nextMonth(){
+
+  currentDate.setMonth(
+    currentDate.getMonth()+1
+  );
+
+  renderCalendar();
+
+}
+
+
+function goToday(){
+
+  currentDate =
+    new Date();
+
+  currentDate.setDate(1);
+
+  renderCalendar();
+
+  showToast(
+    "Returned to today 📅"
+  );
+
+}
+
+
+/* =========================
+   DAY CLICK
+========================= */
+
+function selectDay(
+  date,
+  month,
+  year
+){
+
+  const key =
+    `${year}-${String(month+1).padStart(2,"0")}-${String(date).padStart(2,"0")}`;
+
+  const dayTrips =
+    monthEvents[key];
+
+
+  if(
+    dayTrips && dayTrips.length
+  ){
+
+    showToast(
+      dayTrips.map(trip => trip.title).join(", ") +
+      " trip selected ✈️"
+    );
+
+  }else{
+
+    showToast(
+      `${date}/${month+1}/${year} selected`
+    );
+
+  }
+
+}
+
+
+/* =========================
+   QUICK STATS
+========================= */
+
+function updateQuickStats(tripsThisMonth,travelDays){
+
+  document.getElementById("statTripsMonth").textContent =
+    tripsThisMonth;
+
+  document.getElementById("statTravelDays").textContent =
+    travelDays;
+
+}
+
+
+/* =========================
+   UPCOMING TRIPS + TRAVEL GOAL
+========================= */
+
+async function loadUpcomingTrips(){
+
+  try{
+
+    const data = await API.get("/api/trips");
+
+    allTrips = data.trips || [];
+
+  }catch(error){
+
+    allTrips = [];
+
+    showToast(error.message || "Couldn't load trips");
+
+  }
+
+  renderUpcoming();
+
+  renderTravelGoal();
+
+}
+
+
+function renderUpcoming(){
+
+  const container =
+    document.getElementById("upcomingList");
+
+  const todayKey = dateKey(new Date());
+
+  const upcoming =
+    allTrips
+      .filter(trip => trip.start_date && trip.start_date >= todayKey)
+      .sort((a,b) => a.start_date.localeCompare(b.start_date));
+
+
+  if(!upcoming.length){
+
+    container.innerHTML =
+      `<p style="margin:0;color:var(--muted);font-size:.48rem;">
+        No upcoming trips yet.
+      </p>`;
+
+    return;
+
+  }
+
+
+  container.innerHTML = "";
+
+  const monthAbbrev = [
+    "JAN","FEB","MAR","APR","MAY","JUN",
+    "JUL","AUG","SEP","OCT","NOV","DEC"
+  ];
+
+
+  upcoming.forEach(trip => {
+
+    const start = parseDateOnly(trip.start_date);
+
+    const end = parseDateOnly(trip.end_date) || start;
+
+    const durationDays =
+      start && end
+        ? Math.round((end-start)/(1000*60*60*24)) + 1
+        : null;
+
+
+    const item =
+      document.createElement("div");
+
+    item.className = "upcoming-item";
+
+    item.innerHTML =
+      `<div class="date-box">
+        <strong>${start ? String(start.getDate()).padStart(2,"0") : "--"}</strong>
+        <span>${start ? monthAbbrev[start.getMonth()] : ""}</span>
+      </div>
+      <div class="upcoming-info">
+        <strong>${trip.title || "Untitled trip"}</strong>
+        <span>${durationDays ? durationDays + " day" + (durationDays===1 ? "" : "s") : "Dates not set"}</span>
+      </div>`;
+
+    item.addEventListener("click", function(){
+
+      window.location.href =
+        "trip-overview.html?id=" + encodeURIComponent(trip.id);
+
+    });
+
+    container.appendChild(item);
+
+  });
+
+}
+
+
+function renderTravelGoal(){
+
+  const yearlyGoal = 12;
+
+  const thisYear = new Date().getFullYear();
+
+  const tripsThisYear =
+    allTrips.filter(trip => {
+
+      const start = parseDateOnly(trip.start_date);
+
+      return start && start.getFullYear() === thisYear;
+
+    }).length;
+
+  const percent =
+    Math.min(100, Math.round((tripsThisYear / yearlyGoal) * 100));
+
+
+  document.getElementById("goalBarFill").style.width = percent + "%";
+
+  document.getElementById("goalCountLabel").textContent =
+    tripsThisYear + " / " + yearlyGoal + " trips";
+
+  document.getElementById("goalPercentLabel").textContent =
+    percent + "%";
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function goDashboard(){
+
+  window.location.href =
+    "dashboard.html";
+
+}
+
+
+function newTrip(){
+
+  showToast(
+    "Opening trip planner ✈️"
+  );
+
+
+  setTimeout(
+    function(){
+
+      window.location.href =
+        "trips.html";
+
+    },
+    700
+  );
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+let toastTimer;
+
+function showToast(
+  message
+){
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+
+  toast.textContent =
+    message;
+
+
+  toast.classList.add(
+    "show"
+  );
+
+
+  clearTimeout(
+    toastTimer
+  );
+
+
+  toastTimer =
+    setTimeout(
+      function(){
+
+        toast.classList.remove(
+          "show"
+        );
+
+      },
+      2200
+    );
+
+}
+
+
+/* =========================
+   INIT
+========================= */
+
+document.addEventListener("DOMContentLoaded", function(){
+
+  renderCalendar();
+
+  loadUpcomingTrips();
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GlobeTrotter — Shared Itinerary</title>
+
+<style>
+
+:root{
+  --primary:#0e7c8c;
+  --primary-dark:#075e6b;
+  --cyan:#22d3ee;
+  --accent:#ff7959;
+  --dark:#172033;
+  --muted:#687487;
+  --border:#e2e8ec;
+  --green:#2e9e5b;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  Arial,sans-serif;
+}
+
+body{
+  background:#111a3d;
+  color:var(--dark);
+}
+
+.page{
+  min-height:100vh;
+  position:relative;
+  overflow:hidden;
+
+  background:
+  linear-gradient(
+    180deg,
+    #172451 0%,
+    #41427e 30%,
+    #85548b 55%,
+    #dc7779 76%,
+    #f3b16b 100%
+  );
+}
+
+
+/* =========================
+   STARS
+========================= */
+
+.stars{
+  position:absolute;
+  inset:0;
+  height:55%;
+
+  background-image:
+  radial-gradient(1px 1px at 7% 13%,#fff,transparent),
+  radial-gradient(1px 1px at 18% 28%,#fff,transparent),
+  radial-gradient(1px 1px at 31% 11%,#fff,transparent),
+  radial-gradient(1px 1px at 43% 27%,#fff,transparent),
+  radial-gradient(1px 1px at 56% 16%,#fff,transparent),
+  radial-gradient(1px 1px at 68% 30%,#fff,transparent),
+  radial-gradient(1px 1px at 81% 12%,#fff,transparent),
+  radial-gradient(1px 1px at 94% 25%,#fff,transparent);
+
+  animation:
+  stars 4s ease-in-out infinite alternate;
+}
+
+@keyframes stars{
+
+  from{
+    opacity:.25;
+  }
+
+  to{
+    opacity:.9;
+  }
+
+}
+
+
+/* =========================
+   CLOUDS
+========================= */
+
+.cloud{
+  position:absolute;
+
+  width:135px;
+  height:30px;
+
+  border-radius:50px;
+
+  background:
+  rgba(255,255,255,.17);
+}
+
+.cloud:before,
+.cloud:after{
+  content:"";
+
+  position:absolute;
+
+  border-radius:50%;
+
+  background:inherit;
+}
+
+.cloud:before{
+  width:55px;
+  height:55px;
+
+  left:15px;
+  top:-25px;
+}
+
+.cloud:after{
+  width:43px;
+  height:43px;
+
+  right:12px;
+  top:-20px;
+}
+
+.cloud.one{
+  left:-170px;
+  top:18%;
+
+  animation:
+  cloudMove 45s linear infinite;
+}
+
+.cloud.two{
+  left:-200px;
+  top:35%;
+
+  opacity:.2;
+
+  transform:scale(.7);
+
+  animation:
+  cloudMove 58s linear infinite;
+
+  animation-delay:-18s;
+}
+
+@keyframes cloudMove{
+
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(130vw);
+  }
+
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+
+  position:relative;
+  z-index:20;
+
+  width:
+  min(
+    1180px,
+    calc(100% - 40px)
+  );
+
+  margin:auto;
+
+  padding-top:22px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+}
+
+.logo-area{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:11px;
+
+  color:white;
+}
+
+.logo{
+
+  width:50px;
+  height:50px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:
+  linear-gradient(
+    135deg,
+    var(--primary),
+    var(--accent)
+  );
+
+  box-shadow:
+  0 12px 30px
+  rgba(0,0,0,.2);
+
+  animation:
+  logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+
+  0%,100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-5px);
+  }
+
+}
+
+.logo-text{
+
+  font-size:1.18rem;
+
+  font-weight:800;
+}
+
+.logo-text span{
+  color:#5ee7f5;
+}
+
+.header-actions{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
+}
+
+.header-btn{
+
+  padding:
+  9px 13px;
+
+  border:
+  1px solid
+  rgba(255,255,255,.2);
+
+  border-radius:9px;
+
+  background:
+  rgba(255,255,255,.1);
+
+  color:white;
+
+  backdrop-filter:
+  blur(10px);
+
+  font-size:.55rem;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+.header-btn:hover{
+
+  background:
+  rgba(255,255,255,.2);
+
+  transform:
+  translateY(-2px);
+}
+
+.avatar{
+
+  width:39px;
+  height:39px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:
+  linear-gradient(
+    135deg,
+    var(--cyan),
+    var(--primary)
+  );
+
+  color:white;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.main{
+
+  position:relative;
+  z-index:10;
+
+  width:
+  min(
+    1080px,
+    calc(100% - 40px)
+  );
+
+  margin:
+  35px auto 90px;
+}
+
+
+/* =========================
+   SHARED BADGE
+========================= */
+
+.shared-badge{
+
+  width:max-content;
+
+  margin:
+  0 auto 14px;
+
+  padding:
+  7px 11px;
+
+  border:
+  1px solid
+  rgba(255,255,255,.22);
+
+  border-radius:30px;
+
+  background:
+  rgba(255,255,255,.1);
+
+  color:white;
+
+  backdrop-filter:
+  blur(12px);
+
+  font-size:.48rem;
+
+  font-weight:900;
+
+  letter-spacing:.5px;
+
+  animation:
+  badgeIn .7s ease;
+}
+
+@keyframes badgeIn{
+
+  from{
+    opacity:0;
+    transform:
+    translateY(-10px)
+    scale(.9);
+  }
+
+  to{
+    opacity:1;
+    transform:
+    translateY(0)
+    scale(1);
+  }
+
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+
+  position:relative;
+
+  padding:
+  28px 28px 30px;
+
+  overflow:hidden;
+
+  border-radius:24px;
+
+  color:white;
+
+  background:
+  linear-gradient(
+    120deg,
+    rgba(10,87,105,.9),
+    rgba(57,72,133,.85),
+    rgba(176,82,105,.78)
+  );
+
+  box-shadow:
+  0 30px 70px
+  rgba(7,20,48,.3);
+
+  animation:
+  heroIn .8s
+  cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes heroIn{
+
+  from{
+    opacity:0;
+
+    transform:
+    translateY(30px)
+    scale(.97);
+  }
+
+  to{
+    opacity:1;
+
+    transform:
+    translateY(0)
+    scale(1);
+  }
+
+}
+
+.hero:before{
+
+  content:"";
+
+  position:absolute;
+
+  width:260px;
+  height:260px;
+
+  right:-100px;
+  top:-130px;
+
+  border-radius:50%;
+
+  background:
+  rgba(255,255,255,.09);
+}
+
+.hero:after{
+
+  content:"";
+
+  position:absolute;
+
+  width:180px;
+  height:180px;
+
+  left:-90px;
+  bottom:-110px;
+
+  border-radius:50%;
+
+  background:
+  rgba(34,211,238,.1);
+}
+
+.hero-content{
+
+  position:relative;
+
+  z-index:2;
+
+  display:flex;
+
+  align-items:flex-end;
+
+  justify-content:space-between;
+
+  gap:20px;
+}
+
+.hero h1{
+
+  margin:0;
+
+  font-size:
+  clamp(
+    1.8rem,
+    4vw,
+    2.65rem
+  );
+
+  letter-spacing:-1px;
+}
+
+.hero h1 span{
+  color:#66e8f5;
+}
+
+.hero-subtitle{
+
+  margin:
+  8px 0 0;
+
+  color:
+  rgba(255,255,255,.72);
+
+  font-size:.62rem;
+}
+
+.trip-meta{
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:7px;
+
+  margin-top:15px;
+}
+
+.meta{
+
+  padding:
+  6px 9px;
+
+  border-radius:7px;
+
+  background:
+  rgba(255,255,255,.12);
+
+  border:
+  1px solid
+  rgba(255,255,255,.12);
+
+  font-size:.45rem;
+
+  font-weight:800;
+}
+
+.hero-actions{
+
+  display:flex;
+
+  gap:7px;
+}
+
+.share-btn{
+
+  padding:
+  11px 15px;
+
+  border:0;
+
+  border-radius:9px;
+
+  background:white;
+
+  color:var(--dark);
+
+  font-size:.52rem;
+
+  font-weight:900;
+
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+.share-btn:hover{
+
+  transform:
+  translateY(-3px);
+
+  box-shadow:
+  0 12px 25px
+  rgba(0,0,0,.2);
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.content{
+
+  margin-top:16px;
+
+  padding:20px;
+
+  border-radius:23px;
+
+  background:
+  rgba(255,255,255,.97);
+
+  box-shadow:
+  0 35px 90px
+  rgba(8,30,45,.3);
+
+  animation:
+  contentIn .95s
+  cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes contentIn{
+
+  from{
+    opacity:0;
+
+    transform:
+    translateY(35px);
+  }
+
+  to{
+    opacity:1;
+
+    transform:
+    translateY(0);
+  }
+
+}
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+.summary{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(4,1fr);
+
+  gap:9px;
+}
+
+.summary-card{
+
+  padding:14px;
+
+  border:
+  1px solid
+  var(--border);
+
+  border-radius:13px;
+
+  background:#fbfcfd;
+
+  transition:.25s;
+}
+
+.summary-card:hover{
+
+  transform:
+  translateY(-4px);
+
+  box-shadow:
+  0 12px 25px
+  rgba(0,0,0,.07);
+}
+
+.summary-icon{
+  font-size:1.2rem;
+}
+
+.summary-card strong{
+
+  display:block;
+
+  margin-top:7px;
+
+  font-size:.78rem;
+}
+
+.summary-card span{
+
+  display:block;
+
+  margin-top:3px;
+
+  color:var(--muted);
+
+  font-size:.43rem;
+
+  font-weight:800;
+}
+
+
+/* =========================
+   MAIN GRID
+========================= */
+
+.grid{
+
+  display:grid;
+
+  grid-template-columns:
+  1.45fr .7fr;
+
+  gap:15px;
+
+  margin-top:15px;
+}
+
+
+/* =========================
+   SECTION
+========================= */
+
+.section{
+
+  padding:17px;
+
+  border:
+  1px solid
+  var(--border);
+
+  border-radius:16px;
+
+  background:#fbfcfd;
+}
+
+.section + .section{
+
+  margin-top:13px;
+}
+
+.section-title{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  margin-bottom:13px;
+}
+
+.section-title h2{
+
+  margin:0;
+
+  font-size:.76rem;
+}
+
+.section-title span{
+
+  color:var(--muted);
+
+  font-size:.46rem;
+}
+
+
+/* =========================
+   DAY CARDS
+========================= */
+
+.days{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:10px;
+}
+
+.day-card{
+
+  position:relative;
+
+  padding:13px;
+
+  display:grid;
+
+  grid-template-columns:
+  56px 1fr auto;
+
+  gap:12px;
+
+  align-items:center;
+
+  border:
+  1px solid
+  var(--border);
+
+  border-radius:13px;
+
+  background:white;
+
+  transition:.3s;
+
+  overflow:hidden;
+}
+
+.day-card:hover{
+
+  transform:
+  translateX(4px);
+
+  box-shadow:
+  0 12px 25px
+  rgba(0,0,0,.07);
+
+  border-color:
+  #b4dde1;
+}
+
+.day-card:before{
+
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  top:0;
+  bottom:0;
+
+  width:4px;
+
+  background:
+  var(--primary);
+}
+
+.day-card:nth-child(2):before{
+  background:var(--accent);
+}
+
+.day-card:nth-child(3):before{
+  background:#76549a;
+}
+
+.day-card:nth-child(4):before{
+  background:var(--green);
+}
+
+.day-number{
+
+  width:50px;
+  height:50px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:11px;
+
+  color:white;
+
+  background:
+  linear-gradient(
+    145deg,
+    var(--primary),
+    #1598a7
+  );
+
+  box-shadow:
+  0 7px 15px
+  rgba(14,124,140,.18);
+}
+
+.day-card:nth-child(2)
+.day-number{
+
+  background:
+  linear-gradient(
+    145deg,
+    var(--accent),
+    #e99a66
+  );
+}
+
+.day-card:nth-child(3)
+.day-number{
+
+  background:
+  linear-gradient(
+    145deg,
+    #76549a,
+    #a5669a
+  );
+}
+
+.day-card:nth-child(4)
+.day-number{
+
+  background:
+  linear-gradient(
+    145deg,
+    var(--green),
+    #62b978
+  );
+}
+
+.day-number strong{
+
+  font-size:1rem;
+}
+
+.day-number span{
+
+  font-size:.37rem;
+
+  font-weight:800;
+}
+
+.day-info h3{
+
+  margin:0;
+
+  font-size:.64rem;
+}
+
+.day-info p{
+
+  margin:
+  4px 0 0;
+
+  color:var(--muted);
+
+  font-size:.46rem;
+}
+
+.activities{
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:5px;
+
+  margin-top:7px;
+}
+
+.activity{
+
+  padding:
+  4px 6px;
+
+  border-radius:5px;
+
+  background:#eef7f8;
+
+  color:var(--primary);
+
+  font-size:.4rem;
+
+  font-weight:800;
+}
+
+.day-arrow{
+
+  color:#9ba5b1;
+
+  font-size:.8rem;
+}
+
+
+/* =========================
+   SHARE / CTA ASIDE
+========================= */
+
+.aside-text{
+
+  margin:0 0 12px;
+
+  color:var(--muted);
+
+  font-size:.47rem;
+
+  line-height:1.5;
+}
+
+.aside-btn{
+
+  width:100%;
+
+  padding:10px;
+
+  border:0;
+
+  border-radius:8px;
+
+  color:white;
+
+  font-size:.5rem;
+
+  font-weight:900;
+
+  cursor:pointer;
+}
+
+
+/* =========================
+   CTA
+========================= */
+
+.cta{
+
+  margin-top:15px;
+
+  padding:17px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:15px;
+
+  border-radius:14px;
+
+  color:white;
+
+  background:
+  linear-gradient(
+    110deg,
+    var(--primary),
+    #1595a4,
+    var(--accent)
+  );
+
+  background-size:
+  200% 100%;
+
+  animation:
+  gradientMove 5s ease infinite;
+}
+
+@keyframes gradientMove{
+
+  0%,100%{
+    background-position:0%;
+  }
+
+  50%{
+    background-position:100%;
+  }
+
+}
+
+.cta strong{
+
+  display:block;
+
+  font-size:.7rem;
+}
+
+.cta small{
+
+  display:block;
+
+  margin-top:4px;
+
+  opacity:.75;
+
+  font-size:.48rem;
+}
+
+.cta button{
+
+  padding:
+  10px 14px;
+
+  border:0;
+
+  border-radius:9px;
+
+  background:white;
+
+  color:var(--dark);
+
+  font-size:.52rem;
+
+  font-weight:900;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.cta button:hover{
+
+  transform:
+  translateY(-2px)
+  scale(1.02);
+}
+
+
+/* =========================
+   INVALID STATE
+========================= */
+
+.invalid-box{
+
+  text-align:center;
+
+  padding:60px 20px;
+}
+
+.invalid-box .invalid-icon{
+  font-size:2.4rem;
+}
+
+.invalid-box h2{
+
+  margin:14px 0 6px;
+
+  font-size:.9rem;
+}
+
+.invalid-box p{
+
+  margin:0 auto;
+
+  max-width:380px;
+
+  color:var(--muted);
+
+  font-size:.55rem;
+
+  line-height:1.6;
+}
+
+
+/* =========================
+   MOUNTAINS
+========================= */
+
+.mountains{
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  height:120px;
+
+  z-index:2;
+
+  background:
+  rgba(12,18,38,.72);
+
+  clip-path:
+  polygon(
+    0 100%,
+    0 64%,
+    10% 41%,
+    20% 62%,
+    31% 18%,
+    43% 55%,
+    54% 31%,
+    67% 62%,
+    79% 24%,
+    90% 51%,
+    100% 35%,
+    100% 100%
+  );
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+
+  position:fixed;
+
+  right:22px;
+  bottom:22px;
+
+  z-index:100;
+
+  padding:
+  11px 15px;
+
+  border-radius:9px;
+
+  color:white;
+
+  background:#172033;
+
+  box-shadow:
+  0 15px 35px
+  rgba(0,0,0,.25);
+
+  font-size:.58rem;
+
+  font-weight:700;
+
+  opacity:0;
+
+  transform:
+  translateY(20px);
+
+  pointer-events:none;
+
+  transition:.3s;
+}
+
+.toast.show{
+
+  opacity:1;
+
+  transform:
+  translateY(0);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+
+  .grid{
+
+    grid-template-columns:1fr;
+  }
+
+  .summary{
+
+    grid-template-columns:
+    repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:650px){
+
+  .header,
+  .main{
+
+    width:
+    calc(100% - 24px);
+  }
+
+  .header-btn{
+
+    display:none;
+  }
+
+  .hero-content{
+
+    align-items:flex-start;
+
+    flex-direction:column;
+  }
+
+  .hero-actions{
+
+    width:100%;
+  }
+
+  .share-btn{
+
+    width:100%;
+  }
+
+  .content{
+
+    padding:13px;
+  }
+
+  .summary{
+
+    grid-template-columns:
+    1fr 1fr;
+  }
+
+  .day-card{
+
+    grid-template-columns:
+    48px 1fr;
+  }
+
+  .day-number{
+
+    width:44px;
+    height:44px;
+  }
+
+  .day-arrow{
+
+    display:none;
+  }
+
+  .cta{
+
+    flex-direction:column;
+
+    align-items:flex-start;
+  }
+
+  .cta button{
+
+    width:100%;
+  }
+
+}
+
+@media(max-width:450px){
+
+  .summary{
+
+    grid-template-columns:1fr;
+  }
+
+  .hero{
+
+    padding:20px;
+  }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+  <div class="stars"></div>
+
+  <div class="cloud one"></div>
+  <div class="cloud two"></div>
+
+
+  <!-- HEADER -->
+
+  <header class="header">
+
+    <div class="logo-area">
+
+      <div class="logo">
+        🌍
+      </div>
+
+      <div class="logo-text">
+        Globe<span>Trotter</span>
+      </div>
+
+    </div>
+
+
+    <div class="header-actions">
+
+      <button
+        class="header-btn"
+        onclick="goHome()"
+      >
+        Home
+      </button>
+
+      <button
+        class="header-btn"
+        onclick="copyLink()"
+      >
+        🔗 Copy Link
+      </button>
+
+      <div class="avatar">
+        👤
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+
+    <div class="shared-badge">
+      🔗 PUBLICLY SHARED ITINERARY
+    </div>
+
+
+    <!-- INVALID / NOT FOUND STATE -->
+
+    <section
+      class="content invalid-box"
+      id="invalidSection"
+      style="display:none;"
+    >
+
+      <div class="invalid-icon">
+        🧭
+      </div>
+
+      <h2>
+        Link not found
+      </h2>
+
+      <p>
+        This shared itinerary link is invalid or has expired.
+      </p>
+
+    </section>
+
+
+    <!-- TRIP VIEW -->
+
+    <div id="tripView" style="display:none;">
+
+
+      <!-- HERO -->
+
+      <section class="hero">
+
+        <div class="hero-content">
+
+          <div>
+
+            <h1 id="heroTitle"></h1>
+
+            <p
+              class="hero-subtitle"
+              id="heroSubtitle"
+            ></p>
+
+
+            <div
+              class="trip-meta"
+              id="tripMeta"
+            ></div>
+
+          </div>
+
+
+          <div class="hero-actions">
+
+            <button
+              class="share-btn"
+              onclick="copyLink()"
+            >
+              🔗 Share Itinerary
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- CONTENT -->
+
+      <section class="content">
+
+
+        <!-- SUMMARY -->
+
+        <div
+          class="summary"
+          id="summaryCards"
+        ></div>
+
+
+        <!-- GRID -->
+
+        <div class="grid">
+
+
+          <!-- LEFT -->
+
+          <div>
+
+
+            <div class="section">
+
+              <div class="section-title">
+
+                <h2>
+                  🗺️ Day-by-Day Itinerary
+                </h2>
+
+                <span id="dayCountLabel">
+                  0 DAYS
+                </span>
+
+              </div>
+
+
+              <div
+                class="days"
+                id="daysContainer"
+              ></div>
+
+            </div>
+
+          </div>
+
+
+          <!-- RIGHT -->
+
+          <aside>
+
+
+            <!-- SHARE -->
+
+            <div class="section">
+
+              <div class="section-title">
+
+                <h2>
+                  🔗 Share
+                </h2>
+
+              </div>
+
+
+              <p class="aside-text">
+                Share this itinerary with friends and travel companions.
+              </p>
+
+
+              <button
+                class="aside-btn"
+                onclick="copyLink()"
+                style="background:var(--primary);"
+              >
+                🔗 Copy Public Link
+              </button>
+
+            </div>
+
+
+            <!-- CREATE -->
+
+            <div class="section">
+
+              <div class="section-title">
+
+                <h2>
+                  🌎 Like this trip?
+                </h2>
+
+              </div>
+
+
+              <p class="aside-text">
+                Create your own personalized itinerary inspired by this journey.
+              </p>
+
+
+              <button
+                class="aside-btn"
+                onclick="createTrip()"
+                style="background:var(--accent);"
+              >
+                ✈️ Create My Trip
+              </button>
+
+            </div>
+
+          </aside>
+
+        </div>
+
+
+        <!-- CTA -->
+
+        <div class="cta">
+
+          <div>
+
+            <strong>
+              🌍 Start planning your own adventure
+            </strong>
+
+            <small>
+              Build a personalized trip with GlobeTrotter.
+            </small>
+
+          </div>
+
+
+          <button
+            onclick="createTrip()"
+          >
+            Create New Itinerary →
+          </button>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+
+  <div class="mountains"></div>
+
+
+  <div
+    class="toast"
+    id="toast"
+  >
+    Done!
+  </div>
+
+</div>
+
+
+<script src="app-api.js"></script>
+<script>
+
+const TYPE_ICON = {
+  flight: "✈️",
+  hotel: "🏨",
+  food: "🍽️",
+  restaurant: "🍽️",
+  activity: "🎯",
+  sightseeing: "🏛️",
+  transport: "🚆",
+  transportation: "🚆"
+};
+
+function iconForType(type){
+  return TYPE_ICON[(type || "").toLowerCase()] || "📌";
+}
+
+function formatDate(dateStr){
+
+  if(!dateStr) return "";
+
+  const date = new Date(dateStr);
+
+  if(isNaN(date.getTime())) return "";
+
+  return date.toLocaleDateString(
+    "en-US",
+    { month: "short", day: "numeric", year: "numeric" }
+  );
+}
+
+function formatMonthShort(dateStr){
+
+  if(!dateStr) return "";
+
+  const date = new Date(dateStr);
+
+  if(isNaN(date.getTime())) return "";
+
+  return date.toLocaleDateString("en-US", { month: "short" }).toUpperCase();
+}
+
+/* =========================
+   LOAD SHARED ITINERARY
+========================= */
+
+async function loadSharedItinerary(){
+
+  const token = new URLSearchParams(location.search).get("share");
+
+  if(!token){
+    showInvalid();
+    return;
+  }
+
+  try{
+
+    const data = await API.get(
+      "/api/shared/" + encodeURIComponent(token)
+    );
+
+    renderTrip(data.trip || {}, data.items || []);
+
+  }catch(error){
+
+    showInvalid();
+
+  }
+
+}
+
+function showInvalid(){
+
+  document.getElementById("invalidSection").style.display = "";
+  document.getElementById("tripView").style.display = "none";
+
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function renderTrip(trip, items){
+
+  document.getElementById("invalidSection").style.display = "none";
+  document.getElementById("tripView").style.display = "";
+
+  const emoji = trip.cover_emoji || "🌍";
+
+  document.getElementById("heroTitle").textContent =
+    emoji + " " + (trip.title || "Untitled Trip");
+
+  document.getElementById("heroSubtitle").textContent =
+    trip.description || "";
+
+  renderMeta(trip);
+  renderSummary(trip, items);
+  renderDays(trip, items);
+
+}
+
+function renderMeta(trip){
+
+  const metaEl = document.getElementById("tripMeta");
+  metaEl.innerHTML = "";
+
+  const chips = [];
+
+  if(trip.start_date || trip.end_date){
+    chips.push(
+      "📅 " +
+      formatDate(trip.start_date) +
+      (trip.end_date ? " – " + formatDate(trip.end_date) : "")
+    );
+  }
+
+  if(trip.status){
+    chips.push("🏷️ " + trip.status);
+  }
+
+  if(trip.budget !== undefined && trip.budget !== null && trip.budget !== ""){
+    chips.push(
+      "💰 " +
+      (trip.currency ? trip.currency + " " : "") +
+      trip.budget
+    );
+  }
+
+  chips.forEach(function(text){
+
+    const div = document.createElement("div");
+    div.className = "meta";
+    div.textContent = text;
+    metaEl.appendChild(div);
+
+  });
+
+}
+
+function renderSummary(trip, items){
+
+  const container = document.getElementById("summaryCards");
+  container.innerHTML = "";
+
+  const dayNumbers = items
+    .map(function(item){ return item.day_number; })
+    .filter(function(n){ return n !== undefined && n !== null; });
+
+  let dayCount = dayNumbers.length ? Math.max.apply(null, dayNumbers) : 0;
+
+  if(trip.start_date && trip.end_date){
+
+    const start = new Date(trip.start_date);
+    const end = new Date(trip.end_date);
+
+    if(!isNaN(start.getTime()) && !isNaN(end.getTime())){
+      dayCount = Math.max(
+        dayCount,
+        Math.round((end - start) / 86400000) + 1
+      );
+    }
+
+  }
+
+  const locations = new Set(
+    items
+      .map(function(item){ return (item.location || "").trim(); })
+      .filter(function(loc){ return loc; })
+  );
+
+  const budgetText =
+    (trip.budget !== undefined && trip.budget !== null && trip.budget !== "")
+      ? (trip.currency ? trip.currency + " " : "") + trip.budget
+      : "Not set";
+
+  const statusText = trip.status
+    ? trip.status.charAt(0).toUpperCase() + trip.status.slice(1)
+    : "—";
+
+  const cards = [
+    { icon: "🗓️", value: dayCount ? dayCount + " Days" : "—", label: "TRIP DURATION" },
+    { icon: "📍", value: locations.size ? locations.size + " Places" : "—", label: "DESTINATIONS" },
+    { icon: "💰", value: budgetText, label: "BUDGET" },
+    { icon: "🏷️", value: statusText, label: "STATUS" }
+  ];
+
+  cards.forEach(function(card){
+
+    const el = document.createElement("div");
+    el.className = "summary-card";
+
+    el.innerHTML =
+      '<div class="summary-icon">' + card.icon + '</div>' +
+      "<strong>" + card.value + "</strong>" +
+      "<span>" + card.label + "</span>";
+
+    container.appendChild(el);
+
+  });
+
+}
+
+function renderDays(trip, items){
+
+  const container = document.getElementById("daysContainer");
+  container.innerHTML = "";
+
+  const byDay = {};
+
+  items.forEach(function(item){
+
+    const dayNumber = item.day_number || 1;
+
+    if(!byDay[dayNumber]) byDay[dayNumber] = [];
+
+    byDay[dayNumber].push(item);
+
+  });
+
+  const dayNumbers = Object.keys(byDay)
+    .map(Number)
+    .sort(function(a, b){ return a - b; });
+
+  document.getElementById("dayCountLabel").textContent =
+    dayNumbers.length + (dayNumbers.length === 1 ? " DAY" : " DAYS");
+
+  if(!dayNumbers.length){
+
+    container.innerHTML =
+      '<p style="color:var(--muted); font-size:.55rem; margin:0;">No itinerary items yet.</p>';
+
+    return;
+
+  }
+
+  dayNumbers.forEach(function(dayNumber){
+
+    const dayItems = byDay[dayNumber].slice().sort(function(a, b){
+
+      return (a.time || "").localeCompare(b.time || "");
+
+    });
+
+    const referenceDate = dayItems[0].item_date || offsetDate(trip.start_date, dayNumber - 1);
+
+    const card = document.createElement("div");
+    card.className = "day-card";
+
+    const activitiesHtml = dayItems.map(function(item){
+
+      const parts = [iconForType(item.type)];
+
+      if(item.time) parts.push(item.time);
+
+      parts.push(item.title || "Untitled");
+
+      if(item.location) parts.push("— " + item.location);
+
+      if(item.cost !== undefined && item.cost !== null && item.cost !== ""){
+        parts.push("· " + item.cost);
+      }
+
+      const label = parts.join(" ");
+      const tooltip = item.notes ? ' title="' + escapeHtml(item.notes) + '"' : "";
+
+      return '<div class="activity"' + tooltip + ">" + escapeHtml(label) + "</div>";
+
+    }).join("");
+
+    card.innerHTML =
+      '<div class="day-number">' +
+        "<strong>" + String(dayNumber).padStart(2, "0") + "</strong>" +
+        "<span>" + formatMonthShort(referenceDate) + "</span>" +
+      "</div>" +
+      '<div class="day-info">' +
+        "<h3>Day " + dayNumber + "</h3>" +
+        "<p>" + (referenceDate ? formatDate(referenceDate) : dayItems.length + " activities") + "</p>" +
+        '<div class="activities">' + activitiesHtml + "</div>" +
+      "</div>" +
+      '<div class="day-arrow">→</div>';
+
+    container.appendChild(card);
+
+  });
+
+}
+
+function offsetDate(startDate, offsetDays){
+
+  if(!startDate) return "";
+
+  const date = new Date(startDate);
+
+  if(isNaN(date.getTime())) return "";
+
+  date.setDate(date.getDate() + offsetDays);
+
+  return date.toISOString().slice(0, 10);
+
+}
+
+function escapeHtml(text){
+
+  return String(text).replace(/[&<>"']/g, function(ch){
+
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[ch];
+
+  });
+
+}
+
+
+/* =========================
+   COPY LINK
+========================= */
+
+function copyLink(){
+
+  const url =
+    window.location.href;
+
+
+  if(
+    navigator.clipboard
+  ){
+
+    navigator.clipboard
+      .writeText(url)
+      .then(
+        function(){
+
+          showToast(
+            "Public itinerary link copied 🔗"
+          );
+
+        }
+      );
+
+  }else{
+
+    showToast(
+      "Share link ready 🔗"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   CREATE TRIP
+========================= */
+
+function createTrip(){
+
+  showToast(
+    "Opening trip planner ✈️"
+  );
+
+
+  setTimeout(
+    function(){
+
+      window.location.href =
+        "trip-planner.html";
+
+    },
+    700
+  );
+
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+function goHome(){
+
+  window.location.href =
+    "dashboard.html";
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+let toastTimer;
+
+function showToast(message){
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+
+  toast.textContent =
+    message;
+
+
+  toast.classList.add(
+    "show"
+  );
+
+
+  clearTimeout(
+    toastTimer
+  );
+
+
+  toastTimer =
+    setTimeout(
+      function(){
+
+        toast.classList.remove(
+          "show"
+        );
+
+      },
+      2300
+    );
+
+}
+
+
+loadSharedItinerary();
+
+</script>
+
+</body>
+</html>
