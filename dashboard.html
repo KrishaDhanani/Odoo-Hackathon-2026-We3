@@ -1,0 +1,2729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobeTrotter - Dashboard</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --navy:#101a3d;
+    --navy2:#182957;
+    --cyan:#22c7d8;
+    --cyan2:#0d9dad;
+    --orange:#ff7958;
+    --purple:#765bd0;
+    --bg:#f4f7fb;
+    --white:#fff;
+    --text:#172033;
+    --muted:#7d8798;
+    --border:#e5eaf1;
+    --green:#2fa66a;
+    --shadow:0 12px 35px rgba(25,45,80,.08);
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Inter,"Segoe UI",Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+button{
+    font-family:inherit;
+}
+
+
+/* ==============================
+   SIDEBAR
+============================== */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    width:260px;
+    z-index:1000;
+
+    display:flex;
+    flex-direction:column;
+
+    padding:20px 14px;
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            180deg,
+            #0d1738 0%,
+            #18295b 55%,
+            #101f45 100%
+        );
+
+    box-shadow:
+        8px 0 35px rgba(0,0,0,.12);
+
+    transition:.35s ease;
+}
+
+
+/* BRAND */
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    padding:5px 10px 22px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.1);
+}
+
+.brand-icon{
+    width:46px;
+    height:46px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:14px;
+
+    font-size:24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--cyan),
+            var(--orange)
+        );
+
+    box-shadow:
+        0 10px 25px rgba(34,199,216,.25);
+
+    animation:floatLogo 3s ease-in-out infinite;
+}
+
+@keyframes floatLogo{
+    0%,100%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-5px);
+    }
+}
+
+.brand h2{
+    font-size:18px;
+    font-weight:800;
+}
+
+.brand small{
+    display:block;
+    margin-top:3px;
+    color:rgba(255,255,255,.5);
+    font-size:10px;
+}
+
+
+/* MENU */
+
+.menu{
+    flex:1;
+    padding-top:17px;
+    overflow-y:auto;
+}
+
+.menu-title{
+    margin:20px 12px 8px;
+
+    color:rgba(255,255,255,.35);
+
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1.5px;
+}
+
+.menu-item{
+    position:relative;
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    margin-bottom:4px;
+    padding:11px 13px;
+
+    border-radius:11px;
+
+    color:rgba(255,255,255,.68);
+
+    font-size:12px;
+
+    transition:.25s ease;
+}
+
+.menu-icon{
+    width:24px;
+    text-align:center;
+    font-size:16px;
+}
+
+.menu-item:hover{
+    color:#fff;
+    background:rgba(255,255,255,.08);
+    transform:translateX(4px);
+}
+
+.menu-item.active{
+    color:#fff;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(34,199,216,.24),
+            rgba(255,255,255,.05)
+        );
+
+    box-shadow:
+        inset 3px 0 0 var(--cyan);
+}
+
+.menu-item.active::after{
+    content:"";
+
+    position:absolute;
+    right:12px;
+
+    width:6px;
+    height:6px;
+
+    border-radius:50%;
+
+    background:var(--cyan);
+
+    box-shadow:
+        0 0 12px var(--cyan);
+}
+
+
+/* SIDEBAR BOTTOM */
+
+.sidebar-bottom{
+    padding-top:13px;
+
+    border-top:
+        1px solid rgba(255,255,255,.1);
+}
+
+.logout{
+    width:100%;
+
+    display:flex;
+    align-items:center;
+    gap:11px;
+
+    padding:11px 14px;
+
+    border:0;
+    border-radius:11px;
+
+    color:#ffb09e;
+
+    background:rgba(255,122,89,.08);
+
+    cursor:pointer;
+
+    font-size:12px;
+
+    transition:.25s;
+}
+
+.logout:hover{
+    background:rgba(255,122,89,.17);
+}
+
+
+/* ==============================
+   MOBILE BUTTON
+============================== */
+
+.mobile-menu{
+    display:none;
+
+    position:fixed;
+    top:15px;
+    left:15px;
+
+    z-index:1200;
+
+    width:44px;
+    height:44px;
+
+    border:0;
+    border-radius:12px;
+
+    color:#fff;
+    background:var(--navy);
+
+    font-size:21px;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.2);
+}
+
+
+/* ==============================
+   MAIN
+============================== */
+
+.main{
+    min-height:100vh;
+
+    margin-left:260px;
+
+    padding:27px 32px 50px;
+}
+
+
+/* ==============================
+   TOPBAR
+============================== */
+
+.topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:20px;
+
+    margin-bottom:25px;
+
+    animation:fadeUp .6s ease;
+}
+
+.greeting small{
+    color:var(--muted);
+    font-size:11px;
+}
+
+.greeting h1{
+    margin-top:5px;
+
+    font-size:clamp(23px,3vw,31px);
+
+    font-weight:800;
+}
+
+.greeting h1 span{
+    color:var(--cyan2);
+}
+
+.top-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.notification{
+    width:42px;
+    height:42px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border:1px solid var(--border);
+    border-radius:12px;
+
+    background:#fff;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.notification:hover{
+    transform:translateY(-3px);
+    box-shadow:var(--shadow);
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:9px;
+
+    padding:5px 10px 5px 5px;
+
+    border:1px solid var(--border);
+    border-radius:13px;
+
+    background:#fff;
+}
+
+.avatar{
+    width:34px;
+    height:34px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:10px;
+
+    color:#fff;
+
+    font-size:13px;
+    font-weight:700;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--cyan),
+            var(--purple)
+        );
+}
+
+.profile strong{
+    display:block;
+    font-size:12px;
+}
+
+.profile small{
+    color:var(--muted);
+    font-size:9px;
+}
+
+
+/* ==============================
+   HERO
+============================== */
+
+.hero{
+    position:relative;
+    overflow:hidden;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    min-height:245px;
+
+    padding:35px 40px;
+    margin-bottom:25px;
+
+    border-radius:23px;
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            110deg,
+            #0f1a43 0%,
+            #243f82 45%,
+            #625192 72%,
+            #d37c7b 100%
+        );
+
+    box-shadow:
+        0 20px 45px rgba(25,45,85,.18);
+
+    animation:fadeUp .7s ease;
+}
+
+.hero::before{
+    content:"";
+
+    position:absolute;
+
+    right:-100px;
+    top:-210px;
+
+    width:430px;
+    height:430px;
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
+    border-radius:50%;
+
+    box-shadow:
+        0 0 0 50px rgba(255,255,255,.025),
+        0 0 0 100px rgba(255,255,255,.018);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+
+    max-width:620px;
+}
+
+.hero-label{
+    display:inline-block;
+
+    padding:6px 10px;
+
+    border:
+        1px solid rgba(34,199,216,.25);
+
+    border-radius:20px;
+
+    color:#d8fbff;
+
+    background:rgba(34,199,216,.13);
+
+    font-size:10px;
+    font-weight:700;
+}
+
+.hero h2{
+    margin:14px 0 9px;
+
+    font-size:clamp(28px,4vw,43px);
+
+    line-height:1.05;
+}
+
+.hero p{
+    max-width:540px;
+
+    color:rgba(255,255,255,.7);
+
+    font-size:13px;
+    line-height:1.7;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:22px;
+}
+
+.primary,
+.secondary{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:11px 17px;
+
+    border-radius:10px;
+
+    font-size:12px;
+    font-weight:700;
+
+    transition:.25s;
+}
+
+.primary{
+    color:#fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--cyan),
+            #087c8e
+        );
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,.18);
+}
+
+.primary:hover{
+    transform:translateY(-3px);
+}
+
+.secondary{
+    border:
+        1px solid rgba(255,255,255,.25);
+
+    color:#fff;
+
+    background:
+        rgba(255,255,255,.08);
+}
+
+.secondary:hover{
+    background:
+        rgba(255,255,255,.16);
+}
+
+
+/* HERO VISUAL */
+
+.hero-visual{
+    position:relative;
+
+    width:250px;
+    height:180px;
+
+    flex-shrink:0;
+}
+
+.globe{
+    position:absolute;
+
+    right:15px;
+    top:5px;
+
+    width:155px;
+    height:155px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    font-size:78px;
+
+    background:
+        radial-gradient(
+            circle at 30% 25%,
+            #68e5ed,
+            #16889b 55%,
+            #0d4665
+        );
+
+    box-shadow:
+        0 0 0 10px rgba(34,199,216,.07),
+        0 0 45px rgba(34,199,216,.25);
+
+    animation:globeMove 4s ease-in-out infinite;
+}
+
+@keyframes globeMove{
+    0%,100%{
+        transform:translateY(0) rotate(0);
+    }
+
+    50%{
+        transform:translateY(-9px) rotate(5deg);
+    }
+}
+
+.plane{
+    position:absolute;
+
+    top:48px;
+    left:0;
+
+    font-size:34px;
+
+    animation:planeMove 4s ease-in-out infinite;
+}
+
+@keyframes planeMove{
+    0%,100%{
+        transform:
+            translate(0,10px)
+            rotate(-10deg);
+    }
+
+    50%{
+        transform:
+            translate(45px,-20px)
+            rotate(-5deg);
+    }
+}
+
+
+/* ==============================
+   STATS
+============================== */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+
+    gap:16px;
+
+    margin-bottom:25px;
+}
+
+.stat{
+    position:relative;
+
+    padding:20px;
+
+    border:1px solid var(--border);
+    border-radius:17px;
+
+    background:#fff;
+
+    box-shadow:var(--shadow);
+
+    animation:fadeUp .7s ease both;
+
+    transition:.25s;
+}
+
+.stat:hover{
+    transform:translateY(-5px);
+
+    box-shadow:
+        0 18px 40px rgba(25,45,75,.12);
+}
+
+.stat-icon{
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    margin-bottom:14px;
+
+    border-radius:12px;
+
+    background:#edf9fa;
+
+    font-size:18px;
+}
+
+.stat-number{
+    font-size:25px;
+    font-weight:800;
+}
+
+.stat-label{
+    margin-top:3px;
+
+    color:var(--muted);
+
+    font-size:11px;
+}
+
+.stat-change{
+    position:absolute;
+
+    top:18px;
+    right:17px;
+
+    padding:4px 7px;
+
+    border-radius:20px;
+
+    color:var(--green);
+    background:#eaf8ef;
+
+    font-size:9px;
+    font-weight:700;
+}
+
+
+/* ==============================
+   COMMON CARD
+============================== */
+
+.card{
+    border:1px solid var(--border);
+    border-radius:18px;
+
+    background:#fff;
+
+    box-shadow:var(--shadow);
+}
+
+.section-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:15px;
+}
+
+.section-header h2{
+    font-size:16px;
+}
+
+.view{
+    color:var(--cyan2);
+
+    font-size:11px;
+    font-weight:700;
+}
+
+.view:hover{
+    text-decoration:underline;
+}
+
+
+/* ==============================
+   TRIPS
+============================== */
+
+.content-grid{
+    display:grid;
+
+    grid-template-columns:
+        minmax(0,1.6fr)
+        minmax(300px,.85fr);
+
+    gap:20px;
+
+    margin-bottom:25px;
+}
+
+.trips-card{
+    padding:20px;
+}
+
+.trip-list{
+    display:grid;
+    gap:11px;
+}
+
+.trip{
+    display:flex;
+    align-items:center;
+
+    gap:13px;
+
+    padding:12px;
+
+    border:1px solid var(--border);
+    border-radius:14px;
+
+    transition:.25s;
+}
+
+.trip:hover{
+    transform:translateX(5px);
+
+    border-color:
+        rgba(34,199,216,.35);
+
+    box-shadow:
+        0 8px 20px rgba(20,60,80,.06);
+}
+
+.trip-image{
+    width:72px;
+    height:65px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+
+    border-radius:12px;
+
+    font-size:31px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #c6f0f4,
+            #ddd7ff
+        );
+}
+
+.trip-info{
+    flex:1;
+}
+
+.trip-info h3{
+    margin-bottom:5px;
+    font-size:13px;
+}
+
+.trip-info p{
+    color:var(--muted);
+    font-size:10px;
+}
+
+.trip-meta{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    margin-top:7px;
+}
+
+.badge{
+    padding:4px 7px;
+
+    border-radius:20px;
+
+    color:var(--cyan2);
+    background:#edf9fa;
+
+    font-size:9px;
+    font-weight:700;
+}
+
+.date{
+    color:var(--muted);
+    font-size:9px;
+}
+
+.arrow{
+    color:#b1b9c7;
+    font-size:17px;
+}
+
+
+/* ==============================
+   BUDGET
+============================== */
+
+.budget{
+    padding:20px;
+}
+
+.budget-top{
+    display:flex;
+    justify-content:space-between;
+
+    margin-bottom:20px;
+}
+
+.budget-title h3{
+    font-size:15px;
+}
+
+.budget-title p{
+    margin-top:4px;
+
+    color:var(--muted);
+    font-size:10px;
+}
+
+.amount{
+    text-align:right;
+
+    font-size:19px;
+    font-weight:800;
+}
+
+.amount small{
+    display:block;
+
+    margin-top:2px;
+
+    color:var(--muted);
+
+    font-size:9px;
+    font-weight:400;
+}
+
+.progress{
+    height:9px;
+
+    overflow:hidden;
+
+    border-radius:20px;
+
+    background:#edf0f4;
+}
+
+.progress-bar{
+    width:68%;
+    height:100%;
+
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--cyan),
+            #36dce8
+        );
+
+    animation:progress 1.3s ease;
+}
+
+@keyframes progress{
+    from{
+        width:0;
+    }
+}
+
+.budget-list{
+    display:grid;
+    gap:12px;
+
+    margin-top:19px;
+}
+
+.budget-row{
+    display:flex;
+    justify-content:space-between;
+
+    color:var(--muted);
+
+    font-size:10px;
+}
+
+.budget-row strong{
+    color:var(--text);
+}
+
+.budget-note{
+    margin-top:19px;
+
+    padding:10px;
+
+    border-radius:10px;
+
+    color:#78611c;
+    background:#fff8e7;
+
+    font-size:9px;
+    line-height:1.5;
+}
+
+
+/* ==============================
+   LOWER GRID
+============================== */
+
+.lower-grid{
+    display:grid;
+
+    grid-template-columns:
+        1.15fr
+        1fr
+        1fr;
+
+    gap:20px;
+}
+
+
+/* ==============================
+   CALENDAR
+============================== */
+
+.calendar{
+    padding:20px;
+}
+
+.month{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:15px;
+}
+
+.month h3{
+    font-size:13px;
+}
+
+.calendar-buttons{
+    display:flex;
+    gap:5px;
+}
+
+.calendar-buttons button{
+    width:27px;
+    height:27px;
+
+    border:1px solid var(--border);
+    border-radius:7px;
+
+    background:#fff;
+
+    cursor:pointer;
+}
+
+.calendar-grid{
+    display:grid;
+
+    grid-template-columns:repeat(7,1fr);
+
+    gap:4px;
+
+    text-align:center;
+}
+
+.calendar-grid div{
+    padding:7px 0;
+
+    color:var(--muted);
+
+    font-size:9px;
+}
+
+.calendar-grid .day{
+    color:var(--text);
+
+    border-radius:7px;
+
+    cursor:pointer;
+}
+
+.calendar-grid .day:hover{
+    background:#edf9fa;
+}
+
+.calendar-grid .today{
+    color:#fff;
+    background:var(--cyan2);
+
+    box-shadow:
+        0 5px 12px rgba(34,199,216,.25);
+}
+
+.calendar-grid .trip-day{
+    position:relative;
+    font-weight:700;
+}
+
+.calendar-grid .trip-day::after{
+    content:"";
+
+    position:absolute;
+
+    left:50%;
+    bottom:2px;
+
+    width:4px;
+    height:4px;
+
+    transform:translateX(-50%);
+
+    border-radius:50%;
+
+    background:var(--orange);
+}
+
+
+/* ==============================
+   RECOMMENDED
+============================== */
+
+.recommend{
+    padding:20px;
+}
+
+.destination{
+    display:flex;
+    align-items:center;
+    gap:11px;
+
+    padding-bottom:12px;
+    margin-bottom:12px;
+
+    border-bottom:
+        1px solid var(--border);
+}
+
+.destination:last-child{
+    padding:0;
+    margin:0;
+    border:0;
+}
+
+.destination-image{
+    width:51px;
+    height:51px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+
+    border-radius:11px;
+
+    font-size:23px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d9f5f6,
+            #ece6ff
+        );
+}
+
+.destination-info{
+    flex:1;
+}
+
+.destination-info h4{
+    font-size:11px;
+}
+
+.destination-info p{
+    margin-top:3px;
+
+    color:var(--muted);
+
+    font-size:9px;
+}
+
+.rating{
+    color:#e9a82f;
+    font-size:10px;
+}
+
+
+/* ==============================
+   QUICK ACTIONS
+============================== */
+
+.quick{
+    padding:20px;
+}
+
+.quick-grid{
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:9px;
+}
+
+.quick-action{
+    min-height:78px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    border:1px solid var(--border);
+    border-radius:12px;
+
+    transition:.25s;
+}
+
+.quick-action:hover{
+    color:var(--cyan2);
+
+    border-color:
+        rgba(34,199,216,.35);
+
+    background:#f8fcfd;
+
+    transform:translateY(-3px);
+}
+
+.qa-icon{
+    margin-bottom:6px;
+    font-size:21px;
+}
+
+.quick-action span:last-child{
+    color:var(--muted);
+    font-size:9px;
+}
+
+
+/* ==============================
+   TOAST
+============================== */
+
+.toast{
+    position:fixed;
+
+    right:25px;
+    bottom:25px;
+
+    z-index:3000;
+
+    padding:12px 16px;
+
+    border-radius:11px;
+
+    color:#fff;
+    background:#172033;
+
+    font-size:11px;
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.2);
+
+    opacity:0;
+
+    transform:translateY(20px);
+
+    pointer-events:none;
+
+    transition:.3s;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+
+/* ==============================
+   ANIMATION
+============================== */
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+
+/* ==============================
+   RESPONSIVE
+============================== */
+
+@media(max-width:1150px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .content-grid{
+        grid-template-columns:1fr;
+    }
+
+    .lower-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .hero-visual{
+        transform:scale(.85);
+    }
+}
+
+
+@media(max-width:900px){
+
+    .sidebar{
+        transform:translateX(-100%);
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .mobile-menu{
+        display:block;
+    }
+
+    .main{
+        margin-left:0;
+        padding:75px 20px 40px;
+    }
+
+    .hero-visual{
+        display:none;
+    }
+}
+
+
+@media(max-width:650px){
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .lower-grid{
+        grid-template-columns:1fr;
+    }
+
+    .hero{
+        padding:27px;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .profile div:last-child{
+        display:none;
+    }
+
+    .trip-image{
+        width:60px;
+        height:57px;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar" id="sidebar">
+
+
+    <!-- BRAND -->
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🌍
+        </div>
+
+        <div>
+
+            <h2>
+                GlobeTrotter
+            </h2>
+
+            <small>
+                Smart Travel Planner
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <nav class="menu">
+
+
+        <!-- DASHBOARD -->
+
+        <a
+            href="dashboard.html"
+            class="menu-item"
+        >
+
+            <span class="menu-icon">
+                🏠
+            </span>
+
+            <span>
+                Dashboard
+            </span>
+
+        </a>
+
+
+        <!-- CREATE TRIP -->
+
+        <a
+            href="itinerary-planner.html"
+            class="menu-item"
+        >
+
+            <span class="menu-icon">
+                ➕
+            </span>
+
+            <span>
+                Create Trip
+            </span>
+
+        </a>
+
+
+        <!-- MY TRIPS -->
+
+        <a
+            href="trips.html"
+            class="menu-item"
+        >
+
+            <span class="menu-icon">
+                🧳
+            </span>
+
+            <span>
+                My Trips
+            </span>
+
+        </a>
+
+
+        <!-- ITINERARY -->
+
+        <a
+            href="itinerary.html"
+            class="menu-item"
+        >
+
+            <span class="menu-icon">
+                🗺️
+            </span>
+
+            <span>
+                Itinerary
+            </span>
+
+        </a>
+
+
+        <!-- ITINERARY PLANNER -->
+
+        <a
+            href="itinerary-planner.html"
+            class="menu-item"
+        >
+
+            <span class="menu-icon">
+                ✏️
+            </span>
+
+            <span>
+                Itinerary Planner
+            </span>
+
+        </a>
+
+
+        <!-- TRIP CALENDAR -->
+
+        <a
+            href="trip-calendar.html"
+            class="menu-item"
+        >
+
+            <span class="menu-icon">
+                📅
+            </span>
+
+            <span>
+                Trip Calendar
+            </span>
+
+        </a>
+
+
+        <!-- TRIP OVERVIEW -->
+
+        <a
+            href="trip-overview.html"
+            class="menu-item"
+        >
+
+            <span class="menu-icon">
+                📋
+            </span>
+
+            <span>
+                Trip Overview
+            </span>
+
+        </a>
+
+
+        <!-- SHARED ITINERARY -->
+
+        <a
+            href="shared-itinerary.html"
+            class="menu-item"
+        >
+
+            <span class="menu-icon">
+                🔗
+            </span>
+
+            <span>
+                Shared Itinerary
+            </span>
+
+        </a>
+
+
+        <!-- PUBLIC ITINERARY VIEW -->
+
+        <a
+            href="itinerary-view.html"
+            class="menu-item"
+        >
+
+            <span class="menu-icon">
+                👁️
+            </span>
+
+            <span>
+                Public Itinerary
+            </span>
+
+        </a>
+
+
+        <!-- PROFILE -->
+
+        <a
+            href="profile.html"
+            class="menu-item"
+        >
+
+            <span class="menu-icon">
+                👤
+            </span>
+
+            <span>
+                Profile
+            </span>
+
+        </a>
+
+
+        <!-- EXPLORE -->
+
+        <div class="menu-title">
+            EXPLORE
+        </div>
+
+
+        <!-- CITY SEARCH -->
+
+        <a
+            href="city-search.html"
+            class="menu-item"
+        >
+
+            <span class="menu-icon">
+                🔎
+            </span>
+
+            <span>
+                City Search
+            </span>
+
+        </a>
+
+
+        <!-- ACTIVITY SEARCH -->
+
+        <a
+            href="activity-search.html"
+            class="menu-item"
+        >
+
+            <span class="menu-icon">
+                🎯
+            </span>
+
+            <span>
+                Activity Search
+            </span>
+
+        </a>
+
+
+        <!-- ADMIN -->
+
+        <a
+            href="admin-analytics.html"
+            class="menu-item"
+        >
+
+            <span class="menu-icon">
+                📊
+            </span>
+
+            <span>
+                Admin / Analytics
+            </span>
+
+        </a>
+
+
+    </nav>
+
+
+    <!-- LOGOUT -->
+
+    <div class="sidebar-bottom">
+
+        <button
+            class="logout"
+            onclick="API.logout()"
+        >
+
+            <span>
+                🚪
+            </span>
+
+            <span>
+                Logout
+            </span>
+
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- MOBILE MENU -->
+
+<button
+    class="mobile-menu"
+    onclick="toggleSidebar()"
+>
+    ☰
+</button>
+
+
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<main class="main">
+
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+
+        <div class="greeting">
+
+            <small>
+                Your next adventure awaits
+            </small>
+
+            <h1>
+                Welcome back,
+                <span id="userName">
+                    Traveller
+                </span>
+                👋
+            </h1>
+
+        </div>
+
+
+        <div class="top-right">
+
+
+            <button
+                class="notification"
+                onclick="showToast('You are all caught up!')"
+            >
+                🔔
+            </button>
+
+
+            <a
+                href="profile.html"
+                class="profile"
+            >
+
+                <div
+                    class="avatar"
+                    id="avatar"
+                >
+                    T
+                </div>
+
+                <div>
+
+                    <strong id="profileName">
+                        Traveller
+                    </strong>
+
+                    <small>
+                        Traveller
+                    </small>
+
+                </div>
+
+            </a>
+
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =================================================
+         HERO
+    ================================================== -->
+
+    <section class="hero">
+
+
+        <div class="hero-content">
+
+
+            <span class="hero-label">
+                ✨ PLAN • EXPLORE • EXPERIENCE
+            </span>
+
+
+            <h2>
+                Your next journey
+                <br>
+                starts here.
+            </h2>
+
+
+            <p>
+                Plan multi-city adventures,
+                organize your itinerary,
+                manage your budget and discover
+                amazing destinations — all in one place.
+            </p>
+
+
+            <div class="hero-buttons">
+
+
+                <!-- ACTUAL FILE:
+                     itinerary-planner.html
+                -->
+
+                <a
+                    href="itinerary-planner.html"
+                    class="primary"
+                >
+                    + Create New Trip
+                </a>
+
+
+                <!-- ACTUAL FILE:
+                     trips.html
+                -->
+
+                <a
+                    href="trips.html"
+                    class="secondary"
+                >
+                    View My Trips
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+        <div class="hero-visual">
+
+            <div class="plane">
+                ✈️
+            </div>
+
+            <div class="globe">
+                🌎
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         STATS
+    ================================================== -->
+
+    <section class="stats">
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                🧳
+            </div>
+
+            <div class="stat-number" id="statTotalTrips">
+                0
+            </div>
+
+            <div class="stat-label">
+                Total Trips
+            </div>
+
+            <div class="stat-change">
+                +2 this year
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                🌍
+            </div>
+
+            <div class="stat-number" id="statCitiesExplored">
+                0
+            </div>
+
+            <div class="stat-label">
+                Cities Explored
+            </div>
+
+            <div class="stat-change">
+                +5 new
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                📅
+            </div>
+
+            <div class="stat-number" id="statUpcomingTrips">
+                0
+            </div>
+
+            <div class="stat-label">
+                Upcoming Trips
+            </div>
+
+            <div class="stat-change">
+                Planned
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-icon">
+                💰
+            </div>
+
+            <div class="stat-number" id="statPlannedBudget">
+                ₹0
+            </div>
+
+            <div class="stat-label">
+                Planned Budget
+            </div>
+
+            <div class="stat-change">
+                On track
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         TRIPS + BUDGET
+    ================================================== -->
+
+    <section class="content-grid">
+
+
+        <!-- UPCOMING TRIPS -->
+
+        <div class="card trips-card">
+
+
+            <div class="section-header">
+
+                <h2>
+                    Your Upcoming Trips
+                </h2>
+
+                <!-- trips.html -->
+
+                <a
+                    href="trips.html"
+                    class="view"
+                >
+                    View all →
+                </a>
+
+            </div>
+
+
+            <div class="trip-list" id="tripList">
+
+                <div class="date">
+                    Loading trips...
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- BUDGET -->
+
+        <div class="card budget">
+
+
+            <div class="budget-top">
+
+                <div class="budget-title">
+
+                    <h3>
+                        Trip Budget
+                    </h3>
+
+                    <p>
+                        Manali Escape
+                    </p>
+
+                </div>
+
+
+                <div class="amount">
+
+                    ₹34,000
+
+                    <small>
+                        of ₹50,000
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="progress">
+
+                <div class="progress-bar"></div>
+
+            </div>
+
+
+            <div class="budget-list">
+
+
+                <div class="budget-row">
+                    <span>Transport</span>
+                    <strong>₹8,500</strong>
+                </div>
+
+
+                <div class="budget-row">
+                    <span>Stay</span>
+                    <strong>₹12,000</strong>
+                </div>
+
+
+                <div class="budget-row">
+                    <span>Food</span>
+                    <strong>₹5,500</strong>
+                </div>
+
+
+                <div class="budget-row">
+                    <span>Activities</span>
+                    <strong>₹8,000</strong>
+                </div>
+
+
+            </div>
+
+
+            <div class="budget-note">
+
+                💡 You're currently within your
+                planned budget. ₹16,000 remaining.
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =================================================
+         LOWER GRID
+    ================================================== -->
+
+    <section class="lower-grid">
+
+
+        <!-- CALENDAR -->
+
+        <div class="card calendar">
+
+
+            <div class="section-header">
+
+                <h2>
+                    Trip Calendar
+                </h2>
+
+                <!-- trip-calendar.html -->
+
+                <a
+                    href="trip-calendar.html"
+                    class="view"
+                >
+                    Open →
+                </a>
+
+            </div>
+
+
+            <div class="month">
+
+                <h3>
+                    June 2026
+                </h3>
+
+                <div class="calendar-buttons">
+
+                    <button>
+                        ‹
+                    </button>
+
+                    <button>
+                        ›
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="calendar-grid">
+
+                <div>Mo</div>
+                <div>Tu</div>
+                <div>We</div>
+                <div>Th</div>
+                <div>Fr</div>
+                <div>Sa</div>
+                <div>Su</div>
+
+
+                <div></div>
+                <div></div>
+
+
+                <div class="day">1</div>
+                <div class="day">2</div>
+                <div class="day">3</div>
+                <div class="day">4</div>
+                <div class="day">5</div>
+                <div class="day">6</div>
+                <div class="day">7</div>
+
+                <div class="day">8</div>
+                <div class="day">9</div>
+                <div class="day">10</div>
+                <div class="day">11</div>
+                <div class="day">12</div>
+                <div class="day">13</div>
+                <div class="day">14</div>
+
+                <div class="day">15</div>
+
+                <div class="day trip-day">
+                    16
+                </div>
+
+                <div class="day trip-day">
+                    17
+                </div>
+
+                <div class="day today">
+                    18
+                </div>
+
+                <div class="day trip-day">
+                    19
+                </div>
+
+                <div class="day trip-day">
+                    20
+                </div>
+
+                <div class="day">21</div>
+
+                <div class="day">22</div>
+                <div class="day">23</div>
+                <div class="day">24</div>
+                <div class="day">25</div>
+                <div class="day">26</div>
+                <div class="day">27</div>
+                <div class="day">28</div>
+
+                <div class="day">29</div>
+                <div class="day">30</div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- RECOMMENDED -->
+
+        <div class="card recommend">
+
+
+            <div class="section-header">
+
+                <h2>
+                    Recommended
+                </h2>
+
+                <a
+                    href="city-search.html"
+                    class="view"
+                >
+                    Explore →
+                </a>
+
+            </div>
+
+
+            <!-- BALI -->
+
+            <div class="destination">
+
+                <div class="destination-image">
+                    🏝️
+                </div>
+
+                <div class="destination-info">
+
+                    <h4>
+                        Bali, Indonesia
+                    </h4>
+
+                    <p>
+                        Beaches • Culture • Food
+                    </p>
+
+                </div>
+
+                <div class="rating">
+                    ★ 4.9
+                </div>
+
+            </div>
+
+
+            <!-- SWITZERLAND -->
+
+            <div class="destination">
+
+                <div class="destination-image">
+                    🏔️
+                </div>
+
+                <div class="destination-info">
+
+                    <h4>
+                        Switzerland
+                    </h4>
+
+                    <p>
+                        Alps • Lakes • Scenic trains
+                    </p>
+
+                </div>
+
+                <div class="rating">
+                    ★ 4.8
+                </div>
+
+            </div>
+
+
+            <!-- ROME -->
+
+            <div class="destination">
+
+                <div class="destination-image">
+                    🏛️
+                </div>
+
+                <div class="destination-info">
+
+                    <h4>
+                        Rome, Italy
+                    </h4>
+
+                    <p>
+                        History • Art • Cuisine
+                    </p>
+
+                </div>
+
+                <div class="rating">
+                    ★ 4.7
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- QUICK ACTIONS -->
+
+        <div class="card quick">
+
+
+            <div class="section-header">
+
+                <h2>
+                    Quick Actions
+                </h2>
+
+            </div>
+
+
+            <div class="quick-grid">
+
+
+                <!-- CREATE -->
+
+                <a
+                    href="itinerary-planner.html"
+                    class="quick-action"
+                >
+
+                    <span class="qa-icon">
+                        ✈️
+                    </span>
+
+                    <span>
+                        Create Trip
+                    </span>
+
+                </a>
+
+
+                <!-- CITY -->
+
+                <a
+                    href="city-search.html"
+                    class="quick-action"
+                >
+
+                    <span class="qa-icon">
+                        🔎
+                    </span>
+
+                    <span>
+                        Find City
+                    </span>
+
+                </a>
+
+
+                <!-- ACTIVITY -->
+
+                <a
+                    href="activity-search.html"
+                    class="quick-action"
+                >
+
+                    <span class="qa-icon">
+                        🎯
+                    </span>
+
+                    <span>
+                        Activities
+                    </span>
+
+                </a>
+
+
+                <!-- CALENDAR -->
+
+                <a
+                    href="trip-calendar.html"
+                    class="quick-action"
+                >
+
+                    <span class="qa-icon">
+                        📅
+                    </span>
+
+                    <span>
+                        Calendar
+                    </span>
+
+                </a>
+
+
+                <!-- SHARE -->
+
+                <a
+                    href="shared-itinerary.html"
+                    class="quick-action"
+                >
+
+                    <span class="qa-icon">
+                        🔗
+                    </span>
+
+                    <span>
+                        Share Trip
+                    </span>
+
+                </a>
+
+
+                <!-- PROFILE -->
+
+                <a
+                    href="profile.html"
+                    class="quick-action"
+                >
+
+                    <span class="qa-icon">
+                        👤
+                    </span>
+
+                    <span>
+                        Profile
+                    </span>
+
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast"
+>
+    Notification
+</div>
+
+
+
+<script src="app-api.js"></script>
+<script>
+
+API.requireAuth();
+
+/* =====================================================
+   MOBILE SIDEBAR
+===================================================== */
+
+function toggleSidebar(){
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    sidebar.classList.toggle("open");
+
+}
+
+
+/* =====================================================
+   USER DATA
+===================================================== */
+
+const user =
+    API.getUser() ||
+    { name:"Traveller", email:"", role:"user" };
+
+
+/* =====================================================
+   SHOW USER
+===================================================== */
+
+const userName =
+    document.getElementById(
+        "userName"
+    );
+
+const profileName =
+    document.getElementById(
+        "profileName"
+    );
+
+const avatar =
+    document.getElementById(
+        "avatar"
+    );
+
+
+if(user.name){
+
+    userName.textContent =
+        user.name
+            .split(" ")[0];
+
+    profileName.textContent =
+        user.name;
+
+    avatar.textContent =
+        user.name
+            .charAt(0)
+            .toUpperCase();
+
+}
+
+
+/* =====================================================
+   ACTIVE MENU
+===================================================== */
+
+const currentPage =
+    window.location.pathname
+        .split("/")
+        .pop()
+        .toLowerCase();
+
+
+document
+    .querySelectorAll(".menu-item")
+    .forEach(function(item){
+
+        const href =
+            item
+                .getAttribute("href")
+                .split("/")
+                .pop()
+                .toLowerCase();
+
+
+        if(href === currentPage){
+
+            item.classList.add(
+                "active"
+            );
+
+        }
+
+    });
+
+
+/* =====================================================
+   MOBILE MENU CLOSE
+===================================================== */
+
+document
+    .querySelectorAll(".menu-item")
+    .forEach(function(item){
+
+        item.addEventListener(
+            "click",
+            function(){
+
+                document
+                    .getElementById("sidebar")
+                    .classList
+                    .remove("open");
+
+            }
+        );
+
+    });
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+let toastTimer;
+
+function showToast(message){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    toast.textContent =
+        message;
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            function(){
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            2200
+        );
+
+}
+
+
+/* =====================================================
+   CALENDAR CLICK
+===================================================== */
+
+document
+    .querySelectorAll(
+        ".calendar-grid .day"
+    )
+    .forEach(function(day){
+
+        day.addEventListener(
+            "click",
+            function(){
+
+                showToast(
+                    "June " +
+                    day.textContent +
+                    " selected"
+                );
+
+            }
+        );
+
+    });
+
+
+/* =====================================================
+   DASHBOARD DATA
+===================================================== */
+
+function formatDate(dateStr){
+
+    if(!dateStr) return "";
+
+    const parsed = new Date(dateStr);
+
+    if(isNaN(parsed.getTime())) return dateStr;
+
+    return parsed.toLocaleDateString(
+        "en-US",
+        { month:"short", day:"numeric" }
+    );
+
+}
+
+function renderTrips(trips){
+
+    const tripList =
+        document.getElementById("tripList");
+
+    if(!trips || trips.length === 0){
+
+        tripList.innerHTML =
+            '<div class="date">' +
+            "No trips yet — start planning! " +
+            '<a href="itinerary-planner.html" class="view">Create a trip →</a>' +
+            "</div>";
+
+        return;
+
+    }
+
+    tripList.innerHTML =
+        trips.map(function(trip){
+
+            return (
+                '<a href="trip-overview.html?id=' + encodeURIComponent(trip.id) + '" class="trip">' +
+                    '<div class="trip-image">' + (trip.cover_emoji || "🧳") + "</div>" +
+                    '<div class="trip-info">' +
+                        "<h3>" + trip.title + "</h3>" +
+                        "<p>" + (trip.description || "") + "</p>" +
+                        '<div class="trip-meta">' +
+                            '<span class="badge">' + (trip.status || "") + "</span>" +
+                            '<span class="date">' +
+                                formatDate(trip.start_date) + " – " + formatDate(trip.end_date) +
+                            "</span>" +
+                        "</div>" +
+                    "</div>" +
+                    '<span class="arrow">→</span>' +
+                "</a>"
+            );
+
+        }).join("");
+
+}
+
+async function loadDashboard(){
+
+    try{
+
+        const data =
+            await API.get("/api/dashboard");
+
+        document.getElementById("statTotalTrips").textContent =
+            data.stats.totalTrips;
+
+        document.getElementById("statCitiesExplored").textContent =
+            data.stats.citiesExplored;
+
+        document.getElementById("statUpcomingTrips").textContent =
+            data.stats.upcomingTrips;
+
+        document.getElementById("statPlannedBudget").textContent =
+            "₹" + Number(data.stats.plannedBudget || 0).toLocaleString("en-IN");
+
+        renderTrips(data.trips);
+
+    }catch(error){
+
+        showToast(error.message || "Could not load dashboard");
+
+    }
+
+}
+
+loadDashboard();
+
+</script>
+
+</body>
+</html>
