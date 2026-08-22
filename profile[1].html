@@ -1,0 +1,2603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GlobeTrotter — User Profile</title>
+
+<style>
+
+:root{
+  --primary:#0e7c8c;
+  --primary-dark:#075e6b;
+  --cyan:#22d3ee;
+  --accent:#ff7959;
+  --dark:#172033;
+  --muted:#687487;
+  --border:#e2e8ec;
+  --green:#2e9e5b;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  Arial,sans-serif;
+}
+
+body{
+  background:#111a3d;
+  color:var(--dark);
+}
+
+.page{
+  min-height:100vh;
+  position:relative;
+  overflow:hidden;
+
+  background:
+  linear-gradient(
+    180deg,
+    #172451 0%,
+    #41427e 30%,
+    #85548b 55%,
+    #dc7779 76%,
+    #f3b16b 100%
+  );
+}
+
+
+/* =========================
+   STARS
+========================= */
+
+.stars{
+  position:absolute;
+  inset:0;
+  height:55%;
+
+  background-image:
+  radial-gradient(1px 1px at 7% 13%,#fff,transparent),
+  radial-gradient(1px 1px at 18% 28%,#fff,transparent),
+  radial-gradient(1px 1px at 31% 11%,#fff,transparent),
+  radial-gradient(1px 1px at 43% 27%,#fff,transparent),
+  radial-gradient(1px 1px at 56% 16%,#fff,transparent),
+  radial-gradient(1px 1px at 68% 30%,#fff,transparent),
+  radial-gradient(1px 1px at 81% 12%,#fff,transparent),
+  radial-gradient(1px 1px at 94% 25%,#fff,transparent);
+
+  animation:
+  starsGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes starsGlow{
+
+  from{
+    opacity:.25;
+  }
+
+  to{
+    opacity:.9;
+  }
+
+}
+
+
+/* =========================
+   CLOUDS
+========================= */
+
+.cloud{
+  position:absolute;
+
+  width:135px;
+  height:30px;
+
+  border-radius:50px;
+
+  background:
+  rgba(255,255,255,.17);
+}
+
+.cloud:before,
+.cloud:after{
+  content:"";
+
+  position:absolute;
+
+  border-radius:50%;
+
+  background:inherit;
+}
+
+.cloud:before{
+  width:55px;
+  height:55px;
+  left:15px;
+  top:-25px;
+}
+
+.cloud:after{
+  width:43px;
+  height:43px;
+  right:12px;
+  top:-20px;
+}
+
+.cloud.one{
+  left:-170px;
+  top:18%;
+  animation:
+  cloudMove 45s linear infinite;
+}
+
+.cloud.two{
+  left:-200px;
+  top:35%;
+  opacity:.2;
+  transform:scale(.7);
+  animation:
+  cloudMove 58s linear infinite;
+  animation-delay:-18s;
+}
+
+@keyframes cloudMove{
+
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(130vw);
+  }
+
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+
+  position:relative;
+  z-index:20;
+
+  width:
+  min(
+    1180px,
+    calc(100% - 40px)
+  );
+
+  margin:auto;
+
+  padding-top:22px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+}
+
+.logo-area{
+
+  display:flex;
+  align-items:center;
+  gap:11px;
+  color:white;
+}
+
+.logo{
+
+  width:50px;
+  height:50px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:
+  linear-gradient(
+    135deg,
+    var(--primary),
+    var(--accent)
+  );
+
+  box-shadow:
+  0 12px 30px
+  rgba(0,0,0,.2);
+
+  animation:
+  logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+
+  0%,100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-5px);
+  }
+
+}
+
+.logo-text{
+  font-size:1.18rem;
+  font-weight:800;
+}
+
+.logo-text span{
+  color:#5ee7f5;
+}
+
+.header-actions{
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.header-btn{
+
+  padding:9px 13px;
+
+  border:
+  1px solid
+  rgba(255,255,255,.2);
+
+  border-radius:9px;
+
+  background:
+  rgba(255,255,255,.1);
+
+  color:white;
+
+  backdrop-filter:blur(10px);
+
+  font-size:.55rem;
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+.header-btn:hover{
+
+  background:
+  rgba(255,255,255,.2);
+
+  transform:
+  translateY(-2px);
+}
+
+.avatar-small{
+
+  width:39px;
+  height:39px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:
+  linear-gradient(
+    135deg,
+    var(--cyan),
+    var(--primary)
+  );
+
+  color:white;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.main{
+
+  position:relative;
+  z-index:10;
+
+  width:
+  min(
+    1100px,
+    calc(100% - 40px)
+  );
+
+  margin:
+  35px auto 90px;
+}
+
+
+/* =========================
+   TITLE
+========================= */
+
+.page-title{
+
+  color:white;
+
+  margin-bottom:18px;
+
+  animation:
+  titleIn .7s ease;
+}
+
+@keyframes titleIn{
+
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+}
+
+.page-title h1{
+
+  margin:0;
+
+  font-size:
+  clamp(
+    1.9rem,
+    4vw,
+    2.6rem
+  );
+
+  letter-spacing:-1px;
+}
+
+.page-title h1 span{
+  color:#5ee7f5;
+}
+
+.page-title p{
+
+  margin:
+  7px 0 0;
+
+  color:
+  rgba(255,255,255,.7);
+
+  font-size:.62rem;
+}
+
+
+/* =========================
+   PROFILE PANEL
+========================= */
+
+.profile-panel{
+
+  padding:20px;
+
+  border-radius:23px;
+
+  background:
+  rgba(255,255,255,.97);
+
+  box-shadow:
+  0 35px 90px
+  rgba(8,30,45,.3);
+
+  animation:
+  panelIn .85s
+  cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes panelIn{
+
+  from{
+    opacity:0;
+    transform:
+    translateY(30px)
+    scale(.97);
+  }
+
+  to{
+    opacity:1;
+    transform:
+    translateY(0)
+    scale(1);
+  }
+
+}
+
+
+/* =========================
+   PROFILE HERO
+========================= */
+
+.profile-hero{
+
+  position:relative;
+
+  padding:
+  24px;
+
+  border-radius:17px;
+
+  overflow:hidden;
+
+  color:white;
+
+  background:
+  linear-gradient(
+    120deg,
+    #075e6b,
+    #315d87,
+    #8a527f
+  );
+}
+
+.profile-hero:before{
+
+  content:"";
+
+  position:absolute;
+
+  width:260px;
+  height:260px;
+
+  right:-90px;
+  top:-130px;
+
+  border-radius:50%;
+
+  background:
+  rgba(255,255,255,.08);
+}
+
+.profile-hero-content{
+
+  position:relative;
+  z-index:2;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:20px;
+}
+
+.profile-main{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:17px;
+}
+
+.profile-avatar{
+
+  width:90px;
+  height:90px;
+
+  flex-shrink:0;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:
+  linear-gradient(
+    135deg,
+    #5ee7f5,
+    var(--primary)
+  );
+
+  border:
+  4px solid
+  rgba(255,255,255,.55);
+
+  font-size:2.3rem;
+
+  box-shadow:
+  0 15px 35px
+  rgba(0,0,0,.2);
+
+  animation:
+  avatarFloat 3.5s ease-in-out infinite;
+}
+
+@keyframes avatarFloat{
+
+  0%,100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-6px);
+  }
+
+}
+
+.profile-name h2{
+
+  margin:0;
+
+  font-size:1.3rem;
+}
+
+.profile-name p{
+
+  margin:
+  5px 0 0;
+
+  color:
+  rgba(255,255,255,.72);
+
+  font-size:.55rem;
+}
+
+.profile-location{
+
+  margin-top:9px;
+
+  font-size:.47rem;
+
+  color:
+  rgba(255,255,255,.75);
+}
+
+.edit-btn{
+
+  padding:
+  10px 14px;
+
+  border:0;
+
+  border-radius:9px;
+
+  background:white;
+
+  color:var(--dark);
+
+  font-size:.52rem;
+
+  font-weight:900;
+
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+.edit-btn:hover{
+
+  transform:
+  translateY(-3px);
+
+  box-shadow:
+  0 12px 25px
+  rgba(0,0,0,.2);
+}
+
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(4,1fr);
+
+  gap:9px;
+
+  margin-top:15px;
+}
+
+.stat{
+
+  padding:15px;
+
+  text-align:center;
+
+  border:
+  1px solid
+  var(--border);
+
+  border-radius:13px;
+
+  background:#fbfcfd;
+
+  transition:.25s;
+}
+
+.stat:hover{
+
+  transform:
+  translateY(-4px);
+
+  box-shadow:
+  0 12px 25px
+  rgba(0,0,0,.07);
+}
+
+.stat strong{
+
+  display:block;
+
+  font-size:1rem;
+}
+
+.stat span{
+
+  display:block;
+
+  margin-top:4px;
+
+  color:var(--muted);
+
+  font-size:.42rem;
+
+  font-weight:900;
+}
+
+
+/* =========================
+   CONTENT GRID
+========================= */
+
+.content-grid{
+
+  display:grid;
+
+  grid-template-columns:
+  1.2fr .8fr;
+
+  gap:15px;
+
+  margin-top:15px;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.card{
+
+  padding:17px;
+
+  border:
+  1px solid
+  var(--border);
+
+  border-radius:16px;
+
+  background:#fbfcfd;
+}
+
+.card + .card{
+
+  margin-top:13px;
+}
+
+.card-title{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  margin-bottom:13px;
+}
+
+.card-title h3{
+
+  margin:0;
+
+  font-size:.73rem;
+}
+
+.card-title span{
+
+  color:var(--muted);
+
+  font-size:.43rem;
+}
+
+
+/* =========================
+   ABOUT
+========================= */
+
+.about-text{
+
+  margin:0;
+
+  color:var(--muted);
+
+  font-size:.5rem;
+
+  line-height:1.65;
+}
+
+.tags{
+
+  display:flex;
+
+  flex-wrap:wrap;
+
+  gap:6px;
+
+  margin-top:12px;
+}
+
+.tag{
+
+  padding:
+  6px 8px;
+
+  border-radius:7px;
+
+  background:#eef8f9;
+
+  color:var(--primary);
+
+  font-size:.43rem;
+
+  font-weight:800;
+}
+
+
+/* =========================
+   COUNTRIES
+========================= */
+
+.country-grid{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(3,1fr);
+
+  gap:7px;
+}
+
+.country{
+
+  padding:10px;
+
+  text-align:center;
+
+  border:
+  1px solid
+  var(--border);
+
+  border-radius:10px;
+
+  background:white;
+
+  transition:.2s;
+}
+
+.country:hover{
+
+  transform:
+  translateY(-3px);
+
+  border-color:#b8dfe3;
+}
+
+.country .flag{
+
+  font-size:1.2rem;
+}
+
+.country strong{
+
+  display:block;
+
+  margin-top:5px;
+
+  font-size:.45rem;
+}
+
+.country span{
+
+  display:block;
+
+  margin-top:2px;
+
+  color:var(--muted);
+
+  font-size:.38rem;
+}
+
+
+/* =========================
+   UPCOMING TRIPS
+========================= */
+
+.trip-list{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:8px;
+}
+
+.trip{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  padding:9px;
+
+  border:
+  1px solid
+  var(--border);
+
+  border-radius:10px;
+
+  background:white;
+
+  cursor:pointer;
+
+  transition:.22s;
+}
+
+.trip:hover{
+
+  transform:
+  translateX(4px);
+
+  box-shadow:
+  0 8px 18px
+  rgba(0,0,0,.06);
+}
+
+.trip-icon{
+
+  width:38px;
+  height:38px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:9px;
+
+  background:
+  #eef8f9;
+
+  font-size:1.05rem;
+}
+
+.trip:nth-child(2)
+.trip-icon{
+
+  background:#fff1ed;
+}
+
+.trip:nth-child(3)
+.trip-icon{
+
+  background:#f2ecf8;
+}
+
+.trip-info strong{
+
+  display:block;
+
+  font-size:.52rem;
+}
+
+.trip-info span{
+
+  display:block;
+
+  margin-top:3px;
+
+  color:var(--muted);
+
+  font-size:.42rem;
+}
+
+
+/* =========================
+   ACTIVITY
+========================= */
+
+.activity-list{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:10px;
+}
+
+.activity{
+
+  display:flex;
+
+  gap:9px;
+
+  align-items:flex-start;
+}
+
+.activity-dot{
+
+  width:9px;
+  height:9px;
+
+  flex-shrink:0;
+
+  margin-top:3px;
+
+  border-radius:50%;
+
+  background:var(--primary);
+
+  box-shadow:
+  0 0 0 4px
+  #e5f4f6;
+}
+
+.activity:nth-child(2)
+.activity-dot{
+  background:var(--accent);
+  box-shadow:
+  0 0 0 4px
+  #fff0ec;
+}
+
+.activity:nth-child(3)
+.activity-dot{
+  background:var(--green);
+  box-shadow:
+  0 0 0 4px
+  #e9f7ee;
+}
+
+.activity strong{
+
+  display:block;
+
+  font-size:.48rem;
+}
+
+.activity span{
+
+  display:block;
+
+  margin-top:3px;
+
+  color:var(--muted);
+
+  font-size:.4rem;
+}
+
+
+/* =========================
+   PREFERENCES
+========================= */
+
+.preference{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  padding:
+  9px 0;
+
+  border-bottom:
+  1px solid
+  var(--border);
+}
+
+.preference:last-child{
+  border-bottom:0;
+}
+
+.preference-left{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
+}
+
+.preference-icon{
+
+  width:30px;
+  height:30px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:7px;
+
+  background:#eef8f9;
+}
+
+.preference strong{
+
+  display:block;
+
+  font-size:.48rem;
+}
+
+.preference span{
+
+  display:block;
+
+  margin-top:2px;
+
+  color:var(--muted);
+
+  font-size:.4rem;
+}
+
+.toggle{
+
+  width:32px;
+  height:18px;
+
+  position:relative;
+
+  border-radius:20px;
+
+  background:var(--primary);
+
+  cursor:pointer;
+}
+
+.toggle:after{
+
+  content:"";
+
+  position:absolute;
+
+  width:14px;
+  height:14px;
+
+  right:2px;
+  top:2px;
+
+  border-radius:50%;
+
+  background:white;
+
+  transition:.2s;
+}
+
+.toggle.off{
+  background:#d6dde2;
+}
+
+.toggle.off:after{
+  right:16px;
+}
+
+
+/* =========================
+   PROFILE COMPLETION
+========================= */
+
+.progress{
+
+  height:8px;
+
+  border-radius:20px;
+
+  overflow:hidden;
+
+  background:#eaf0f2;
+
+  margin-top:10px;
+}
+
+.progress-bar{
+
+  width:82%;
+
+  height:100%;
+
+  border-radius:20px;
+
+  background:
+  linear-gradient(
+    90deg,
+    var(--primary),
+    var(--cyan)
+  );
+
+  animation:
+  progressIn 1.5s ease;
+}
+
+@keyframes progressIn{
+
+  from{
+    width:0;
+  }
+
+  to{
+    width:82%;
+  }
+
+}
+
+.progress-info{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  margin-top:6px;
+
+  color:var(--muted);
+
+  font-size:.4rem;
+
+  font-weight:800;
+}
+
+
+/* =========================
+   CTA
+========================= */
+
+.cta{
+
+  margin-top:15px;
+
+  padding:17px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:15px;
+
+  border-radius:14px;
+
+  color:white;
+
+  background:
+  linear-gradient(
+    110deg,
+    var(--primary),
+    #1595a4,
+    var(--accent)
+  );
+
+  background-size:
+  200% 100%;
+
+  animation:
+  gradientMove 5s ease infinite;
+}
+
+@keyframes gradientMove{
+
+  0%,100%{
+    background-position:0%;
+  }
+
+  50%{
+    background-position:100%;
+  }
+
+}
+
+.cta strong{
+
+  display:block;
+
+  font-size:.7rem;
+}
+
+.cta small{
+
+  display:block;
+
+  margin-top:4px;
+
+  opacity:.75;
+
+  font-size:.48rem;
+}
+
+.cta button{
+
+  padding:
+  10px 14px;
+
+  border:0;
+
+  border-radius:9px;
+
+  background:white;
+
+  color:var(--dark);
+
+  font-size:.52rem;
+
+  font-weight:900;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.cta button:hover{
+
+  transform:
+  translateY(-2px)
+  scale(1.02);
+}
+
+
+/* =========================
+   MOUNTAINS
+========================= */
+
+.mountains{
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  height:120px;
+
+  z-index:2;
+
+  background:
+  rgba(12,18,38,.72);
+
+  clip-path:
+  polygon(
+    0 100%,
+    0 64%,
+    10% 41%,
+    20% 62%,
+    31% 18%,
+    43% 55%,
+    54% 31%,
+    67% 62%,
+    79% 24%,
+    90% 51%,
+    100% 35%,
+    100% 100%
+  );
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+
+  position:fixed;
+
+  right:22px;
+  bottom:22px;
+
+  z-index:100;
+
+  padding:
+  11px 15px;
+
+  border-radius:9px;
+
+  background:#172033;
+
+  color:white;
+
+  box-shadow:
+  0 15px 35px
+  rgba(0,0,0,.25);
+
+  font-size:.58rem;
+
+  font-weight:700;
+
+  opacity:0;
+
+  transform:
+  translateY(20px);
+
+  pointer-events:none;
+
+  transition:.3s;
+}
+
+.toast.show{
+
+  opacity:1;
+
+  transform:
+  translateY(0);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px){
+
+  .content-grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
+@media(max-width:700px){
+
+  .header,
+  .main{
+    width:
+    calc(100% - 24px);
+  }
+
+  .header-btn{
+    display:none;
+  }
+
+  .profile-hero-content{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .stats{
+    grid-template-columns:
+    repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:500px){
+
+  .profile-main{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .profile-avatar{
+    width:75px;
+    height:75px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .country-grid{
+    grid-template-columns:
+    repeat(2,1fr);
+  }
+
+  .profile-panel{
+    padding:13px;
+  }
+
+  .cta{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .cta button{
+    width:100%;
+  }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+  <div class="stars"></div>
+
+  <div class="cloud one"></div>
+  <div class="cloud two"></div>
+
+
+  <!-- HEADER -->
+
+  <header class="header">
+
+    <div class="logo-area">
+
+      <div class="logo">
+        🌍
+      </div>
+
+      <div class="logo-text">
+        Globe<span>Trotter</span>
+      </div>
+
+    </div>
+
+
+    <div class="header-actions">
+
+      <button
+        class="header-btn"
+        onclick="goDashboard()"
+      >
+        Dashboard
+      </button>
+
+      <button
+        class="header-btn"
+        onclick="goCalendar()"
+      >
+        Trip Calendar
+      </button>
+
+      <div class="avatar-small">
+        👤
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+
+    <!-- TITLE -->
+
+    <div class="page-title">
+
+      <h1>
+        My <span>Profile</span>
+      </h1>
+
+      <p>
+        Manage your travel identity, preferences and adventures.
+      </p>
+
+    </div>
+
+
+    <!-- PROFILE PANEL -->
+
+    <section class="profile-panel">
+
+
+      <!-- PROFILE HERO -->
+
+      <div class="profile-hero">
+
+        <div class="profile-hero-content">
+
+
+          <div class="profile-main">
+
+            <div class="profile-avatar" id="profileAvatar" style="position:relative;">
+              <img id="profileAvatarImg" style="display:none;width:100%;height:100%;border-radius:50%;object-fit:cover;">
+              <span id="profileAvatarFallback">👤</span>
+              <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" onchange="handleAvatarFileChange(event)">
+              <button type="button" id="avatarEditBtn" onclick="document.getElementById('avatarFileInput').click()" style="display:none;position:absolute;bottom:-2px;right:-2px;width:26px;height:26px;border-radius:50%;border:2px solid white;background:var(--accent);color:white;font-size:.8rem;cursor:pointer;">✎</button>
+            </div>
+
+
+            <div class="profile-name">
+
+              <h2 id="profileNameDisplay">
+                Loading…
+              </h2>
+
+              <input
+                type="text"
+                id="profileNameInput"
+                style="display:none;padding:6px 9px;border-radius:7px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:white;font-size:1.1rem;font-weight:700;width:100%;"
+              >
+
+              <p id="profileEmailDisplay">
+                Loading…
+              </p>
+
+              <div class="profile-location" id="profileMemberSince"></div>
+
+            </div>
+
+          </div>
+
+
+          <div id="profileActionsView">
+
+            <button
+              class="edit-btn"
+              onclick="enterEditMode()"
+            >
+              ✏️ Edit Profile
+            </button>
+
+          </div>
+
+          <div id="profileActionsEdit" style="display:none;gap:8px;">
+
+            <button
+              class="edit-btn"
+              onclick="saveProfile()"
+            >
+              💾 Save
+            </button>
+
+            <button
+              class="edit-btn"
+              onclick="cancelEditMode()"
+              style="background:rgba(255,255,255,.2);color:white;"
+            >
+              ✖ Cancel
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- STATS -->
+
+      <div class="stats">
+
+        <div class="stat">
+
+          <strong id="statTrips">
+            –
+          </strong>
+
+          <span>
+            TRIPS PLANNED
+          </span>
+
+        </div>
+
+
+        <div class="stat">
+
+          <strong id="statUpcoming">
+            –
+          </strong>
+
+          <span>
+            UPCOMING
+          </span>
+
+        </div>
+
+
+        <div class="stat">
+
+          <strong id="statCities">
+            –
+          </strong>
+
+          <span>
+            CITIES EXPLORED
+          </span>
+
+        </div>
+
+
+        <div class="stat">
+
+          <strong id="statBudget">
+            –
+          </strong>
+
+          <span>
+            BUDGET PLANNED
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- CONTENT -->
+
+      <div class="content-grid">
+
+
+        <!-- LEFT -->
+
+        <div>
+
+
+          <!-- ABOUT -->
+
+          <div class="card">
+
+            <div class="card-title">
+
+              <h3>
+                👋 About Me
+              </h3>
+
+              <span>
+                PROFILE
+              </span>
+
+            </div>
+
+
+            <p class="about-text" id="bioDisplay">
+              Loading…
+            </p>
+
+            <textarea
+              id="bioInput"
+              style="display:none;width:100%;min-height:70px;padding:9px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:.5rem;color:var(--dark);resize:vertical;"
+            ></textarea>
+
+
+            <div class="tags">
+
+              <div class="tag">
+                🏔️ Mountains
+              </div>
+
+              <div class="tag">
+                📸 Photography
+              </div>
+
+              <div class="tag">
+                🍜 Food
+              </div>
+
+              <div class="tag">
+                🏛️ Culture
+              </div>
+
+              <div class="tag">
+                🌊 Beaches
+              </div>
+
+              <div class="tag">
+                🚆 Road Trips
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- COUNTRIES -->
+
+          <div class="card">
+
+            <div class="card-title">
+
+              <h3>
+                🌎 Countries Visited
+              </h3>
+
+              <span>
+                9 COUNTRIES
+              </span>
+
+            </div>
+
+
+            <div class="country-grid">
+
+
+              <div class="country">
+
+                <div class="flag">
+                  🇮🇳
+                </div>
+
+                <strong>
+                  India
+                </strong>
+
+                <span>
+                  6 trips
+                </span>
+
+              </div>
+
+
+              <div class="country">
+
+                <div class="flag">
+                  🇨🇭
+                </div>
+
+                <strong>
+                  Switzerland
+                </strong>
+
+                <span>
+                  2 trips
+                </span>
+
+              </div>
+
+
+              <div class="country">
+
+                <div class="flag">
+                  🇯🇵
+                </div>
+
+                <strong>
+                  Japan
+                </strong>
+
+                <span>
+                  1 trip
+                </span>
+
+              </div>
+
+
+              <div class="country">
+
+                <div class="flag">
+                  🇮🇩
+                </div>
+
+                <strong>
+                  Indonesia
+                </strong>
+
+                <span>
+                  1 trip
+                </span>
+
+              </div>
+
+
+              <div class="country">
+
+                <div class="flag">
+                  🇫🇷
+                </div>
+
+                <strong>
+                  France
+                </strong>
+
+                <span>
+                  1 trip
+                </span>
+
+              </div>
+
+
+              <div class="country">
+
+                <div class="flag">
+                  🇮🇹
+                </div>
+
+                <strong>
+                  Italy
+                </strong>
+
+                <span>
+                  1 trip
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- ACTIVITY -->
+
+          <div class="card">
+
+            <div class="card-title">
+
+              <h3>
+                ⚡ Recent Activity
+              </h3>
+
+              <span>
+                THIS MONTH
+              </span>
+
+            </div>
+
+
+            <div class="activity-list">
+
+
+              <div class="activity">
+
+                <div class="activity-dot"></div>
+
+                <div>
+
+                  <strong>
+                    Created a new Switzerland itinerary
+                  </strong>
+
+                  <span>
+                    2 hours ago · Swiss Adventure
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <div class="activity">
+
+                <div class="activity-dot"></div>
+
+                <div>
+
+                  <strong>
+                    Added Bali to your wishlist
+                  </strong>
+
+                  <span>
+                    Yesterday · 3 destinations saved
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <div class="activity">
+
+                <div class="activity-dot"></div>
+
+                <div>
+
+                  <strong>
+                    Completed Japan trip
+                  </strong>
+
+                  <span>
+                    5 days ago · Tokyo Explorer
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- RIGHT -->
+
+        <aside>
+
+
+          <!-- UPCOMING -->
+
+          <div class="card">
+
+            <div class="card-title">
+
+              <h3>
+                ✈️ Upcoming Trips
+              </h3>
+
+              <span>
+                3 TRIPS
+              </span>
+
+            </div>
+
+
+            <div class="trip-list">
+
+
+              <div
+                class="trip"
+                onclick="openTrip('Swiss Adventure')"
+              >
+
+                <div class="trip-icon">
+                  🏔️
+                </div>
+
+                <div class="trip-info">
+
+                  <strong>
+                    Swiss Adventure
+                  </strong>
+
+                  <span>
+                    Mar 18 · Switzerland
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <div
+                class="trip"
+                onclick="openTrip('Bali Adventure')"
+              >
+
+                <div class="trip-icon">
+                  🌴
+                </div>
+
+                <div class="trip-info">
+
+                  <strong>
+                    Bali Adventure
+                  </strong>
+
+                  <span>
+                    Mar 26 · Indonesia
+                  </span>
+
+                </div>
+
+              </div>
+
+
+              <div
+                class="trip"
+                onclick="openTrip('Tokyo Explorer')"
+              >
+
+                <div class="trip-icon">
+                  🗼
+                </div>
+
+                <div class="trip-info">
+
+                  <strong>
+                    Tokyo Explorer
+                  </strong>
+
+                  <span>
+                    Apr 08 · Japan
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- PREFERENCES -->
+
+          <div class="card">
+
+            <div class="card-title">
+
+              <h3>
+                ⚙️ Preferences
+              </h3>
+
+            </div>
+
+
+            <div class="preference">
+
+              <div class="preference-left">
+
+                <div class="preference-icon">
+                  🔔
+                </div>
+
+                <div>
+
+                  <strong>
+                    Trip Reminders
+                  </strong>
+
+                  <span>
+                    Upcoming travel alerts
+                  </span>
+
+                </div>
+
+              </div>
+
+              <div
+                class="toggle"
+                onclick="toggleSetting(this)"
+              ></div>
+
+            </div>
+
+
+            <div class="preference">
+
+              <div class="preference-left">
+
+                <div class="preference-icon">
+                  ✉️
+                </div>
+
+                <div>
+
+                  <strong>
+                    Travel Updates
+                  </strong>
+
+                  <span>
+                    Destination recommendations
+                  </span>
+
+                </div>
+
+              </div>
+
+              <div
+                class="toggle"
+                onclick="toggleSetting(this)"
+              ></div>
+
+            </div>
+
+
+            <div class="preference">
+
+              <div class="preference-left">
+
+                <div class="preference-icon">
+                  🔗
+                </div>
+
+                <div>
+
+                  <strong>
+                    Public Profile
+                  </strong>
+
+                  <span>
+                    Allow others to view
+                  </span>
+
+                </div>
+
+              </div>
+
+              <div
+                class="toggle"
+                onclick="toggleSetting(this)"
+              ></div>
+
+            </div>
+
+          </div>
+
+
+          <!-- PROFILE COMPLETION -->
+
+          <div class="card">
+
+            <div class="card-title">
+
+              <h3>
+                ✨ Profile Completion
+              </h3>
+
+              <span>
+                82%
+              </span>
+
+            </div>
+
+
+            <p style="
+              margin:0;
+              color:var(--muted);
+              font-size:.46rem;
+              line-height:1.5;
+            ">
+              Complete your profile to unlock a more personalized travel experience.
+            </p>
+
+
+            <div class="progress">
+
+              <div class="progress-bar"></div>
+
+            </div>
+
+
+            <div class="progress-info">
+
+              <span>
+                4 of 5 sections
+              </span>
+
+              <span>
+                82%
+              </span>
+
+            </div>
+
+          </div>
+
+
+        </aside>
+
+      </div>
+
+
+      <!-- CTA -->
+
+      <div class="cta">
+
+        <div>
+
+          <strong>
+            🌍 Ready for your next adventure?
+          </strong>
+
+          <small>
+            Explore destinations and start planning your next trip.
+          </small>
+
+        </div>
+
+
+        <button
+          onclick="newTrip()"
+        >
+          Plan New Trip →
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <div class="mountains"></div>
+
+
+  <div
+    class="toast"
+    id="toast"
+  >
+    Done!
+  </div>
+
+</div>
+
+
+<script src="app-api.js"></script>
+<script>
+
+API.requireAuth();
+
+let currentUser = null;
+let pendingAvatarValue = null;
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function goDashboard(){
+
+  window.location.href =
+    "dashboard.html";
+
+}
+
+
+function goCalendar(){
+
+  window.location.href =
+    "trip-calendar.html";
+
+}
+
+
+function newTrip(){
+
+  showToast(
+    "Opening trip planner ✈️"
+  );
+
+  setTimeout(
+    function(){
+
+      window.location.href =
+        "trip-planner.html";
+
+    },
+    700
+  );
+
+}
+
+
+/* =========================
+   LOAD PROFILE
+========================= */
+
+async function loadProfile(){
+
+  try{
+
+    const data = await API.get("/api/auth/me");
+
+    currentUser = data.user;
+
+    renderProfile(currentUser);
+
+  }catch(error){
+
+    showToast(error.message);
+
+  }
+
+}
+
+function renderProfile(user){
+
+  document.getElementById("profileNameDisplay").textContent =
+    user.name || "Unnamed Traveler";
+
+  document.getElementById("profileNameInput").value =
+    user.name || "";
+
+  document.getElementById("profileEmailDisplay").innerHTML =
+    (user.email || "") +
+    ' <span style="opacity:.65;font-size:.85em;">(read-only)</span>';
+
+  document.getElementById("bioDisplay").textContent =
+    user.bio ||
+    "No bio yet. Click Edit Profile to add one.";
+
+  document.getElementById("bioInput").value =
+    user.bio || "";
+
+  if(user.created_at){
+
+    const year =
+      new Date(user.created_at).getFullYear();
+
+    document.getElementById("profileMemberSince").textContent =
+      "🗓️ Member since " + year;
+
+  }else{
+
+    document.getElementById("profileMemberSince").textContent = "";
+
+  }
+
+  updateAvatarDisplay(user.avatar || "");
+
+}
+
+function updateAvatarDisplay(avatarValue){
+
+  const img = document.getElementById("profileAvatarImg");
+  const fallback = document.getElementById("profileAvatarFallback");
+
+  if(avatarValue){
+
+    img.src = avatarValue;
+    img.style.display = "block";
+    fallback.style.display = "none";
+
+  }else{
+
+    img.style.display = "none";
+    fallback.style.display = "block";
+
+  }
+
+}
+
+
+/* =========================
+   DASHBOARD STATS
+========================= */
+
+async function loadStats(){
+
+  try{
+
+    const data = await API.get("/api/dashboard");
+    const stats = data.stats;
+
+    document.getElementById("statTrips").textContent =
+      stats.totalTrips;
+
+    document.getElementById("statUpcoming").textContent =
+      stats.upcomingTrips;
+
+    document.getElementById("statCities").textContent =
+      stats.citiesExplored;
+
+    document.getElementById("statBudget").textContent =
+      "₹" + Number(stats.plannedBudget || 0).toLocaleString();
+
+  }catch(error){
+
+    /* stats are a bonus on this page, ignore failures silently */
+
+  }
+
+}
+
+
+/* =========================
+   EDIT PROFILE
+========================= */
+
+function enterEditMode(){
+
+  document.getElementById("profileNameDisplay").style.display = "none";
+  document.getElementById("profileNameInput").style.display = "block";
+
+  document.getElementById("bioDisplay").style.display = "none";
+  document.getElementById("bioInput").style.display = "block";
+
+  document.getElementById("avatarEditBtn").style.display = "flex";
+
+  document.getElementById("profileActionsView").style.display = "none";
+  document.getElementById("profileActionsEdit").style.display = "flex";
+
+}
+
+function cancelEditMode(){
+
+  pendingAvatarValue = null;
+
+  renderProfile(currentUser);
+
+  document.getElementById("profileNameDisplay").style.display = "block";
+  document.getElementById("profileNameInput").style.display = "none";
+
+  document.getElementById("bioDisplay").style.display = "block";
+  document.getElementById("bioInput").style.display = "none";
+
+  document.getElementById("avatarEditBtn").style.display = "none";
+
+  document.getElementById("profileActionsView").style.display = "block";
+  document.getElementById("profileActionsEdit").style.display = "none";
+
+}
+
+function handleAvatarFileChange(event){
+
+  const file = event.target.files[0];
+
+  if(!file){
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e){
+
+    pendingAvatarValue = e.target.result;
+
+    updateAvatarDisplay(pendingAvatarValue);
+
+  };
+
+  reader.readAsDataURL(file);
+
+}
+
+async function saveProfile(){
+
+  const name =
+    document.getElementById("profileNameInput").value.trim();
+
+  const bio =
+    document.getElementById("bioInput").value.trim();
+
+  if(!name){
+
+    showToast("Name cannot be empty");
+
+    return;
+
+  }
+
+  const avatar =
+    pendingAvatarValue !== null ?
+      pendingAvatarValue :
+      (currentUser.avatar || "");
+
+  try{
+
+    const data =
+      await API.put(
+        "/api/profile",
+        { name: name, bio: bio, avatar: avatar }
+      );
+
+    currentUser = data.user;
+
+    API.setSession(
+      API.getToken(),
+      currentUser
+    );
+
+    pendingAvatarValue = null;
+
+    renderProfile(currentUser);
+
+    document.getElementById("profileNameDisplay").style.display = "block";
+    document.getElementById("profileNameInput").style.display = "none";
+
+    document.getElementById("bioDisplay").style.display = "block";
+    document.getElementById("bioInput").style.display = "none";
+
+    document.getElementById("avatarEditBtn").style.display = "none";
+
+    document.getElementById("profileActionsView").style.display = "block";
+    document.getElementById("profileActionsEdit").style.display = "none";
+
+    showToast("Profile updated ✅");
+
+  }catch(error){
+
+    showToast(error.message);
+
+  }
+
+}
+
+
+/* =========================
+   OPEN TRIP
+========================= */
+
+function openTrip(name){
+
+  showToast(
+    name +
+    " selected ✈️"
+  );
+
+}
+
+
+/* =========================
+   TOGGLE
+========================= */
+
+function toggleSetting(element){
+
+  element.classList.toggle(
+    "off"
+  );
+
+  if(
+    element.classList.contains("off")
+  ){
+
+    showToast(
+      "Setting disabled"
+    );
+
+  }else{
+
+    showToast(
+      "Setting enabled"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+let toastTimer;
+
+function showToast(message){
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+  toast.textContent =
+    message;
+
+  toast.classList.add(
+    "show"
+  );
+
+  clearTimeout(
+    toastTimer
+  );
+
+  toastTimer =
+    setTimeout(
+      function(){
+
+        toast.classList.remove(
+          "show"
+        );
+
+      },
+      2200
+    );
+
+}
+
+
+/* =========================
+   INIT
+========================= */
+
+loadProfile();
+loadStats();
+
+</script>
+
+</body>
+</html>
