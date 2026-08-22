@@ -16,22 +16,22 @@ This repository contains our solution developed for the Odoo Hiring Hackathon 20
 
 
 
-# 🌍 GlobeTrotter – Personalized Travel Planning
+#  GlobeTrotter – Personalized Travel Planning
 
 GlobeTrotter is a personalized and interactive travel-planning platform designed to make planning multi-city trips simple, visual, and collaborative.
 
 The platform allows travelers to create customized itineraries, discover destinations and activities, manage travel dates, estimate expenses, visualize their journey, and share their travel plans with others.
 
-## ✨ Features
+##  Features
 
-### 🔐 Authentication
+###  Authentication
 
 * User signup and login
 * Email and password authentication
 * Forgot password functionality
 * Basic form validation
 
-### 🏠 Dashboard
+###  Dashboard
 
 * Personalized welcome screen
 * View recent and upcoming trips
@@ -39,7 +39,7 @@ The platform allows travelers to create customized itineraries, discover destina
 * Quick access to create a new trip
 * Budget highlights
 
-### 🗺️ Create & Manage Trips
+###  Create & Manage Trips
 
 * Create customized trips
 * Add trip name and description
@@ -48,7 +48,7 @@ The platform allows travelers to create customized itineraries, discover destina
 * Edit and delete trips
 * View destination count and trip summaries
 
-### 📍 Itinerary Builder
+###  Itinerary Builder
 
 * Add multiple cities/stops
 * Assign travel dates to each stop
@@ -56,7 +56,7 @@ The platform allows travelers to create customized itineraries, discover destina
 * Reorder cities
 * Build a complete day-wise itinerary
 
-### 🔎 City & Activity Discovery
+###  City & Activity Discovery
 
 * Search for cities and destinations
 * View country, popularity, and cost information
@@ -68,7 +68,7 @@ The platform allows travelers to create customized itineraries, discover destina
   * Duration
 * View activity descriptions and images
 
-### 📅 Itinerary Visualization
+###  Itinerary Visualization
 
 * Day-wise itinerary
 * Calendar view
@@ -77,7 +77,7 @@ The platform allows travelers to create customized itineraries, discover destina
 * Activity time and cost information
 * Drag-and-drop/reordering support
 
-### 💰 Trip Budget & Cost Breakdown
+###  Trip Budget & Cost Breakdown
 
 * Estimated total trip cost
 * Cost breakdown for:
@@ -98,7 +98,7 @@ The platform allows travelers to create customized itineraries, discover destina
 * Copy an existing trip
 * Social sharing support
 
-### 👤 User Profile & Settings
+###  User Profile & Settings
 
 * Update profile information
 * Change preferences
@@ -106,7 +106,7 @@ The platform allows travelers to create customized itineraries, discover destina
 * Manage saved destinations
 * Delete account
 
-### 📊 Admin Dashboard
+###  Admin Dashboard
 
 An optional admin and analytics dashboard can provide:
 
@@ -116,25 +116,25 @@ An optional admin and analytics dashboard can provide:
 * User engagement metrics
 * Platform usage analytics
 
-## 🎯 Problem Statement
+##  Problem Statement
 
 Planning a multi-city trip can become complicated when travelers need to manage destinations, dates, activities, expenses, and schedules across different locations.
 
 GlobeTrotter aims to solve this problem by bringing these tasks together into one intuitive platform, giving users complete visibility of their journey while helping them organize trips efficiently and stay within budget.
 
-## 🚀 Vision
+##  Vision
 
 Our vision is to create an intelligent, personalized, and collaborative travel-planning platform where users can:
 
-* 🌎 Explore destinations around the world
-* 🧳 Build personalized multi-city journeys
-* 📅 Visualize their travel plans
-* 💵 Make cost-effective decisions
-* 🤝 Share their itineraries with others
+*  Explore destinations around the world
+*  Build personalized multi-city journeys
+*  Visualize their travel plans
+*  Make cost-effective decisions
+*  Share their itineraries with others
 
 The goal is to make travel planning as exciting and engaging as the trip itself.
 
-## 🏗️ Core Application Flow
+##  Core Application Flow
 
 ```text
 Login / Signup
@@ -156,7 +156,7 @@ Login / Signup
  Share Trip
 ```
 
-## 🗄️ Data Management
+##  Data Management
 
 GlobeTrotter is designed around a relational database capable of managing complex travel data, including:
 
@@ -172,17 +172,17 @@ GlobeTrotter is designed around a relational database capable of managing comple
 
 This structure allows user-specific travel plans and related information to be stored and retrieved efficiently.
 
-## 📱 Responsive Experience
+##  Responsive Experience
 
 The application is intended to provide a smooth user experience across:
 
-* 💻 Desktop
-* 📱 Mobile
-* 🖥️ Larger screens
+*  Desktop
+*  Mobile
+*  Larger screens
 
 The interface should dynamically adapt to the user's trip flow and provide intuitive tools for organizing travel plans.
 
-## 🎨 Design
+##  Design
 
 The application includes dedicated screens for:
 
@@ -200,7 +200,7 @@ The application includes dedicated screens for:
 12. User Profile / Settings
 13. Admin / Analytics Dashboard *(Optional)*
 
-## 🔮 Future Improvements
+##  Future Improvements
 
 Potential future enhancements include:
 
@@ -215,19 +215,19 @@ Potential future enhancements include:
 * Mobile applications
 * More detailed travel analytics
 
-## 🛠️ Project Status
+##  Project Status
 
-🚧 **In Development**
+ **In Development**
 
 GlobeTrotter is being developed as a comprehensive travel-planning application focused on personalization, itinerary management, budgeting, and trip sharing.
 
-## 🎨 Design Mockup
+##  Design Mockup
 
 The project design/mockup is available on Excalidraw:
 
-[View GlobeTrotter Mockup](https://link.excalidraw.com/l/65VNwvy7c4X/6CzbTgEeSr1)
 
-## 🤝 Contributing
+
+##  Contributing
 
 Contributions, ideas, and feedback are welcome.
 
@@ -238,13 +238,13 @@ Contributions, ideas, and feedback are welcome.
 5. Push the branch
 6. Open a Pull Request
 
-## 📄 License
+##  License
 
 This project is currently being developed as part of a hackathon/project initiative.
 
 ---
 
-### 🌍 GlobeTrotter
+###  GlobeTrotter
 
 **Dream. Plan. Explore. Share.**
 
