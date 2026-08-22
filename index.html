@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobeTrotter — Login</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="auth-shell">
+  <div class="travel-scene" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="far-plane">&#9992;&#65039;</div>
+    <svg class="flight-route" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+      <path id="flightPath" d="M 80 800 C 400 380, 1000 320, 1520 120" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="3" stroke-dasharray="2 16" stroke-linecap="round"/>
+      <circle cx="80" cy="800" r="9" fill="#ff7a59"/>
+      <circle cx="1520" cy="120" r="9" fill="#22d3ee"/>
+      <text text-anchor="middle" dominant-baseline="middle">&#9992;&#65039;
+        <animateMotion dur="7s" repeatCount="indefinite" rotate="auto" path="M 80 800 C 400 380, 1000 320, 1520 120"/>
+      </text>
+    </svg>
+    <div class="mountains"></div>
+    <div class="road">
+      <div class="vehicle bus">&#128652;</div>
+      <div class="vehicle car">&#128663;</div>
+    </div>
+  </div>
+  <div class="card auth-card" style="width:100%;max-width:400px;">
+    <div class="auth-logo">&#127760;</div>
+    <h1 class="center">GlobeTrotter</h1>
+    <p class="text-muted center auth-subtitle">Plan multi-city trips, on budget, together.</p>
+    <div class="mini-route" aria-hidden="true">
+      <span class="route-dot dep"></span>
+      <span class="route-track"></span>
+      <span class="route-plane">&#9992;&#65039;</span>
+      <span class="route-track"></span>
+      <span class="route-dot arr"></span>
+    </div>
+
+    <div id="msg" class="msg hidden"></div>
+
+    <form id="loginForm">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="loginEmail" required placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="loginPassword" required placeholder="••••••••">
+      </div>
+      <button class="btn" type="submit" style="width:100%;">Log In</button>
+      <p class="center" style="margin-top:10px;font-size:0.85rem;">
+        <a href="#" id="forgotLink">Forgot password?</a>
+      </p>
+    </form>
+
+    <form id="signupForm" class="hidden">
+      <div class="field">
+        <label>Full name</label>
+        <input type="text" id="signupName" required placeholder="Alex Traveler">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="signupEmail" required placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="signupPassword" required minlength="6" placeholder="At least 6 characters">
+      </div>
+      <button class="btn" type="submit" style="width:100%;">Create Account</button>
+    </form>
+
+    <div class="divider"></div>
+    <p class="center" style="font-size:0.9rem;">
+      <span id="toggleText">Don't have an account?</span>
+      <a href="#" id="toggleLink">Sign up</a>
+    </p>
+    <p class="center">
+      <span class="auth-note">Demo admin: admin@globetrotter.test / admin123</span>
+    </p>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>
