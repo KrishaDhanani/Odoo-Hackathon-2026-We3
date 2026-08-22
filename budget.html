@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobeTrotter — Budget</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="gt-nav"></div>
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1 id="tripName">Budget breakdown</h1>
+      <p>Estimated costs across your whole trip.</p>
+    </div>
+    <a class="btn secondary" id="backLink" href="my-trips.html">← Back to itinerary</a>
+  </div>
+
+  <div id="msg" class="msg hidden"></div>
+
+  <div class="grid grid-3" id="stats"></div>
+
+  <div class="section-title"><h2>Cost breakdown</h2></div>
+  <div class="card">
+    <div class="bar-chart" id="breakdownChart"></div>
+  </div>
+
+  <div class="section-title"><h2>Daily estimated spend</h2></div>
+  <div class="card">
+    <div class="bar-chart" id="dailyChart"></div>
+    <p id="overBudgetNote" class="text-muted" style="margin-top:14px;"></p>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/budget.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobeTrotter — Admin</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="gt-nav"></div>
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Admin Dashboard</h1>
+      <p>Platform usage and trends.</p>
+    </div>
+  </div>
+
+  <div id="msg" class="msg hidden"></div>
+
+  <div class="grid grid-3" id="stats"></div>
+
+  <div class="section-title"><h2>Top cities</h2></div>
+  <div class="card"><table id="topCitiesTable"><thead><tr><th>City</th><th>Country</th><th>Times added to trips</th></tr></thead><tbody></tbody></table></div>
+
+  <div class="section-title"><h2>Top activities</h2></div>
+  <div class="card"><table id="topActivitiesTable"><thead><tr><th>Activity</th><th>Type</th><th>Times booked</th></tr></thead><tbody></tbody></table></div>
+
+  <div class="section-title"><h2>Users</h2></div>
+  <div class="card"><table id="usersTable"><thead><tr><th>Name</th><th>Email</th><th>Trips</th><th>Joined</th><th>Role</th></tr></thead><tbody></tbody></table></div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

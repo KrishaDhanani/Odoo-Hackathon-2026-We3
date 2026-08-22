@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobeTrotter — Itinerary</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="gt-nav"></div>
+<div class="page">
+  <div id="msg" class="msg hidden"></div>
+
+  <div class="page-header">
+    <div>
+      <h1 id="tripName">Loading trip…</h1>
+      <p id="tripDates"></p>
+      <p id="tripDescription" class="text-muted"></p>
+    </div>
+    <div class="btn-row">
+      <a class="btn secondary" id="budgetLink" href="#">View Budget</a>
+      <button class="btn secondary" id="editTripBtn">Edit Trip</button>
+      <button class="btn accent" id="shareBtn">Share Trip</button>
+    </div>
+  </div>
+
+  <div id="editPanel" class="card hidden" style="margin-bottom:20px;">
+    <div class="field">
+      <label>Trip name</label>
+      <input type="text" id="editName">
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Start date</label><input type="date" id="editStart"></div>
+      <div class="field"><label>End date</label><input type="date" id="editEnd"></div>
+    </div>
+    <div class="field"><label>Description</label><textarea id="editDescription" rows="2"></textarea></div>
+    <div class="btn-row">
+      <button class="btn" id="saveTripBtn">Save</button>
+      <button class="btn secondary" id="cancelEditBtn">Cancel</button>
+    </div>
+  </div>
+
+  <div id="sharePanel" class="card hidden" style="margin-bottom:20px;">
+    <label>Public share link</label>
+    <div class="btn-row">
+      <input type="text" id="shareLink" readonly style="flex:1;min-width:200px;">
+      <button class="btn small" id="copyShareBtn">Copy</button>
+      <button class="btn small danger" id="revokeShareBtn">Revoke</button>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <h2>Itinerary</h2>
+    <div class="view-toggle">
+      <button id="listViewBtn" class="active">List</button>
+      <button id="calendarViewBtn">Calendar</button>
+    </div>
+  </div>
+
+  <div id="listView">
+    <div id="stopsContainer"></div>
+
+    <div class="card">
+      <h3>Add a stop</h3>
+      <div class="field">
+        <label>City</label>
+        <input type="text" id="citySearch" placeholder="Search cities (e.g. Tokyo, France)…" autocomplete="off">
+        <div id="cityResults" class="search-results"></div>
+        <input type="hidden" id="selectedCityId">
+        <div id="selectedCityLabel" class="badge hidden" style="margin-top:8px;"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Arrival date</label><input type="date" id="stopStart"></div>
+        <div class="field"><label>Departure date</label><input type="date" id="stopEnd"></div>
+      </div>
+      <button class="btn" id="addStopBtn">Add Stop</button>
+    </div>
+  </div>
+
+  <div id="calendarView" class="hidden"></div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/itinerary.js"></script>
+</body>
+</html>

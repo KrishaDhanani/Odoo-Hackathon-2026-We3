@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobeTrotter — Dashboard</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="gt-nav"></div>
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1 id="welcome">Welcome back!</h1>
+      <p>Here's what's happening with your travel plans.</p>
+    </div>
+    <a class="btn accent" href="create-trip.html">+ Plan New Trip</a>
+  </div>
+
+  <div class="grid grid-3" id="highlights"></div>
+
+  <div class="section-title">
+    <h2>Upcoming trips</h2>
+    <a href="my-trips.html">View all →</a>
+  </div>
+  <div class="grid grid-3" id="recentTrips"></div>
+
+  <div class="section-title">
+    <h2>Popular destinations</h2>
+    <a href="create-trip.html">Start planning →</a>
+  </div>
+  <div class="grid grid-4" id="popularCities"></div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
