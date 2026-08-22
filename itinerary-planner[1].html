@@ -1,0 +1,3225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GlobeTrotter — Itinerary Planner</title>
+
+<style>
+:root{
+  --primary:#0e7c8c;
+  --primary-dark:#075e6b;
+  --cyan:#22d3ee;
+  --accent:#ff7959;
+  --dark:#172033;
+  --muted:#687487;
+  --border:#e2e8ec;
+  --green:#2e9e5b;
+  --orange:#ef8b35;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,sans-serif;
+}
+
+body{
+  background:#10183a;
+  color:var(--dark);
+  overflow-x:hidden;
+}
+
+.page{
+  min-height:100vh;
+  position:relative;
+  overflow:hidden;
+
+  padding-bottom:90px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #192453 0%,
+      #3b3c83 22%,
+      #76508f 42%,
+      #c96d85 63%,
+      #ed9869 82%,
+      #f8c873 100%
+    );
+}
+
+
+/* =========================
+   BACKGROUND
+========================= */
+
+.stars{
+  position:absolute;
+  inset:0;
+  height:60%;
+
+  opacity:.7;
+
+  background-image:
+    radial-gradient(1px 1px at 7% 16%,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 18% 31%,#fff,transparent),
+    radial-gradient(1px 1px at 29% 11%,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 42% 28%,#fff,transparent),
+    radial-gradient(1px 1px at 56% 17%,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 69% 34%,#fff,transparent),
+    radial-gradient(1px 1px at 82% 14%,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 94% 27%,#fff,transparent);
+
+  animation:
+    starPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes starPulse{
+  from{opacity:.35}
+  to{opacity:.9}
+}
+
+.cloud{
+  position:absolute;
+
+  width:125px;
+  height:32px;
+
+  border-radius:40px;
+
+  background:
+    rgba(255,255,255,.4);
+}
+
+.cloud::before,
+.cloud::after{
+  content:"";
+  position:absolute;
+
+  border-radius:50%;
+
+  background:inherit;
+}
+
+.cloud::before{
+  width:58px;
+  height:58px;
+
+  left:13px;
+  top:-26px;
+}
+
+.cloud::after{
+  width:43px;
+  height:43px;
+
+  right:11px;
+  top:-18px;
+}
+
+.cloud.one{
+  top:15%;
+  left:-160px;
+
+  animation:
+    cloudMove 40s linear infinite;
+}
+
+.cloud.two{
+  top:34%;
+  left:-180px;
+
+  opacity:.3;
+  transform:scale(.65);
+
+  animation:
+    cloudMove 55s linear infinite;
+
+  animation-delay:-20s;
+}
+
+@keyframes cloudMove{
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(135vw);
+  }
+}
+
+
+/* =========================
+   PLANE
+========================= */
+
+.plane{
+  position:absolute;
+
+  left:-5%;
+  top:70%;
+
+  z-index:5;
+
+  font-size:27px;
+
+  animation:
+    planeMove 14s ease-in-out infinite;
+}
+
+@keyframes planeMove{
+
+  0%{
+    left:-5%;
+    top:72%;
+    transform:rotate(-8deg);
+  }
+
+  35%{
+    left:35%;
+    top:52%;
+    transform:rotate(-17deg);
+  }
+
+  70%{
+    left:70%;
+    top:37%;
+    transform:rotate(-10deg);
+  }
+
+  100%{
+    left:105%;
+    top:13%;
+    transform:rotate(-4deg);
+  }
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+  position:relative;
+  z-index:20;
+
+  width:min(
+    1180px,
+    calc(100% - 40px)
+  );
+
+  margin:auto;
+
+  padding-top:23px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo-area{
+  display:flex;
+  align-items:center;
+  gap:11px;
+
+  color:white;
+}
+
+.logo{
+  width:52px;
+  height:52px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  font-size:1.5rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--accent)
+    );
+
+  box-shadow:
+    0 12px 30px
+    rgba(14,124,140,.35);
+
+  animation:
+    logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+
+  0%,100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-5px);
+  }
+}
+
+.logo-text{
+  font-size:1.2rem;
+  font-weight:800;
+}
+
+.logo-text span{
+  color:#5ee7f5;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.header-btn{
+  padding:10px 13px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.22);
+
+  border-radius:10px;
+
+  color:white;
+
+  background:
+    rgba(255,255,255,.1);
+
+  backdrop-filter:blur(12px);
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+.header-btn:hover{
+  transform:translateY(-2px);
+
+  background:
+    rgba(255,255,255,.2);
+}
+
+.avatar{
+  width:40px;
+  height:40px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  color:white;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--cyan),
+      var(--primary)
+    );
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.main{
+  position:relative;
+  z-index:10;
+
+  width:min(
+    1180px,
+    calc(100% - 40px)
+  );
+
+  margin:35px auto 0;
+}
+
+.heading{
+  color:white;
+  margin-bottom:20px;
+
+  animation:
+    headingIn .8s ease;
+}
+
+.heading h1{
+  margin:0;
+
+  font-size:
+    clamp(
+      2rem,
+      4vw,
+      3rem
+    );
+
+  letter-spacing:-1px;
+}
+
+.heading h1 span{
+  color:#5ee7f5;
+}
+
+.heading p{
+  margin:7px 0 0;
+
+  color:
+    rgba(255,255,255,.72);
+
+  font-size:.9rem;
+}
+
+@keyframes headingIn{
+
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+
+/* =========================
+   PANEL
+========================= */
+
+.panel{
+  background:
+    rgba(255,255,255,.97);
+
+  border-radius:25px;
+
+  padding:23px;
+
+  box-shadow:
+    0 35px 90px
+    rgba(8,30,45,.3);
+
+  animation:
+    panelIn .85s
+    cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes panelIn{
+
+  from{
+    opacity:0;
+    transform:
+      translateY(35px)
+      scale(.97);
+  }
+
+  to{
+    opacity:1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =========================
+   TOP BAR
+========================= */
+
+.trip-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  gap:15px;
+
+  padding-bottom:18px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+}
+
+.trip-title{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.trip-icon{
+  width:48px;
+  height:48px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e2f7f9,
+      #fff0ea
+    );
+
+  font-size:1.35rem;
+}
+
+.trip-title h2{
+  margin:0;
+  font-size:.95rem;
+}
+
+.trip-title p{
+  margin:4px 0 0;
+
+  color:var(--muted);
+
+  font-size:.56rem;
+}
+
+.finish-btn{
+  border:0;
+
+  padding:10px 14px;
+
+  border-radius:9px;
+
+  color:white;
+
+  background:var(--primary);
+
+  font-size:.58rem;
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.finish-btn:hover{
+  background:var(--primary-dark);
+  transform:translateY(-2px);
+}
+
+
+/* =========================
+   TRIP SUMMARY
+========================= */
+
+.summary{
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:10px;
+
+  margin-top:18px;
+}
+
+.summary-card{
+  position:relative;
+
+  padding:13px;
+
+  overflow:hidden;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:13px;
+
+  background:#fbfcfd;
+
+  transition:.25s;
+}
+
+.summary-card:hover{
+  transform:translateY(-3px);
+
+  box-shadow:
+    0 10px 25px
+    rgba(0,0,0,.07);
+}
+
+.summary-card::after{
+  content:"";
+
+  position:absolute;
+
+  width:50px;
+  height:50px;
+
+  right:-18px;
+  bottom:-18px;
+
+  border-radius:50%;
+
+  background:
+    rgba(14,124,140,.06);
+}
+
+.summary-icon{
+  font-size:1rem;
+}
+
+.summary-card span{
+  display:block;
+
+  margin-top:7px;
+
+  color:var(--muted);
+
+  font-size:.52rem;
+}
+
+.summary-card strong{
+  display:block;
+
+  margin-top:3px;
+
+  font-size:.78rem;
+}
+
+
+/* =========================
+   PROGRESS
+========================= */
+
+.progress-area{
+  margin-top:20px;
+}
+
+.progress-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  margin-bottom:7px;
+}
+
+.progress-top strong{
+  font-size:.62rem;
+}
+
+.progress-top span{
+  color:var(--primary);
+
+  font-size:.55rem;
+  font-weight:800;
+}
+
+.progress{
+  height:7px;
+
+  overflow:hidden;
+
+  border-radius:20px;
+
+  background:#eaf0f2;
+}
+
+.progress-fill{
+  width:72%;
+  height:100%;
+
+  border-radius:20px;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--primary),
+      var(--cyan),
+      var(--accent)
+    );
+
+  background-size:200% 100%;
+
+  animation:
+    progressGlow 4s linear infinite;
+}
+
+@keyframes progressGlow{
+
+  0%{
+    background-position:0%;
+  }
+
+  100%{
+    background-position:200%;
+  }
+}
+
+
+/* =========================
+   DAYS
+========================= */
+
+.days{
+  display:flex;
+
+  gap:7px;
+
+  margin-top:20px;
+
+  overflow-x:auto;
+
+  scrollbar-width:none;
+}
+
+.days::-webkit-scrollbar{
+  display:none;
+}
+
+.day-btn{
+  min-width:80px;
+
+  padding:9px 12px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:10px;
+
+  color:var(--muted);
+
+  background:white;
+
+  cursor:pointer;
+
+  transition:.22s;
+}
+
+.day-btn strong{
+  display:block;
+  font-size:.61rem;
+}
+
+.day-btn span{
+  display:block;
+
+  margin-top:3px;
+
+  font-size:.49rem;
+}
+
+.day-btn:hover{
+  border-color:#b4d9de;
+}
+
+.day-btn.active{
+  color:white;
+
+  border-color:var(--primary);
+
+  background:var(--primary);
+
+  box-shadow:
+    0 6px 16px
+    rgba(14,124,140,.2);
+}
+
+
+/* =========================
+   CONTENT LAYOUT
+========================= */
+
+.content{
+  display:grid;
+
+  grid-template-columns:
+    1fr 275px;
+
+  gap:17px;
+
+  margin-top:18px;
+}
+
+
+/* =========================
+   DAY PANEL
+========================= */
+
+.day-panel{
+  padding:17px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:17px;
+
+  background:#fbfcfd;
+}
+
+.day-heading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  margin-bottom:14px;
+}
+
+.day-heading-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.day-number{
+  width:38px;
+  height:38px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:10px;
+
+  color:white;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--cyan)
+    );
+
+  font-size:.72rem;
+  font-weight:900;
+}
+
+.day-heading h3{
+  margin:0;
+
+  font-size:.82rem;
+}
+
+.day-heading p{
+  margin:3px 0 0;
+
+  color:var(--muted);
+
+  font-size:.52rem;
+}
+
+.day-edit{
+  border:0;
+
+  padding:7px 9px;
+
+  border-radius:7px;
+
+  color:var(--primary);
+
+  background:#eaf7f9;
+
+  font-size:.5rem;
+  font-weight:800;
+
+  cursor:pointer;
+}
+
+
+/* =========================
+   TIMELINE
+========================= */
+
+.timeline{
+  position:relative;
+}
+
+.timeline::before{
+  content:"";
+
+  position:absolute;
+
+  left:17px;
+  top:14px;
+  bottom:14px;
+
+  width:2px;
+
+  background:
+    linear-gradient(
+      var(--primary),
+      #b8e3e7,
+      var(--accent)
+    );
+
+  opacity:.5;
+}
+
+.timeline-item{
+  position:relative;
+
+  display:grid;
+
+  grid-template-columns:
+    35px 1fr;
+
+  gap:10px;
+
+  margin-bottom:10px;
+
+  animation:
+    itemIn .5s ease both;
+}
+
+@keyframes itemIn{
+
+  from{
+    opacity:0;
+    transform:translateX(-10px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateX(0);
+  }
+}
+
+.timeline-dot{
+  position:relative;
+
+  z-index:2;
+
+  width:35px;
+  height:35px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  color:var(--primary);
+
+  background:white;
+
+  border:
+    2px solid
+    #c7e5e9;
+
+  font-size:.8rem;
+
+  box-shadow:
+    0 4px 10px
+    rgba(0,0,0,.06);
+}
+
+.timeline-card{
+  padding:11px 12px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:11px;
+
+  background:white;
+
+  transition:.25s;
+}
+
+.timeline-card:hover{
+  transform:translateX(4px);
+
+  border-color:#b6dce1;
+
+  box-shadow:
+    0 8px 18px
+    rgba(0,0,0,.06);
+}
+
+.timeline-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+
+  gap:8px;
+}
+
+.time{
+  color:var(--primary);
+
+  font-size:.52rem;
+  font-weight:900;
+}
+
+.timeline-card h4{
+  margin:3px 0 0;
+
+  font-size:.67rem;
+}
+
+.timeline-card p{
+  margin:4px 0 0;
+
+  color:var(--muted);
+
+  font-size:.51rem;
+
+  line-height:1.4;
+}
+
+.card-actions{
+  display:flex;
+  gap:5px;
+}
+
+.small-btn{
+  width:27px;
+  height:27px;
+
+  border:0;
+
+  border-radius:7px;
+
+  color:var(--muted);
+
+  background:#f1f4f6;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.small-btn:hover{
+  color:var(--primary);
+  background:#e6f5f7;
+}
+
+.small-btn.delete:hover{
+  color:#d94d4d;
+  background:#fff0f0;
+}
+
+
+/* =========================
+   ADD SLOT
+========================= */
+
+.add-slot{
+  margin-left:45px;
+
+  width:
+    calc(100% - 45px);
+
+  padding:9px;
+
+  border:
+    1px dashed
+    #b9d9de;
+
+  border-radius:9px;
+
+  color:var(--primary);
+
+  background:
+    rgba(235,248,249,.55);
+
+  font-size:.55rem;
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.add-slot:hover{
+  border-color:var(--primary);
+  background:#eaf8f9;
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+  display:flex;
+
+  flex-direction:column;
+
+  gap:12px;
+}
+
+.side-card{
+  padding:15px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:15px;
+
+  background:white;
+}
+
+.side-card h3{
+  margin:0;
+
+  font-size:.7rem;
+}
+
+.side-card-sub{
+  margin:4px 0 13px;
+
+  color:var(--muted);
+
+  font-size:.51rem;
+}
+
+
+/* =========================
+   BUDGET
+========================= */
+
+.budget{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  margin:8px auto 14px;
+
+  width:115px;
+  height:115px;
+
+  border-radius:50%;
+
+  background:
+    conic-gradient(
+      var(--primary) 0 68%,
+      #e8eff1 68% 100%
+    );
+
+  position:relative;
+}
+
+.budget::before{
+  content:"";
+
+  position:absolute;
+
+  width:86px;
+  height:86px;
+
+  border-radius:50%;
+
+  background:white;
+}
+
+.budget-content{
+  position:relative;
+  z-index:2;
+
+  text-align:center;
+}
+
+.budget-content strong{
+  display:block;
+
+  font-size:1rem;
+}
+
+.budget-content span{
+  color:var(--muted);
+
+  font-size:.48rem;
+}
+
+.budget-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:7px 0;
+
+  border-bottom:
+    1px solid
+    #edf0f2;
+
+  font-size:.54rem;
+}
+
+.budget-row:last-child{
+  border-bottom:0;
+}
+
+.budget-row span{
+  color:var(--muted);
+}
+
+.budget-row strong{
+  font-size:.56rem;
+}
+
+
+/* =========================
+   TRIP CHECKLIST
+========================= */
+
+.check-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  padding:7px 0;
+
+  font-size:.55rem;
+
+  cursor:pointer;
+}
+
+.check{
+  width:17px;
+  height:17px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border:
+    1px solid
+    #cdd8dc;
+
+  border-radius:5px;
+
+  color:white;
+
+  font-size:.55rem;
+
+  transition:.2s;
+}
+
+.check-item.done .check{
+  border-color:var(--green);
+
+  background:var(--green);
+}
+
+.check-item.done span{
+  text-decoration:line-through;
+  color:#9ba5ad;
+}
+
+
+/* =========================
+   TIPS
+========================= */
+
+.tip{
+  display:flex;
+  gap:9px;
+
+  padding:9px;
+
+  border-radius:9px;
+
+  background:#fff8ed;
+}
+
+.tip-icon{
+  font-size:.9rem;
+}
+
+.tip p{
+  margin:0;
+
+  color:#806642;
+
+  font-size:.51rem;
+
+  line-height:1.45;
+}
+
+
+/* =========================
+   BOTTOM ACTION
+========================= */
+
+.bottom-action{
+  display:flex;
+
+  align-items:center;
+  justify-content:space-between;
+
+  gap:15px;
+
+  margin-top:17px;
+
+  padding:14px;
+
+  border-radius:13px;
+
+  color:white;
+
+  background:
+    linear-gradient(
+      110deg,
+      var(--primary),
+      #1298a8,
+      var(--accent)
+    );
+
+  background-size:200% 100%;
+
+  animation:
+    gradientMove 5s ease infinite;
+}
+
+@keyframes gradientMove{
+
+  0%,100%{
+    background-position:0%;
+  }
+
+  50%{
+    background-position:100%;
+  }
+}
+
+.bottom-action strong{
+  display:block;
+
+  font-size:.67rem;
+}
+
+.bottom-action small{
+  display:block;
+
+  margin-top:3px;
+
+  opacity:.78;
+
+  font-size:.52rem;
+}
+
+.save-btn{
+  border:0;
+
+  padding:10px 15px;
+
+  border-radius:9px;
+
+  color:var(--dark);
+
+  background:white;
+
+  font-size:.59rem;
+  font-weight:900;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.save-btn:hover{
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 7px 18px
+    rgba(0,0,0,.14);
+}
+
+
+/* =========================
+   MOUNTAINS
+========================= */
+
+.mountains{
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:42px;
+
+  height:145px;
+
+  z-index:2;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15,22,45,.25),
+      rgba(10,16,32,.88)
+    );
+
+  clip-path:
+    polygon(
+      0 100%,
+      0 62%,
+      10% 38%,
+      20% 58%,
+      31% 15%,
+      43% 51%,
+      54% 30%,
+      66% 61%,
+      78% 21%,
+      89% 48%,
+      100% 32%,
+      100% 100%
+    );
+}
+
+
+/* =========================
+   ROAD
+========================= */
+
+.road{
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  height:42px;
+
+  z-index:3;
+
+  background:
+    linear-gradient(
+      180deg,
+      #292f3a,
+      #11151d
+    );
+}
+
+.road::before{
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  top:50%;
+
+  height:4px;
+
+  transform:
+    translateY(-50%);
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.6)
+      0 22px,
+      transparent
+      22px 47px
+    );
+
+  animation:
+    roadMove 1s linear infinite;
+}
+
+@keyframes roadMove{
+
+  to{
+    background-position:-47px 0;
+  }
+}
+
+.car{
+  position:absolute;
+
+  bottom:5px;
+
+  font-size:1.3rem;
+
+  animation:
+    carMove 11s linear infinite;
+}
+
+.bus{
+  position:absolute;
+
+  bottom:23px;
+
+  font-size:1.4rem;
+
+  animation:
+    carMove 16s linear infinite;
+}
+
+@keyframes carMove{
+
+  from{
+    transform:translateX(-120px);
+  }
+
+  to{
+    transform:translateX(110vw);
+  }
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+  position:fixed;
+
+  right:22px;
+  bottom:25px;
+
+  z-index:200;
+
+  padding:12px 16px;
+
+  border-radius:10px;
+
+  color:white;
+
+  background:#172033;
+
+  box-shadow:
+    0 15px 35px
+    rgba(0,0,0,.25);
+
+  font-size:.66rem;
+  font-weight:700;
+
+  opacity:0;
+
+  transform:
+    translateY(20px);
+
+  pointer-events:none;
+
+  transition:.3s;
+}
+
+.toast.show{
+  opacity:1;
+
+  transform:
+    translateY(0);
+}
+
+
+/* =========================
+   EMPTY / NO-TRIP STATE
+========================= */
+
+.empty-note{
+  padding:14px;
+
+  border:
+    1px dashed
+    var(--border);
+
+  border-radius:11px;
+
+  color:var(--muted);
+
+  font-size:.55rem;
+
+  text-align:center;
+}
+
+
+/* =========================
+   MODAL / FORM
+========================= */
+
+.modal-overlay{
+  position:fixed;
+  inset:0;
+
+  z-index:300;
+
+  display:none;
+
+  align-items:center;
+  justify-content:center;
+
+  padding:20px;
+
+  background:
+    rgba(10,14,26,.55);
+}
+
+.modal-overlay.show{
+  display:flex;
+}
+
+.modal-box{
+  width:min(440px,100%);
+
+  max-height:88vh;
+
+  overflow-y:auto;
+
+  padding:20px;
+
+  border-radius:17px;
+
+  background:white;
+
+  box-shadow:
+    0 30px 70px
+    rgba(0,0,0,.35);
+}
+
+.modal-box h3{
+  margin:0 0 13px;
+
+  font-size:.8rem;
+}
+
+.form-grid{
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:10px;
+}
+
+.form-field{
+  display:flex;
+
+  flex-direction:column;
+
+  gap:5px;
+}
+
+.form-field.full{
+  grid-column:1 / -1;
+}
+
+.form-field label{
+  color:var(--muted);
+
+  font-size:.51rem;
+  font-weight:700;
+
+  text-transform:uppercase;
+}
+
+.form-field input,
+.form-field textarea{
+  padding:8px 9px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:8px;
+
+  font-size:.62rem;
+  font-family:inherit;
+
+  color:var(--dark);
+}
+
+.form-field textarea{
+  resize:vertical;
+
+  min-height:52px;
+}
+
+.form-field input:focus,
+.form-field textarea:focus{
+  outline:none;
+
+  border-color:var(--primary);
+}
+
+.modal-actions{
+  display:flex;
+
+  justify-content:flex-end;
+
+  gap:8px;
+
+  margin-top:16px;
+}
+
+.modal-cancel{
+  border:0;
+
+  padding:10px 14px;
+
+  border-radius:9px;
+
+  color:var(--muted);
+
+  background:#f1f4f6;
+
+  font-size:.58rem;
+  font-weight:800;
+
+  cursor:pointer;
+}
+
+.modal-cancel:hover{
+  background:#e6e9ec;
+}
+
+.day-btn.add-day{
+  color:var(--primary);
+
+  border-style:dashed;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+
+  .summary{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .content{
+    grid-template-columns:1fr;
+  }
+
+  .sidebar{
+    display:grid;
+
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:650px){
+
+  .header{
+    width:
+      calc(100% - 25px);
+  }
+
+  .main{
+    width:
+      calc(100% - 25px);
+  }
+
+  .header-btn{
+    display:none;
+  }
+
+  .panel{
+    padding:14px;
+
+    border-radius:20px;
+  }
+
+  .trip-top{
+    align-items:flex-start;
+
+    flex-direction:column;
+  }
+
+  .finish-btn{
+    width:100%;
+  }
+
+  .summary{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .sidebar{
+    grid-template-columns:1fr;
+  }
+
+  .bottom-action{
+    align-items:flex-start;
+
+    flex-direction:column;
+  }
+
+  .save-btn{
+    width:100%;
+  }
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *::before,
+  *::after{
+    animation:none!important;
+    transition:none!important;
+  }
+
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+  <div class="stars"></div>
+
+  <div class="cloud one"></div>
+  <div class="cloud two"></div>
+
+  <div class="plane">
+    ✈️
+  </div>
+
+
+  <!-- HEADER -->
+
+  <header class="header">
+
+    <div class="logo-area">
+
+      <div class="logo">
+        🌍
+      </div>
+
+      <div class="logo-text">
+        Globe<span>Trotter</span>
+      </div>
+
+    </div>
+
+
+    <div class="header-actions">
+
+      <button
+        class="header-btn"
+        onclick="goActivities()"
+      >
+        ← Activities
+      </button>
+
+      <button
+        class="header-btn"
+        onclick="goDashboard()"
+      >
+        Dashboard
+      </button>
+
+      <div class="avatar">
+        👤
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <section class="heading">
+
+      <h1>
+        Plan your <span>Itinerary</span> 🗺️
+      </h1>
+
+      <p>
+        Organize your activities into a smooth day-by-day travel plan.
+      </p>
+
+    </section>
+
+
+    <section class="panel">
+
+
+      <!-- NO TRIP -->
+
+      <div
+        class="day-panel"
+        id="noTripState"
+        style="display:none;"
+      >
+
+        <h3 id="noTripTitle">
+          No trip selected
+        </h3>
+
+        <p style="color:var(--muted);font-size:.58rem;margin-top:6px;">
+          Pick a trip first, then come back here to plan its itinerary.
+        </p>
+
+        <button
+          class="finish-btn"
+          style="margin-top:12px;"
+          onclick="window.location.href='trips.html'"
+        >
+          Go to Trips
+        </button>
+
+      </div>
+
+
+      <div id="plannerBody">
+
+
+      <!-- TOP -->
+
+      <div class="trip-top">
+
+        <div class="trip-title">
+
+          <div class="trip-icon">
+            🧳
+          </div>
+
+          <div>
+
+            <h2 id="tripTitle">
+              Loading trip…
+            </h2>
+
+            <p id="tripMeta">
+              —
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="finish-btn"
+          onclick="finishTrip()"
+        >
+          ✓ Finish Trip
+        </button>
+
+      </div>
+
+
+      <!-- SUMMARY -->
+
+      <div class="summary">
+
+        <div class="summary-card">
+
+          <div class="summary-icon">
+            📍
+          </div>
+
+          <span>
+            DESTINATION
+          </span>
+
+          <strong id="summaryDestination">
+            —
+          </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+          <div class="summary-icon">
+            📅
+          </div>
+
+          <span>
+            DURATION
+          </span>
+
+          <strong id="summaryDuration">
+            —
+          </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+          <div class="summary-icon">
+            🎯
+          </div>
+
+          <span>
+            ACTIVITIES
+          </span>
+
+          <strong id="activityTotal">
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+          <div class="summary-icon">
+            💰
+          </div>
+
+          <span>
+            EST. BUDGET
+          </span>
+
+          <strong id="budgetTotal">
+            $0
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- PROGRESS -->
+
+      <div class="progress-area">
+
+        <div class="progress-top">
+
+          <strong>
+            Trip planning progress
+          </strong>
+
+          <span>
+            72% complete
+          </span>
+
+        </div>
+
+        <div class="progress">
+
+          <div class="progress-fill"></div>
+
+        </div>
+
+      </div>
+
+
+      <!-- DAYS -->
+
+      <div
+        class="days"
+        id="dayTabs"
+      ></div>
+
+
+      <!-- CONTENT -->
+
+      <div class="content">
+
+
+        <!-- DAY PANEL -->
+
+        <div class="day-panel">
+
+          <div class="day-heading">
+
+            <div class="day-heading-left">
+
+              <div
+                class="day-number"
+                id="dayNumberBadge"
+              >
+                01
+              </div>
+
+              <div>
+
+                <h3 id="dayTitle">
+                  Day 1
+                </h3>
+
+                <p id="dayDate">
+                  —
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="timeline"
+            id="timeline"
+          ></div>
+
+
+          <button
+            class="add-slot"
+            id="addSlotBtn"
+            onclick="openAddModal()"
+          >
+            + Add another activity to Day 1
+          </button>
+
+        </div>
+
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+
+          <!-- BUDGET -->
+
+          <div class="side-card">
+
+            <h3>
+              💰 Budget Overview
+            </h3>
+
+            <p class="side-card-sub">
+              Estimated cost for your current itinerary
+            </p>
+
+
+            <div class="budget">
+
+              <div class="budget-content">
+
+                <strong id="budgetCircle">
+                  $0
+                </strong>
+
+                <span>
+                  estimated
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div id="budgetBreakdown"></div>
+
+
+            <div class="budget-row">
+
+              <span>
+                Total
+              </span>
+
+              <strong id="totalBudget">
+                $0
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- CHECKLIST -->
+
+          <div class="side-card">
+
+            <h3>
+              ✅ Trip Checklist
+            </h3>
+
+            <p class="side-card-sub">
+              Complete these before your trip
+            </p>
+
+
+            <div
+              class="check-item done"
+              onclick="toggleCheck(this)"
+            >
+
+              <div class="check">
+                ✓
+              </div>
+
+              <span>
+                Choose destination
+              </span>
+
+            </div>
+
+
+            <div
+              class="check-item done"
+              onclick="toggleCheck(this)"
+            >
+
+              <div class="check">
+                ✓
+              </div>
+
+              <span>
+                Add activities
+              </span>
+
+            </div>
+
+
+            <div
+              class="check-item"
+              onclick="toggleCheck(this)"
+            >
+
+              <div class="check">
+              </div>
+
+              <span>
+                Plan accommodation
+              </span>
+
+            </div>
+
+
+            <div
+              class="check-item"
+              onclick="toggleCheck(this)"
+            >
+
+              <div class="check">
+              </div>
+
+              <span>
+                Confirm transport
+              </span>
+
+            </div>
+
+
+            <div
+              class="check-item"
+              onclick="toggleCheck(this)"
+            >
+
+              <div class="check">
+              </div>
+
+              <span>
+                Review itinerary
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- TIP -->
+
+          <div class="side-card">
+
+            <div class="tip">
+
+              <div class="tip-icon">
+                💡
+              </div>
+
+              <p>
+                Keep some free time between activities. It makes your trip more comfortable and flexible.
+              </p>
+
+            </div>
+
+          </div>
+
+        </aside>
+
+      </div>
+
+
+      <!-- BOTTOM -->
+
+      <div class="bottom-action">
+
+        <div>
+
+          <strong>
+            🚀 Your itinerary is almost ready!
+          </strong>
+
+          <small>
+            Save your plan and continue to your final trip overview.
+          </small>
+
+        </div>
+
+
+        <button
+          class="save-btn"
+          onclick="saveTrip()"
+        >
+          Save Itinerary →
+        </button>
+
+      </div>
+
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <div class="mountains"></div>
+
+
+  <div class="road">
+
+    <div class="bus">
+      🚌
+    </div>
+
+    <div class="car">
+      🚗
+    </div>
+
+  </div>
+
+
+  <div
+    class="toast"
+    id="toast"
+  >
+    Itinerary saved!
+  </div>
+
+
+  <!-- ITEM MODAL -->
+
+  <div
+    class="modal-overlay"
+    id="itemModalOverlay"
+  >
+
+    <div class="modal-box">
+
+      <h3 id="modalTitle">
+        Add Activity
+      </h3>
+
+      <div class="form-grid">
+
+        <div class="form-field full">
+          <label>Title *</label>
+          <input
+            id="fieldTitle"
+            type="text"
+            placeholder="e.g. Eiffel Tower Visit"
+            maxlength="120"
+          >
+        </div>
+
+        <div class="form-field">
+          <label>Time</label>
+          <input
+            id="fieldTime"
+            type="text"
+            placeholder="e.g. 09:00 AM"
+            maxlength="30"
+          >
+        </div>
+
+        <div class="form-field">
+          <label>Type</label>
+          <input
+            id="fieldType"
+            type="text"
+            list="typeSuggestions"
+            placeholder="activity, food..."
+            maxlength="40"
+          >
+          <datalist id="typeSuggestions">
+            <option value="activity"></option>
+            <option value="food"></option>
+            <option value="transport"></option>
+            <option value="sightseeing"></option>
+            <option value="hotel"></option>
+            <option value="flight"></option>
+          </datalist>
+        </div>
+
+        <div class="form-field">
+          <label>Location</label>
+          <input
+            id="fieldLocation"
+            type="text"
+            placeholder="e.g. Champ de Mars"
+            maxlength="120"
+          >
+        </div>
+
+        <div class="form-field">
+          <label>Cost ($)</label>
+          <input
+            id="fieldCost"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="0"
+          >
+        </div>
+
+        <div class="form-field full">
+          <label>Notes</label>
+          <textarea
+            id="fieldNotes"
+            placeholder="Any extra detail worth remembering"
+          ></textarea>
+        </div>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          class="modal-cancel"
+          onclick="closeItemModal()"
+        >
+          Cancel
+        </button>
+
+        <button
+          class="finish-btn"
+          id="modalSaveBtn"
+          onclick="submitItemForm()"
+        >
+          Save Activity
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script src="app-api.js"></script>
+<script>
+
+API.requireAuth();
+
+/* =====================================
+   STATE
+===================================== */
+
+const params = new URLSearchParams(location.search);
+
+const tripId = params.get("id");
+
+const state = {
+
+  trip: null,
+
+  items: [],
+
+  clientDays: new Set([1]),
+
+  activeDay: 1
+
+};
+
+let editingItemId = null;
+
+
+/* =====================================
+   ELEMENTS
+===================================== */
+
+const activityTotal = document.getElementById("activityTotal");
+
+const budgetTotal = document.getElementById("budgetTotal");
+
+const budgetCircle = document.getElementById("budgetCircle");
+
+const totalBudget = document.getElementById("totalBudget");
+
+const budgetBreakdown = document.getElementById("budgetBreakdown");
+
+const budgetDonut = document.querySelector(".budget");
+
+const timeline = document.getElementById("timeline");
+
+const dayTabs = document.getElementById("dayTabs");
+
+const dayNumberBadge = document.getElementById("dayNumberBadge");
+
+const dayTitleElement = document.getElementById("dayTitle");
+
+const dayDateElement = document.getElementById("dayDate");
+
+const addSlotBtn = document.getElementById("addSlotBtn");
+
+const noTripState = document.getElementById("noTripState");
+
+const noTripTitle = document.getElementById("noTripTitle");
+
+const plannerBody = document.getElementById("plannerBody");
+
+const tripTitleElement = document.getElementById("tripTitle");
+
+const tripMetaElement = document.getElementById("tripMeta");
+
+const summaryDestination = document.getElementById("summaryDestination");
+
+const summaryDuration = document.getElementById("summaryDuration");
+
+const itemModalOverlay = document.getElementById("itemModalOverlay");
+
+const modalTitle = document.getElementById("modalTitle");
+
+const fieldTitle = document.getElementById("fieldTitle");
+
+const fieldTime = document.getElementById("fieldTime");
+
+const fieldType = document.getElementById("fieldType");
+
+const fieldLocation = document.getElementById("fieldLocation");
+
+const fieldCost = document.getElementById("fieldCost");
+
+const fieldNotes = document.getElementById("fieldNotes");
+
+const toast = document.getElementById("toast");
+
+let toastTimer;
+
+
+/* =====================================
+   TYPE ICONS
+===================================== */
+
+const typeIcons = {
+
+  food: "🍽️",
+
+  transport: "🚗",
+
+  sightseeing: "📸",
+
+  hotel: "🏨",
+
+  flight: "✈️",
+
+  activity: "🎯"
+
+};
+
+function iconFor(type){
+
+  return typeIcons[(type || "").toLowerCase()] || "📌";
+
+}
+
+
+/* =====================================
+   NO TRIP ID / LOAD FAILURE
+===================================== */
+
+function showNoTrip(message){
+
+  plannerBody.style.display = "none";
+
+  noTripState.style.display = "block";
+
+  if(message){
+
+    noTripTitle.textContent = message;
+
+  }
+
+}
+
+
+/* =====================================
+   LOAD
+===================================== */
+
+async function loadItinerary(){
+
+  if(!tripId){
+
+    showNoTrip("No trip selected");
+
+    setTimeout(() => {
+
+      window.location.href = "trips.html";
+
+    }, 1800);
+
+    return;
+
+  }
+
+  try{
+
+    const data = await API.get("/api/trips/" + encodeURIComponent(tripId) + "/itinerary");
+
+    state.trip = data.trip;
+
+    state.items = data.items || [];
+
+    computeDays();
+
+    render();
+
+  }catch(error){
+
+    showNoTrip("Couldn't load that trip");
+
+    setTimeout(() => {
+
+      window.location.href = "trips.html";
+
+    }, 1800);
+
+  }
+
+}
+
+
+/* =====================================
+   DAY COMPUTATION
+===================================== */
+
+function computeDays(){
+
+  const fromItems = state.items.map(item => Number(item.day_number) || 1);
+
+  const all = new Set([...state.clientDays, ...fromItems]);
+
+  state.clientDays = all;
+
+  if(!all.has(state.activeDay)){
+
+    state.activeDay = Math.min(...all);
+
+  }
+
+}
+
+function sortedDays(){
+
+  return [...state.clientDays].sort((a, b) => a - b);
+
+}
+
+
+/* =====================================
+   RENDER — ALL
+===================================== */
+
+function render(){
+
+  renderTripHeader();
+
+  renderSummary();
+
+  renderDayTabs();
+
+  renderDayPanel();
+
+  renderBudget();
+
+}
+
+
+/* =====================================
+   RENDER — TRIP HEADER
+===================================== */
+
+function formatDate(value){
+
+  if(!value) return "";
+
+  const date = new Date(value);
+
+  if(isNaN(date.getTime())) return "";
+
+  return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+
+}
+
+function tripDurationDays(){
+
+  const trip = state.trip;
+
+  if(trip && trip.start_date && trip.end_date){
+
+    const start = new Date(trip.start_date);
+
+    const end = new Date(trip.end_date);
+
+    if(!isNaN(start.getTime()) && !isNaN(end.getTime())){
+
+      const days = Math.round((end - start) / 86400000) + 1;
+
+      return Math.max(days, 1);
+
+    }
+
+  }
+
+  return Math.max(...sortedDays());
+
+}
+
+function renderTripHeader(){
+
+  const trip = state.trip;
+
+  tripTitleElement.textContent = trip.title || "Untitled Trip";
+
+  const duration = tripDurationDays();
+
+  const range = trip.start_date && trip.end_date
+    ? formatDate(trip.start_date) + " – " + formatDate(trip.end_date)
+    : "";
+
+  const metaParts = [duration + (duration === 1 ? " Day" : " Days")];
+
+  if(range) metaParts.push(range);
+
+  tripMetaElement.textContent = metaParts.join(" · ");
+
+}
+
+
+/* =====================================
+   RENDER — SUMMARY
+===================================== */
+
+function formatMoney(amount){
+
+  const rounded = Math.round((amount || 0) * 100) / 100;
+
+  return "$" + rounded;
+
+}
+
+function renderSummary(){
+
+  const trip = state.trip;
+
+  summaryDestination.textContent = trip.description || trip.title || "—";
+
+  const duration = tripDurationDays();
+
+  summaryDuration.textContent = duration + (duration === 1 ? " Day" : " Days");
+
+  activityTotal.textContent = state.items.length;
+
+}
+
+
+/* =====================================
+   RENDER — DAY TABS
+===================================== */
+
+function renderDayTabs(){
+
+  dayTabs.innerHTML = "";
+
+  sortedDays().forEach(day => {
+
+    const count = state.items.filter(item => (Number(item.day_number) || 1) === day).length;
+
+    const button = document.createElement("button");
+
+    button.className = "day-btn" + (day === state.activeDay ? " active" : "");
+
+    button.dataset.day = day;
+
+    button.innerHTML =
+      "<strong>Day " + day + "</strong><span>" +
+      (count ? count + (count === 1 ? " activity" : " activities") : "No activities") +
+      "</span>";
+
+    button.addEventListener("click", () => {
+
+      state.activeDay = day;
+
+      renderDayTabs();
+
+      renderDayPanel();
+
+    });
+
+    dayTabs.appendChild(button);
+
+  });
+
+  const addDayButton = document.createElement("button");
+
+  addDayButton.className = "day-btn add-day";
+
+  addDayButton.innerHTML = "<strong>+ Add Day</strong><span>New day</span>";
+
+  addDayButton.addEventListener("click", addDay);
+
+  dayTabs.appendChild(addDayButton);
+
+}
+
+function addDay(){
+
+  const nextDay = Math.max(...sortedDays()) + 1;
+
+  state.clientDays.add(nextDay);
+
+  state.activeDay = nextDay;
+
+  renderDayTabs();
+
+  renderDayPanel();
+
+}
+
+
+/* =====================================
+   RENDER — DAY PANEL
+===================================== */
+
+function itemsForActiveDay(){
+
+  return state.items
+
+    .filter(item => (Number(item.day_number) || 1) === state.activeDay)
+
+    .slice()
+
+    .sort((a, b) => (a.time || "").localeCompare(b.time || ""));
+
+}
+
+function renderDayPanel(){
+
+  const day = state.activeDay;
+
+  dayNumberBadge.textContent = String(day).padStart(2, "0");
+
+  dayTitleElement.textContent = "Day " + day;
+
+  const dayItems = itemsForActiveDay();
+
+  const withDate = dayItems.find(item => item.item_date);
+
+  dayDateElement.textContent = withDate ? formatDate(withDate.item_date) : "No date set yet";
+
+  addSlotBtn.textContent = "+ Add another activity to Day " + day;
+
+  if(!dayItems.length){
+
+    timeline.innerHTML = "<p class=\"empty-note\">No activities planned for this day yet.</p>";
+
+    return;
+
+  }
+
+  timeline.innerHTML = dayItems.map(item => {
+
+    const detail = item.notes || item.location || "";
+
+    return (
+      "<div class=\"timeline-item\" data-id=\"" + item.id + "\">" +
+        "<div class=\"timeline-dot\">" + iconFor(item.type) + "</div>" +
+        "<div class=\"timeline-card\">" +
+          "<div class=\"timeline-top\">" +
+            "<div>" +
+              "<div class=\"time\">" + escapeHTML(item.time || "—") + "</div>" +
+              "<h4>" + escapeHTML(item.title) + "</h4>" +
+            "</div>" +
+            "<div class=\"card-actions\">" +
+              "<button class=\"small-btn edit-btn\" title=\"Edit\">✏</button>" +
+              "<button class=\"small-btn delete delete-btn\" title=\"Delete\">×</button>" +
+            "</div>" +
+          "</div>" +
+          (detail ? "<p>" + escapeHTML(detail) + "</p>" : "") +
+        "</div>" +
+      "</div>"
+    );
+
+  }).join("");
+
+}
+
+timeline.addEventListener("click", event => {
+
+  const editBtn = event.target.closest(".edit-btn");
+
+  const deleteBtn = event.target.closest(".delete-btn");
+
+  const card = event.target.closest(".timeline-item");
+
+  if(!card) return;
+
+  const itemId = Number(card.dataset.id);
+
+  if(editBtn){
+
+    openEditModal(itemId);
+
+  }else if(deleteBtn){
+
+    handleDelete(itemId);
+
+  }
+
+});
+
+
+/* =====================================
+   RENDER — BUDGET
+===================================== */
+
+function renderBudget(){
+
+  const spent = state.items.reduce((sum, item) => sum + (Number(item.cost) || 0), 0);
+
+  const tripBudget = Number(state.trip.budget) || 0;
+
+  const displayBudget = tripBudget > 0 ? tripBudget : spent;
+
+  budgetTotal.textContent = formatMoney(displayBudget);
+
+  budgetCircle.textContent = formatMoney(displayBudget);
+
+  const percent = displayBudget > 0 ? Math.min(100, Math.round((spent / displayBudget) * 100)) : 0;
+
+  budgetDonut.style.background =
+    "conic-gradient(var(--primary) 0 " + percent + "%, #e8eff1 " + percent + "% 100%)";
+
+  const byType = {};
+
+  state.items.forEach(item => {
+
+    const key = (item.type || "other").trim().toLowerCase() || "other";
+
+    byType[key] = (byType[key] || 0) + (Number(item.cost) || 0);
+
+  });
+
+  const typeEntries = Object.entries(byType).filter(([, cost]) => cost > 0);
+
+  if(!typeEntries.length){
+
+    budgetBreakdown.innerHTML = "<div class=\"budget-row\"><span>No costed items yet</span></div>";
+
+  }else{
+
+    budgetBreakdown.innerHTML = typeEntries.map(([type, cost]) => {
+
+      const label = type.charAt(0).toUpperCase() + type.slice(1);
+
+      return "<div class=\"budget-row\"><span>" + escapeHTML(label) + "</span><strong>" + formatMoney(cost) + "</strong></div>";
+
+    }).join("");
+
+  }
+
+  totalBudget.textContent = formatMoney(spent);
+
+}
+
+
+/* =====================================
+   ADD / EDIT MODAL
+===================================== */
+
+function openAddModal(){
+
+  editingItemId = null;
+
+  modalTitle.textContent = "Add Activity to Day " + state.activeDay;
+
+  fieldTitle.value = "";
+
+  fieldTime.value = "";
+
+  fieldType.value = "";
+
+  fieldLocation.value = "";
+
+  fieldCost.value = "";
+
+  fieldNotes.value = "";
+
+  itemModalOverlay.classList.add("show");
+
+  fieldTitle.focus();
+
+}
+
+function openEditModal(itemId){
+
+  const item = state.items.find(entry => entry.id === itemId);
+
+  if(!item) return;
+
+  editingItemId = itemId;
+
+  modalTitle.textContent = "Edit Activity";
+
+  fieldTitle.value = item.title || "";
+
+  fieldTime.value = item.time || "";
+
+  fieldType.value = item.type || "";
+
+  fieldLocation.value = item.location || "";
+
+  fieldCost.value = item.cost || "";
+
+  fieldNotes.value = item.notes || "";
+
+  itemModalOverlay.classList.add("show");
+
+  fieldTitle.focus();
+
+}
+
+function closeItemModal(){
+
+  itemModalOverlay.classList.remove("show");
+
+  editingItemId = null;
+
+}
+
+async function submitItemForm(){
+
+  const title = fieldTitle.value.trim();
+
+  if(!title){
+
+    fieldTitle.focus();
+
+    showToast("Title is required");
+
+    return;
+
+  }
+
+  const payload = {
+
+    title,
+
+    time: fieldTime.value.trim(),
+
+    type: fieldType.value.trim(),
+
+    location: fieldLocation.value.trim(),
+
+    notes: fieldNotes.value.trim(),
+
+    cost: Number(fieldCost.value) || 0
+
+  };
+
+  try{
+
+    if(editingItemId){
+
+      const result = await API.put("/api/itinerary/" + editingItemId, payload);
+
+      const index = state.items.findIndex(entry => entry.id === editingItemId);
+
+      if(index !== -1) state.items[index] = result.item;
+
+      showToast("Activity updated ✨");
+
+    }else{
+
+      payload.day_number = state.activeDay;
+
+      const result = await API.post("/api/trips/" + encodeURIComponent(tripId) + "/itinerary", payload);
+
+      state.items.push(result.item);
+
+      showToast("Activity added ✨");
+
+    }
+
+    closeItemModal();
+
+    computeDays();
+
+    render();
+
+  }catch(error){
+
+    showToast(error.message || "Something went wrong");
+
+  }
+
+}
+
+
+/* =====================================
+   DELETE
+===================================== */
+
+async function handleDelete(itemId){
+
+  const item = state.items.find(entry => entry.id === itemId);
+
+  if(!item) return;
+
+  if(!confirm("Remove \"" + item.title + "\" from this itinerary?")) return;
+
+  try{
+
+    await API.del("/api/itinerary/" + itemId);
+
+    state.items = state.items.filter(entry => entry.id !== itemId);
+
+    render();
+
+    showToast("Activity removed");
+
+  }catch(error){
+
+    showToast(error.message || "Couldn't delete that activity");
+
+  }
+
+}
+
+
+/* =====================================
+   CHECKLIST
+===================================== */
+
+function toggleCheck(item){
+
+  item.classList.toggle("done");
+
+  const check = item.querySelector(".check");
+
+  check.textContent = item.classList.contains("done") ? "✓" : "";
+
+}
+
+
+/* =====================================
+   SAVE / FINISH
+===================================== */
+
+function saveTrip(){
+
+  showToast("✓ Itinerary saved successfully");
+
+  setTimeout(() => {
+
+    window.location.href = "trip-overview.html?id=" + encodeURIComponent(tripId);
+
+  }, 700);
+
+}
+
+function finishTrip(){
+
+  if(confirm("Finish your itinerary and open the trip overview?")){
+
+    saveTrip();
+
+  }
+
+}
+
+
+/* =====================================
+   NAVIGATION
+===================================== */
+
+function goActivities(){
+
+  window.location.href = "activity-search.html";
+
+}
+
+function goDashboard(){
+
+  window.location.href = "dashboard.html";
+
+}
+
+
+/* =====================================
+   TOAST
+===================================== */
+
+function showToast(message){
+
+  toast.textContent = message;
+
+  toast.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(() => {
+
+    toast.classList.remove("show");
+
+  }, 2200);
+
+}
+
+
+/* =====================================
+   SECURITY HELPERS
+===================================== */
+
+function escapeHTML(value){
+
+  return String(value)
+
+    .replace(/&/g, "&amp;")
+
+    .replace(/</g, "&lt;")
+
+    .replace(/>/g, "&gt;")
+
+    .replace(/"/g, "&quot;")
+
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* =====================================
+   INIT
+===================================== */
+
+loadItinerary();
+
+</script>
+
+</body>
+</html>

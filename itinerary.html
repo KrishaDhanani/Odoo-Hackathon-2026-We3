@@ -1,0 +1,3044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobeTrotter — Itinerary Builder</title>
+
+<style>
+:root{
+  --primary:#0e7c8c;
+  --primary-dark:#0a5f6b;
+  --accent:#ff7a59;
+  --cyan:#22d3ee;
+  --text:#1c2733;
+  --muted:#647084;
+  --border:#e2e8ee;
+  --success:#2e9e5b;
+  --danger:#d9534f;
+  --white:#fff;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+}
+
+body{
+  background:#111a3d;
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+button,input,select,textarea{
+  font-family:inherit;
+}
+
+
+/* =========================================================
+   PAGE BACKGROUND
+========================================================= */
+
+.page{
+  min-height:100vh;
+  position:relative;
+  overflow:hidden;
+
+  padding-bottom:100px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #1b2559 0%,
+      #3b3b86 22%,
+      #754d91 42%,
+      #c66b86 61%,
+      #ef9a68 80%,
+      #f7c875 100%
+    );
+}
+
+.stars{
+  position:absolute;
+  inset:0;
+  height:60%;
+
+  background-image:
+    radial-gradient(1.5px 1.5px at 8% 20%,#fff,transparent 60%),
+    radial-gradient(1.5px 1.5px at 21% 42%,#fff,transparent 60%),
+    radial-gradient(1px 1px at 34% 14%,#fff,transparent 60%),
+    radial-gradient(1.5px 1.5px at 48% 31%,#fff,transparent 60%),
+    radial-gradient(1px 1px at 63% 16%,#fff,transparent 60%),
+    radial-gradient(1.5px 1.5px at 77% 35%,#fff,transparent 60%),
+    radial-gradient(1px 1px at 91% 17%,#fff,transparent 60%);
+
+  opacity:.7;
+
+  animation:starsPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes starsPulse{
+  from{opacity:.3}
+  to{opacity:.9}
+}
+
+
+/* CLOUDS */
+
+.cloud{
+  position:absolute;
+  width:120px;
+  height:33px;
+  border-radius:50px;
+  background:rgba(255,255,255,.48);
+  z-index:1;
+}
+
+.cloud:before,
+.cloud:after{
+  content:"";
+  position:absolute;
+  background:inherit;
+  border-radius:50%;
+}
+
+.cloud:before{
+  width:55px;
+  height:55px;
+  left:12px;
+  top:-23px;
+}
+
+.cloud:after{
+  width:43px;
+  height:43px;
+  right:10px;
+  top:-16px;
+}
+
+.cloud.one{
+  top:13%;
+  left:-160px;
+  animation:cloudMove 38s linear infinite;
+}
+
+.cloud.two{
+  top:34%;
+  left:-190px;
+  transform:scale(.7);
+  opacity:.4;
+  animation:cloudMove 52s linear infinite;
+  animation-delay:-17s;
+}
+
+.cloud.three{
+  top:51%;
+  left:-150px;
+  transform:scale(.55);
+  opacity:.25;
+  animation:cloudMove 65s linear infinite;
+  animation-delay:-30s;
+}
+
+@keyframes cloudMove{
+  from{transform:translateX(0)}
+  to{transform:translateX(135vw)}
+}
+
+
+/* =========================================================
+   FLIGHT ROUTE
+========================================================= */
+
+.flight-route{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:1;
+  pointer-events:none;
+}
+
+.flight-route path{
+  fill:none;
+  stroke:rgba(255,255,255,.4);
+  stroke-width:3;
+  stroke-dasharray:2 15;
+  stroke-linecap:round;
+}
+
+.route-dot{
+  fill:var(--accent);
+  animation:routePulse 2s ease-in-out infinite;
+}
+
+@keyframes routePulse{
+  0%,100%{
+    opacity:.5;
+    transform:scale(1);
+  }
+  50%{
+    opacity:1;
+    transform:scale(1.35);
+  }
+}
+
+.plane{
+  position:absolute;
+  left:0;
+  top:70%;
+  z-index:4;
+  font-size:28px;
+
+  animation:
+    planeFly 12s cubic-bezier(.45,.05,.35,1) infinite;
+}
+
+@keyframes planeFly{
+  0%{
+    left:0;
+    top:73%;
+    transform:rotate(-8deg);
+  }
+
+  35%{
+    left:35%;
+    top:47%;
+    transform:rotate(-18deg);
+  }
+
+  65%{
+    left:67%;
+    top:33%;
+    transform:rotate(-12deg);
+  }
+
+  100%{
+    left:103%;
+    top:8%;
+    transform:rotate(-5deg);
+  }
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header{
+  position:relative;
+  z-index:20;
+
+  width:min(1180px,calc(100% - 40px));
+  margin:auto;
+  padding-top:23px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo-area{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  color:white;
+}
+
+.logo{
+  width:53px;
+  height:53px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  font-size:1.65rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--accent)
+    );
+
+  box-shadow:
+    0 12px 30px rgba(14,124,140,.35);
+
+  animation:logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-5px)}
+}
+
+.logo-text{
+  font-size:1.2rem;
+  font-weight:800;
+}
+
+.logo-text span{
+  color:#5ee7f5;
+}
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.header-btn{
+  border:1px solid rgba(255,255,255,.23);
+  color:white;
+  background:rgba(255,255,255,.12);
+  backdrop-filter:blur(12px);
+
+  border-radius:10px;
+  padding:10px 13px;
+
+  font-weight:700;
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+.header-btn:hover{
+  transform:translateY(-2px);
+  background:rgba(255,255,255,.2);
+}
+
+.avatar{
+  width:40px;
+  height:40px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--cyan),
+      var(--primary)
+    );
+
+  color:white;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+  position:relative;
+  z-index:10;
+
+  width:min(1180px,calc(100% - 40px));
+  margin:35px auto 0;
+}
+
+.heading{
+  color:white;
+  margin-bottom:22px;
+
+  animation:
+    headingIn .8s ease forwards;
+}
+
+.heading h1{
+  margin:0;
+  font-size:clamp(2rem,4vw,3rem);
+  letter-spacing:-1px;
+}
+
+.heading h1 span{
+  color:#5ee7f5;
+}
+
+.heading p{
+  margin:8px 0 0;
+  color:rgba(255,255,255,.72);
+  font-size:.9rem;
+}
+
+@keyframes headingIn{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+
+/* =========================================================
+   MAIN PANEL
+========================================================= */
+
+.panel{
+  background:rgba(255,255,255,.96);
+
+  border:1px solid rgba(255,255,255,.75);
+
+  border-radius:25px;
+
+  padding:23px;
+
+  box-shadow:
+    0 35px 90px rgba(8,30,45,.3),
+    0 10px 30px rgba(0,0,0,.08);
+
+  backdrop-filter:blur(18px);
+
+  animation:
+    panelIn .9s cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes panelIn{
+  from{
+    opacity:0;
+    transform:translateY(35px) scale(.97);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+
+/* =========================================================
+   TRIP TOP
+========================================================= */
+
+.trip-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+
+  padding-bottom:18px;
+
+  border-bottom:1px solid var(--border);
+}
+
+.trip-info{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.trip-icon{
+  width:52px;
+  height:52px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:15px;
+
+  color:white;
+  font-size:1.4rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--accent)
+    );
+
+  box-shadow:
+    0 8px 20px rgba(14,124,140,.2);
+}
+
+.trip-info h2{
+  margin:0;
+  font-size:1.15rem;
+}
+
+.trip-info p{
+  margin:4px 0 0;
+  color:var(--muted);
+  font-size:.7rem;
+}
+
+.save-btn{
+  border:0;
+  border-radius:10px;
+
+  padding:11px 17px;
+
+  color:white;
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--primary-dark)
+    );
+
+  font-weight:700;
+  cursor:pointer;
+
+  box-shadow:
+    0 8px 18px rgba(14,124,140,.22);
+
+  transition:.25s;
+}
+
+.save-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:
+    0 13px 25px rgba(14,124,140,.32);
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.progress-wrap{
+  margin:20px 0;
+}
+
+.progress-head{
+  display:flex;
+  justify-content:space-between;
+
+  margin-bottom:7px;
+
+  font-size:.68rem;
+  color:var(--muted);
+}
+
+.progress{
+  height:7px;
+  border-radius:20px;
+  overflow:hidden;
+  background:#edf1f3;
+}
+
+.progress-bar{
+  height:100%;
+  width:42%;
+
+  border-radius:20px;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--primary),
+      var(--cyan),
+      var(--accent)
+    );
+
+  background-size:200% 100%;
+
+  animation:
+    progressGlow 3s linear infinite;
+}
+
+@keyframes progressGlow{
+  from{background-position:0%}
+  to{background-position:200%}
+}
+
+
+/* =========================================================
+   BUILDER LAYOUT
+========================================================= */
+
+.builder{
+  display:grid;
+  grid-template-columns:270px 1fr;
+  gap:20px;
+}
+
+
+/* =========================================================
+   LEFT SIDEBAR
+========================================================= */
+
+.sidebar{
+  padding:16px;
+
+  border:1px solid var(--border);
+  border-radius:17px;
+
+  background:#f8fafc;
+}
+
+.sidebar-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  margin-bottom:13px;
+}
+
+.sidebar-title strong{
+  font-size:.82rem;
+}
+
+.count{
+  min-width:25px;
+  height:25px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  color:white;
+  background:var(--primary);
+
+  font-size:.65rem;
+  font-weight:800;
+}
+
+
+/* STOP ITEM */
+
+.stop-list{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.stop{
+  position:relative;
+
+  padding:12px;
+
+  border:1px solid var(--border);
+  border-radius:12px;
+
+  background:white;
+
+  cursor:pointer;
+
+  transition:.25s;
+
+  animation:stopIn .5s ease both;
+}
+
+.stop:hover{
+  transform:translateX(4px);
+  border-color:rgba(14,124,140,.4);
+
+  box-shadow:
+    0 8px 20px rgba(14,124,140,.08);
+}
+
+.stop.active{
+  border-color:var(--primary);
+
+  background:
+    linear-gradient(
+      135deg,
+      #f0fafb,
+      #fff7f3
+    );
+
+  box-shadow:
+    0 8px 20px rgba(14,124,140,.1);
+}
+
+@keyframes stopIn{
+  from{
+    opacity:0;
+    transform:translateX(-15px);
+  }
+  to{
+    opacity:1;
+    transform:translateX(0);
+  }
+}
+
+.stop-number{
+  width:25px;
+  height:25px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  color:white;
+  background:var(--primary);
+
+  font-size:.65rem;
+  font-weight:800;
+
+  float:left;
+  margin-right:9px;
+}
+
+.stop h4{
+  margin:0;
+  font-size:.76rem;
+}
+
+.stop p{
+  margin:4px 0 0;
+  color:var(--muted);
+  font-size:.6rem;
+}
+
+.drag{
+  position:absolute;
+  right:9px;
+  top:10px;
+  color:#aab4bd;
+  font-size:.8rem;
+}
+
+
+/* ADD STOP */
+
+.add-stop{
+  width:100%;
+
+  margin-top:12px;
+
+  border:1.5px dashed #a8c5cb;
+
+  border-radius:11px;
+
+  padding:11px;
+
+  color:var(--primary);
+
+  background:#f1fafb;
+
+  font-weight:700;
+  font-size:.68rem;
+
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+.add-stop:hover{
+  transform:translateY(-2px);
+  background:#e8f7f9;
+  border-color:var(--primary);
+}
+
+
+/* =========================================================
+   CONTENT AREA
+========================================================= */
+
+.content{
+  min-width:0;
+}
+
+.content-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  margin-bottom:14px;
+}
+
+.content-header h3{
+  margin:0;
+  font-size:1rem;
+}
+
+.day-badge{
+  padding:6px 10px;
+
+  border-radius:20px;
+
+  color:var(--primary);
+
+  background:#eaf7f9;
+
+  font-size:.62rem;
+  font-weight:800;
+}
+
+
+/* =========================================================
+   CITY FORM
+========================================================= */
+
+.city-form{
+  display:grid;
+
+  grid-template-columns:
+    1.3fr
+    1fr
+    1fr;
+
+  gap:10px;
+
+  margin-bottom:15px;
+}
+
+.field{
+  position:relative;
+}
+
+.field label{
+  display:block;
+
+  margin-bottom:5px;
+
+  color:var(--muted);
+
+  font-size:.62rem;
+  font-weight:700;
+}
+
+.field input,
+.field select{
+  width:100%;
+
+  padding:10px;
+
+  border:1px solid var(--border);
+  border-radius:9px;
+
+  outline:none;
+
+  color:var(--text);
+  background:#fbfcfd;
+
+  font-size:.7rem;
+
+  transition:.2s;
+}
+
+.field input:focus,
+.field select:focus{
+  border-color:var(--primary);
+
+  box-shadow:
+    0 0 0 3px rgba(14,124,140,.08);
+}
+
+
+/* =========================================================
+   ACTIVITY HEADER
+========================================================= */
+
+.activities-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  margin:
+    15px
+    0
+    9px;
+}
+
+.activities-header strong{
+  font-size:.76rem;
+}
+
+.activity-filter{
+  display:flex;
+  gap:5px;
+}
+
+.filter-btn{
+  border:1px solid var(--border);
+
+  padding:6px 8px;
+
+  border-radius:7px;
+
+  color:var(--muted);
+  background:white;
+
+  font-size:.58rem;
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.filter-btn.active,
+.filter-btn:hover{
+  color:var(--primary);
+  border-color:#a7d6dc;
+  background:#eef9fa;
+}
+
+
+/* =========================================================
+   ACTIVITY CARDS
+========================================================= */
+
+.activities{
+  display:grid;
+
+  grid-template-columns:
+    repeat(2,1fr);
+
+  gap:10px;
+}
+
+.activity{
+  position:relative;
+
+  display:flex;
+  gap:11px;
+
+  padding:12px;
+
+  border:1px solid var(--border);
+  border-radius:13px;
+
+  background:white;
+
+  transition:.25s;
+
+  animation:
+    activityIn .55s ease both;
+}
+
+.activity:hover{
+  transform:translateY(-4px);
+
+  box-shadow:
+    0 12px 25px rgba(14,124,140,.1);
+
+  border-color:
+    rgba(14,124,140,.3);
+}
+
+@keyframes activityIn{
+  from{
+    opacity:0;
+    transform:translateY(12px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.activity-icon{
+  width:43px;
+  height:43px;
+
+  flex-shrink:0;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:11px;
+
+  font-size:1.15rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e7f7f9,
+      #fff0eb
+    );
+}
+
+.activity-info{
+  min-width:0;
+  flex:1;
+}
+
+.activity-info h4{
+  margin:0;
+
+  font-size:.72rem;
+}
+
+.activity-info p{
+  margin:4px 0;
+
+  color:var(--muted);
+
+  font-size:.58rem;
+
+  line-height:1.4;
+}
+
+.activity-meta{
+  display:flex;
+  gap:7px;
+}
+
+.meta{
+  color:var(--muted);
+  font-size:.55rem;
+}
+
+.meta strong{
+  color:var(--text);
+}
+
+.remove{
+  position:absolute;
+
+  top:7px;
+  right:7px;
+
+  border:0;
+
+  background:transparent;
+
+  color:#aab3ba;
+
+  cursor:pointer;
+
+  font-size:.75rem;
+}
+
+.remove:hover{
+  color:var(--danger);
+}
+
+
+/* =========================================================
+   ADD ACTIVITY
+========================================================= */
+
+.add-activity{
+  width:100%;
+
+  margin-top:10px;
+
+  padding:11px;
+
+  border:1.5px dashed #b5d0d5;
+  border-radius:11px;
+
+  background:#f8fcfd;
+
+  color:var(--primary);
+
+  font-size:.66rem;
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.25s;
+}
+
+.add-activity:hover{
+  background:#eef9fa;
+  border-color:var(--primary);
+
+  transform:translateY(-2px);
+}
+
+
+/* =========================================================
+   BOTTOM SUMMARY
+========================================================= */
+
+.summary{
+  margin-top:20px;
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:10px;
+}
+
+.summary-box{
+  padding:13px;
+
+  border-radius:13px;
+
+  background:#f8fafc;
+
+  border:1px solid var(--border);
+}
+
+.summary-box small{
+  color:var(--muted);
+  font-size:.58rem;
+}
+
+.summary-box strong{
+  display:block;
+  margin-top:4px;
+  font-size:1rem;
+}
+
+
+/* =========================================================
+   SAVE BAR
+========================================================= */
+
+.save-bar{
+  margin-top:17px;
+
+  padding:13px 15px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  border-radius:13px;
+
+  color:white;
+
+  background:
+    linear-gradient(
+      110deg,
+      var(--primary),
+      #1498a9,
+      var(--accent)
+    );
+
+  background-size:200% 100%;
+
+  animation:gradientMove 5s ease infinite;
+}
+
+@keyframes gradientMove{
+  0%,100%{background-position:0%}
+  50%{background-position:100%}
+}
+
+.save-bar p{
+  margin:0;
+  font-size:.66rem;
+}
+
+.save-bar strong{
+  display:block;
+  margin-bottom:2px;
+  font-size:.76rem;
+}
+
+.save-bar button{
+  border:0;
+
+  padding:9px 14px;
+
+  border-radius:8px;
+
+  background:white;
+
+  color:var(--primary);
+
+  font-size:.64rem;
+  font-weight:800;
+
+  cursor:pointer;
+
+  transition:.2s;
+}
+
+.save-bar button:hover{
+  transform:scale(1.04);
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal{
+  position:fixed;
+  inset:0;
+
+  z-index:100;
+
+  display:none;
+
+  align-items:center;
+  justify-content:center;
+
+  padding:20px;
+
+  background:rgba(9,18,40,.67);
+
+  backdrop-filter:blur(8px);
+}
+
+.modal.show{
+  display:flex;
+
+  animation:modalFade .25s ease;
+}
+
+@keyframes modalFade{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+.modal-box{
+  width:min(470px,100%);
+
+  padding:23px;
+
+  border-radius:20px;
+
+  background:white;
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.3);
+
+  animation:
+    modalIn .35s cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes modalIn{
+  from{
+    opacity:0;
+    transform:translateY(25px) scale(.95);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  margin-bottom:18px;
+}
+
+.modal-head h2{
+  margin:0;
+  font-size:1.05rem;
+}
+
+.close{
+  width:34px;
+  height:34px;
+
+  border:0;
+
+  border-radius:50%;
+
+  background:#f1f4f6;
+
+  cursor:pointer;
+
+  font-size:1rem;
+}
+
+.modal-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.modal-field{
+  margin-bottom:12px;
+}
+
+.modal-field.full{
+  grid-column:1/-1;
+}
+
+.modal-field label{
+  display:block;
+
+  margin-bottom:5px;
+
+  color:var(--muted);
+
+  font-size:.62rem;
+  font-weight:700;
+}
+
+.modal-field input,
+.modal-field select,
+.modal-field textarea{
+  width:100%;
+
+  padding:10px;
+
+  border:1px solid var(--border);
+  border-radius:9px;
+
+  outline:none;
+
+  resize:none;
+}
+
+.modal-field input:focus,
+.modal-field select:focus,
+.modal-field textarea:focus{
+  border-color:var(--primary);
+}
+
+.modal-submit{
+  width:100%;
+
+  padding:11px;
+
+  border:0;
+
+  border-radius:9px;
+
+  color:white;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--primary-dark)
+    );
+
+  font-weight:800;
+
+  cursor:pointer;
+}
+
+
+/* =========================================================
+   MOUNTAINS + ROAD
+========================================================= */
+
+.mountains{
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:45px;
+
+  height:145px;
+
+  z-index:2;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15,22,45,.28),
+      rgba(10,16,32,.86)
+    );
+
+  clip-path:
+    polygon(
+      0 100%,
+      0 62%,
+      10% 38%,
+      20% 58%,
+      31% 15%,
+      43% 51%,
+      54% 30%,
+      66% 61%,
+      78% 21%,
+      89% 48%,
+      100% 32%,
+      100% 100%
+    );
+}
+
+.road{
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  height:45px;
+
+  z-index:3;
+
+  background:
+    linear-gradient(
+      180deg,
+      #252d3b,
+      #11151d
+    );
+}
+
+.road:before{
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  top:50%;
+
+  height:4px;
+
+  transform:translateY(-50%);
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.6) 0 22px,
+      transparent 22px 46px
+    );
+
+  animation:roadMove 1s linear infinite;
+}
+
+@keyframes roadMove{
+  to{
+    background-position:-46px 0;
+  }
+}
+
+.car{
+  position:absolute;
+  bottom:5px;
+  font-size:1.35rem;
+
+  animation:carMove 11s linear infinite;
+}
+
+.bus{
+  position:absolute;
+  bottom:24px;
+  font-size:1.45rem;
+
+  animation:carMove 16s linear infinite;
+}
+
+@keyframes carMove{
+  from{
+    transform:translateX(-120px);
+  }
+  to{
+    transform:translateX(110vw);
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:900px){
+
+  .builder{
+    grid-template-columns:1fr;
+  }
+
+  .sidebar{
+    order:2;
+  }
+
+  .content{
+    order:1;
+  }
+
+  .stop-list{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .activities{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:700px){
+
+  .header{
+    width:calc(100% - 25px);
+  }
+
+  .main{
+    width:calc(100% - 25px);
+  }
+
+  .header-btn{
+    display:none;
+  }
+
+  .panel{
+    padding:14px;
+    border-radius:20px;
+  }
+
+  .trip-top{
+    align-items:flex-start;
+  }
+
+  .trip-info h2{
+    font-size:.95rem;
+  }
+
+  .city-form{
+    grid-template-columns:1fr;
+  }
+
+  .summary{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .stop-list{
+    grid-template-columns:1fr;
+  }
+
+  .save-bar{
+    align-items:flex-start;
+    gap:12px;
+    flex-direction:column;
+  }
+
+  .save-bar button{
+    width:100%;
+  }
+
+  .mountains{
+    height:90px;
+    bottom:40px;
+  }
+
+  .road{
+    height:40px;
+  }
+}
+
+@media(max-width:480px){
+
+  .logo-text{
+    font-size:1rem;
+  }
+
+  .logo{
+    width:45px;
+    height:45px;
+  }
+
+  .trip-top{
+    flex-direction:column;
+  }
+
+  .save-btn{
+    width:100%;
+  }
+
+  .summary{
+    grid-template-columns:1fr;
+  }
+
+  .modal-grid{
+    grid-template-columns:1fr;
+  }
+
+  .modal-field.full{
+    grid-column:auto;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *:before,
+  *:after{
+    animation:none!important;
+    transition:none!important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <!-- BACKGROUND -->
+
+  <div class="stars"></div>
+
+  <div class="cloud one"></div>
+  <div class="cloud two"></div>
+  <div class="cloud three"></div>
+
+  <svg
+    class="flight-route"
+    viewBox="0 0 1600 900"
+    preserveAspectRatio="xMidYMid slice"
+  >
+    <path d="M70 770 C400 350 1000 300 1530 110"></path>
+
+    <circle
+      class="route-dot"
+      cx="70"
+      cy="770"
+      r="9"
+    />
+
+    <circle
+      class="route-dot"
+      cx="1530"
+      cy="110"
+      r="9"
+    />
+  </svg>
+
+  <div class="plane">✈️</div>
+
+
+  <!-- HEADER -->
+
+  <header class="header">
+
+    <div class="logo-area">
+
+      <div class="logo">🌍</div>
+
+      <div class="logo-text">
+        Globe<span>Trotter</span>
+      </div>
+
+    </div>
+
+    <div class="header-right">
+
+      <button
+        class="header-btn"
+        onclick="goDashboard()"
+      >
+        ← Dashboard
+      </button>
+
+      <button
+        class="header-btn"
+        onclick="goTrips()"
+      >
+        🧳 My Trips
+      </button>
+
+      <div class="avatar">
+        👤
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <section class="heading">
+
+      <h1>
+        Itinerary <span>Builder</span> 🗺️
+      </h1>
+
+      <p>
+        Build your perfect day-by-day journey, one destination at a time.
+      </p>
+
+    </section>
+
+
+    <section class="panel">
+
+
+      <!-- TRIP HEADER -->
+
+      <div class="trip-top">
+
+        <div class="trip-info">
+
+          <div class="trip-icon">
+            🗼
+          </div>
+
+          <div>
+
+            <h2>
+              European Summer Adventure
+            </h2>
+
+            <p>
+              Paris → Rome → Barcelona · 12 Sep – 25 Sep
+            </p>
+
+          </div>
+
+        </div>
+
+        <button
+          class="save-btn"
+          onclick="saveItinerary()"
+        >
+          💾 Save Itinerary
+        </button>
+
+      </div>
+
+
+      <!-- PROGRESS -->
+
+      <div class="progress-wrap">
+
+        <div class="progress-head">
+
+          <span>
+            Trip planning progress
+          </span>
+
+          <strong id="progressText">
+            42%
+          </strong>
+
+        </div>
+
+        <div class="progress">
+          <div
+            class="progress-bar"
+            id="progressBar"
+          ></div>
+        </div>
+
+      </div>
+
+
+      <!-- BUILDER -->
+
+      <div class="builder">
+
+
+        <!-- LEFT -->
+
+        <aside class="sidebar">
+
+          <div class="sidebar-title">
+
+            <strong>
+              Trip Stops
+            </strong>
+
+            <div
+              class="count"
+              id="stopCount"
+            >
+              3
+            </div>
+
+          </div>
+
+
+          <div
+            class="stop-list"
+            id="stopList"
+          >
+
+            <div
+              class="stop active"
+              data-city="Paris"
+              onclick="selectStop(this,'Paris')"
+            >
+
+              <span class="stop-number">
+                1
+              </span>
+
+              <span class="drag">
+                ☷
+              </span>
+
+              <h4>
+                Paris
+              </h4>
+
+              <p>
+                🇫🇷 France · 12–15 Sep
+              </p>
+
+            </div>
+
+
+            <div
+              class="stop"
+              data-city="Rome"
+              onclick="selectStop(this,'Rome')"
+            >
+
+              <span class="stop-number">
+                2
+              </span>
+
+              <span class="drag">
+                ☷
+              </span>
+
+              <h4>
+                Rome
+              </h4>
+
+              <p>
+                🇮🇹 Italy · 16–20 Sep
+              </p>
+
+            </div>
+
+
+            <div
+              class="stop"
+              data-city="Barcelona"
+              onclick="selectStop(this,'Barcelona')"
+            >
+
+              <span class="stop-number">
+                3
+              </span>
+
+              <span class="drag">
+                ☷
+              </span>
+
+              <h4>
+                Barcelona
+              </h4>
+
+              <p>
+                🇪🇸 Spain · 21–25 Sep
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="add-stop"
+            onclick="openStopModal()"
+          >
+            ＋ Add Stop
+          </button>
+
+        </aside>
+
+
+        <!-- RIGHT CONTENT -->
+
+        <section class="content">
+
+          <div class="content-header">
+
+            <h3 id="selectedCity">
+              Paris Itinerary
+            </h3>
+
+            <span
+              class="day-badge"
+              id="dayBadge"
+            >
+              DAY 01
+            </span>
+
+          </div>
+
+
+          <!-- CITY / DATES -->
+
+          <div class="city-form">
+
+            <div class="field">
+
+              <label>
+                City
+              </label>
+
+              <input
+                id="cityInput"
+                value="Paris, France"
+                type="text"
+              >
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                Start Date
+              </label>
+
+              <input
+                id="startDate"
+                value="2026-09-12"
+                type="date"
+              >
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                End Date
+              </label>
+
+              <input
+                id="endDate"
+                value="2026-09-15"
+                type="date"
+              >
+
+            </div>
+
+          </div>
+
+
+          <!-- ACTIVITIES -->
+
+          <div class="activities-header">
+
+            <strong>
+              Activities
+            </strong>
+
+            <div class="activity-filter">
+
+              <button
+                class="filter-btn active"
+                onclick="filterActivities('all',this)"
+              >
+                All
+              </button>
+
+              <button
+                class="filter-btn"
+                onclick="filterActivities('sightseeing',this)"
+              >
+                Sightseeing
+              </button>
+
+              <button
+                class="filter-btn"
+                onclick="filterActivities('food',this)"
+              >
+                Food
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <div
+            class="activities"
+            id="activities"
+          >
+
+
+            <!-- ACTIVITY 1 -->
+
+            <div
+              class="activity"
+              data-type="sightseeing"
+            >
+
+              <div class="activity-icon">
+                🗼
+              </div>
+
+              <div class="activity-info">
+
+                <h4>
+                  Eiffel Tower Visit
+                </h4>
+
+                <p>
+                  Explore the iconic Eiffel Tower and enjoy panoramic city views.
+                </p>
+
+                <div class="activity-meta">
+
+                  <span class="meta">
+                    🕘 <strong>09:00 AM</strong>
+                  </span>
+
+                  <span class="meta">
+                    💰 <strong>$35</strong>
+                  </span>
+
+                  <span class="meta">
+                    ⏱ <strong>2h</strong>
+                  </span>
+
+                </div>
+
+              </div>
+
+              <button
+                class="remove"
+                onclick="removeActivity(this)"
+              >
+                ×
+              </button>
+
+            </div>
+
+
+            <!-- ACTIVITY 2 -->
+
+            <div
+              class="activity"
+              data-type="sightseeing"
+            >
+
+              <div class="activity-icon">
+                🖼️
+              </div>
+
+              <div class="activity-info">
+
+                <h4>
+                  Louvre Museum
+                </h4>
+
+                <p>
+                  Discover world-famous art and historical masterpieces.
+                </p>
+
+                <div class="activity-meta">
+
+                  <span class="meta">
+                    🕐 <strong>01:00 PM</strong>
+                  </span>
+
+                  <span class="meta">
+                    💰 <strong>$22</strong>
+                  </span>
+
+                  <span class="meta">
+                    ⏱ <strong>3h</strong>
+                  </span>
+
+                </div>
+
+              </div>
+
+              <button
+                class="remove"
+                onclick="removeActivity(this)"
+              >
+                ×
+              </button>
+
+            </div>
+
+
+            <!-- ACTIVITY 3 -->
+
+            <div
+              class="activity"
+              data-type="food"
+            >
+
+              <div class="activity-icon">
+                🥐
+              </div>
+
+              <div class="activity-info">
+
+                <h4>
+                  French Food Tour
+                </h4>
+
+                <p>
+                  Taste authentic pastries, cheese and classic French dishes.
+                </p>
+
+                <div class="activity-meta">
+
+                  <span class="meta">
+                    🕕 <strong>06:00 PM</strong>
+                  </span>
+
+                  <span class="meta">
+                    💰 <strong>$48</strong>
+                  </span>
+
+                  <span class="meta">
+                    ⏱ <strong>2h</strong>
+                  </span>
+
+                </div>
+
+              </div>
+
+              <button
+                class="remove"
+                onclick="removeActivity(this)"
+              >
+                ×
+              </button>
+
+            </div>
+
+
+            <!-- ACTIVITY 4 -->
+
+            <div
+              class="activity"
+              data-type="sightseeing"
+            >
+
+              <div class="activity-icon">
+                🌅
+              </div>
+
+              <div class="activity-info">
+
+                <h4>
+                  Seine River Cruise
+                </h4>
+
+                <p>
+                  Relax on a scenic evening cruise along the Seine.
+                </p>
+
+                <div class="activity-meta">
+
+                  <span class="meta">
+                    🕗 <strong>08:00 PM</strong>
+                  </span>
+
+                  <span class="meta">
+                    💰 <strong>$30</strong>
+                  </span>
+
+                  <span class="meta">
+                    ⏱ <strong>1.5h</strong>
+                  </span>
+
+                </div>
+
+              </div>
+
+              <button
+                class="remove"
+                onclick="removeActivity(this)"
+              >
+                ×
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="add-activity"
+            onclick="openActivityModal()"
+          >
+            ＋ Add Activity
+          </button>
+
+
+          <!-- SUMMARY -->
+
+          <div class="summary">
+
+            <div class="summary-box">
+
+              <small>
+                Stops
+              </small>
+
+              <strong id="summaryStops">
+                3
+              </strong>
+
+            </div>
+
+            <div class="summary-box">
+
+              <small>
+                Activities
+              </small>
+
+              <strong id="summaryActivities">
+                4
+              </strong>
+
+            </div>
+
+            <div class="summary-box">
+
+              <small>
+                Trip Days
+              </small>
+
+              <strong>
+                14
+              </strong>
+
+            </div>
+
+            <div class="summary-box">
+
+              <small>
+                Est. Cost
+              </small>
+
+              <strong>
+                $1,240
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- SAVE BAR -->
+
+          <div class="save-bar">
+
+            <div>
+
+              <strong>
+                Your itinerary is taking shape ✨
+              </strong>
+
+              <p>
+                Add activities and stops to complete your trip plan.
+              </p>
+
+            </div>
+
+            <button
+              onclick="saveItinerary()"
+            >
+              Save Changes
+            </button>
+
+          </div>
+
+        </section>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- MOUNTAINS -->
+
+  <div class="mountains"></div>
+
+
+  <!-- ROAD -->
+
+  <div class="road">
+
+    <div class="bus">
+      🚌
+    </div>
+
+    <div class="car">
+      🚗
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     ADD STOP MODAL
+========================================================= -->
+
+<div
+  class="modal"
+  id="stopModal"
+  onclick="outsideClose(event,'stopModal')"
+>
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <h2>
+        📍 Add New Stop
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeModal('stopModal')"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="modal-grid">
+
+      <div class="modal-field full">
+
+        <label>
+          City / Destination
+        </label>
+
+        <input
+          id="newCity"
+          placeholder="e.g. Amsterdam"
+        >
+
+      </div>
+
+
+      <div class="modal-field">
+
+        <label>
+          Start Date
+        </label>
+
+        <input
+          id="newStart"
+          type="date"
+        >
+
+      </div>
+
+
+      <div class="modal-field">
+
+        <label>
+          End Date
+        </label>
+
+        <input
+          id="newEnd"
+          type="date"
+        >
+
+      </div>
+
+
+      <div class="modal-field full">
+
+        <label>
+          Country
+        </label>
+
+        <input
+          id="newCountry"
+          placeholder="e.g. Netherlands"
+        >
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="modal-submit"
+      onclick="addStop()"
+    >
+      Add Stop ✈️
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     ADD ACTIVITY MODAL
+========================================================= -->
+
+<div
+  class="modal"
+  id="activityModal"
+  onclick="outsideClose(event,'activityModal')"
+>
+
+  <div class="modal-box">
+
+    <div class="modal-head">
+
+      <h2>
+        ✨ Add Activity
+      </h2>
+
+      <button
+        class="close"
+        onclick="closeModal('activityModal')"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="modal-grid">
+
+      <div class="modal-field full">
+
+        <label>
+          Activity Name
+        </label>
+
+        <input
+          id="activityName"
+          placeholder="e.g. City Walking Tour"
+        >
+
+      </div>
+
+
+      <div class="modal-field">
+
+        <label>
+          Type
+        </label>
+
+        <select id="activityType">
+
+          <option value="sightseeing">
+            Sightseeing
+          </option>
+
+          <option value="food">
+            Food
+          </option>
+
+          <option value="adventure">
+            Adventure
+          </option>
+
+          <option value="shopping">
+            Shopping
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="modal-field">
+
+        <label>
+          Time
+        </label>
+
+        <input
+          id="activityTime"
+          type="time"
+        >
+
+      </div>
+
+
+      <div class="modal-field">
+
+        <label>
+          Cost ($)
+        </label>
+
+        <input
+          id="activityCost"
+          type="number"
+          placeholder="25"
+        >
+
+      </div>
+
+
+      <div class="modal-field">
+
+        <label>
+          Duration
+        </label>
+
+        <select id="activityDuration">
+
+          <option>
+            1 hour
+          </option>
+
+          <option>
+            1.5 hours
+          </option>
+
+          <option>
+            2 hours
+          </option>
+
+          <option>
+            3 hours
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="modal-field full">
+
+        <label>
+          Description
+        </label>
+
+        <textarea
+          id="activityDescription"
+          rows="3"
+          placeholder="Describe the activity..."
+        ></textarea>
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="modal-submit"
+      onclick="addActivity()"
+    >
+      Add Activity 🌍
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function goDashboard(){
+  window.location.href="dashboard.html";
+}
+
+function goTrips(){
+  window.location.href="trips.html";
+}
+
+
+/* =========================================================
+   STOP SELECTION
+========================================================= */
+
+function selectStop(element,city){
+
+  document
+    .querySelectorAll(".stop")
+    .forEach(stop=>{
+      stop.classList.remove("active");
+    });
+
+  element.classList.add("active");
+
+  document.getElementById("selectedCity")
+    .textContent=city+" Itinerary";
+
+  document.getElementById("cityInput")
+    .value=city;
+
+  const number=
+    element.querySelector(".stop-number")
+      .textContent;
+
+  document.getElementById("dayBadge")
+    .textContent="DAY "+String(number).padStart(2,"0");
+
+}
+
+
+/* =========================================================
+   STOP MODAL
+========================================================= */
+
+function openStopModal(){
+
+  document
+    .getElementById("stopModal")
+    .classList.add("show");
+
+  setTimeout(()=>{
+    document
+      .getElementById("newCity")
+      .focus();
+  },150);
+}
+
+
+function addStop(){
+
+  const city=
+    document
+      .getElementById("newCity")
+      .value
+      .trim();
+
+  const country=
+    document
+      .getElementById("newCountry")
+      .value
+      .trim();
+
+  const start=
+    document
+      .getElementById("newStart")
+      .value;
+
+  const end=
+    document
+      .getElementById("newEnd")
+      .value;
+
+
+  if(!city){
+
+    alert("Please enter a city 📍");
+    return;
+  }
+
+
+  const list=
+    document.getElementById("stopList");
+
+  const number=
+    list.children.length+1;
+
+
+  const item=
+    document.createElement("div");
+
+  item.className="stop";
+
+  item.dataset.city=city;
+
+  item.onclick=function(){
+    selectStop(item,city);
+  };
+
+
+  item.innerHTML=`
+
+    <span class="stop-number">
+      ${number}
+    </span>
+
+    <span class="drag">
+      ☷
+    </span>
+
+    <h4>
+      ${city}
+    </h4>
+
+    <p>
+      🌍 ${country || "New Destination"}
+      ${start ? " · "+start : ""}
+      ${end ? " – "+end : ""}
+    </p>
+
+  `;
+
+
+  list.appendChild(item);
+
+
+  updateCounts();
+
+  closeModal("stopModal");
+
+
+  document.getElementById("newCity").value="";
+  document.getElementById("newCountry").value="";
+  document.getElementById("newStart").value="";
+  document.getElementById("newEnd").value="";
+
+
+  item.classList.add("active");
+
+  document
+    .querySelectorAll(".stop")
+    .forEach(stop=>{
+      if(stop!==item)
+        stop.classList.remove("active");
+    });
+
+
+  document.getElementById("selectedCity")
+    .textContent=city+" Itinerary";
+
+  document.getElementById("cityInput")
+    .value=city;
+
+}
+
+
+/* =========================================================
+   ACTIVITY FILTER
+========================================================= */
+
+function filterActivities(type,button){
+
+  document
+    .querySelectorAll(".filter-btn")
+    .forEach(btn=>{
+      btn.classList.remove("active");
+    });
+
+  button.classList.add("active");
+
+
+  document
+    .querySelectorAll(".activity")
+    .forEach(activity=>{
+
+      const activityType=
+        activity.dataset.type;
+
+      if(
+        type==="all" ||
+        activityType===type
+      ){
+
+        activity.style.display="flex";
+
+      }else{
+
+        activity.style.display="none";
+
+      }
+
+    });
+
+}
+
+
+/* =========================================================
+   ACTIVITY MODAL
+========================================================= */
+
+function openActivityModal(){
+
+  document
+    .getElementById("activityModal")
+    .classList.add("show");
+
+  setTimeout(()=>{
+    document
+      .getElementById("activityName")
+      .focus();
+  },150);
+}
+
+
+function addActivity(){
+
+  const name=
+    document
+      .getElementById("activityName")
+      .value
+      .trim();
+
+  const type=
+    document
+      .getElementById("activityType")
+      .value;
+
+  const time=
+    document
+      .getElementById("activityTime")
+      .value;
+
+  const cost=
+    document
+      .getElementById("activityCost")
+      .value || 0;
+
+  const duration=
+    document
+      .getElementById("activityDuration")
+      .value;
+
+  const description=
+    document
+      .getElementById("activityDescription")
+      .value
+      .trim();
+
+
+  if(!name){
+
+    alert("Please enter activity name ✨");
+    return;
+  }
+
+
+  const icons={
+    sightseeing:"🏛️",
+    food:"🍽️",
+    adventure:"🧗",
+    shopping:"🛍️"
+  };
+
+
+  const container=
+    document.getElementById("activities");
+
+
+  const card=
+    document.createElement("div");
+
+  card.className="activity";
+
+  card.dataset.type=type;
+
+
+  card.innerHTML=`
+
+    <div class="activity-icon">
+      ${icons[type] || "✨"}
+    </div>
+
+    <div class="activity-info">
+
+      <h4>
+        ${name}
+      </h4>
+
+      <p>
+        ${description || "New activity added to your itinerary."}
+      </p>
+
+      <div class="activity-meta">
+
+        <span class="meta">
+          🕘 <strong>
+            ${time || "--:--"}
+          </strong>
+        </span>
+
+        <span class="meta">
+          💰 <strong>
+            $${cost}
+          </strong>
+        </span>
+
+        <span class="meta">
+          ⏱ <strong>
+            ${duration}
+          </strong>
+        </span>
+
+      </div>
+
+    </div>
+
+    <button
+      class="remove"
+      onclick="removeActivity(this)"
+    >
+      ×
+    </button>
+
+  `;
+
+
+  container.appendChild(card);
+
+
+  updateCounts();
+
+  closeModal("activityModal");
+
+
+  document.getElementById("activityName").value="";
+  document.getElementById("activityTime").value="";
+  document.getElementById("activityCost").value="";
+  document.getElementById("activityDescription").value="";
+
+
+  card.scrollIntoView({
+    behavior:"smooth",
+    block:"nearest"
+  });
+
+}
+
+
+/* =========================================================
+   REMOVE ACTIVITY
+========================================================= */
+
+function removeActivity(button){
+
+  const card=
+    button.closest(".activity");
+
+
+  card.style.transform=
+    "translateX(30px) scale(.95)";
+
+  card.style.opacity="0";
+
+
+  setTimeout(()=>{
+
+    card.remove();
+
+    updateCounts();
+
+  },250);
+
+}
+
+
+/* =========================================================
+   COUNTS
+========================================================= */
+
+function updateCounts(){
+
+  const stops=
+    document.querySelectorAll(".stop").length;
+
+  const activities=
+    document.querySelectorAll(".activity").length;
+
+
+  document.getElementById("stopCount")
+    .textContent=stops;
+
+  document.getElementById("summaryStops")
+    .textContent=stops;
+
+  document.getElementById("summaryActivities")
+    .textContent=activities;
+
+
+  let progress=
+    Math.min(
+      95,
+      25+
+      stops*10+
+      activities*4
+    );
+
+
+  document.getElementById("progressBar")
+    .style.width=progress+"%";
+
+  document.getElementById("progressText")
+    .textContent=progress+"%";
+
+}
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+function saveItinerary(){
+
+  const button=
+    document.querySelector(".save-btn");
+
+  const original=
+    button.innerHTML;
+
+
+  button.innerHTML=
+    "✓ Saved!";
+
+  button.style.background=
+    "linear-gradient(135deg,#2e9e5b,#238047)";
+
+
+  setTimeout(()=>{
+
+    button.innerHTML=original;
+
+    button.style.background="";
+
+  },1800);
+
+
+  const saveBar=
+    document.querySelector(".save-bar strong");
+
+  saveBar.textContent=
+    "Itinerary saved successfully ✨";
+
+}
+
+
+/* =========================================================
+   MODAL HELPERS
+========================================================= */
+
+function closeModal(id){
+
+  document
+    .getElementById(id)
+    .classList.remove("show");
+
+}
+
+
+function outsideClose(event,id){
+
+  if(event.target.id===id){
+
+    closeModal(id);
+
+  }
+
+}
+
+
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    if(event.key==="Escape"){
+
+      closeModal("stopModal");
+      closeModal("activityModal");
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   INITIAL
+========================================================= */
+
+updateCounts();
+
+</script>
+
+</body>
+</html>
