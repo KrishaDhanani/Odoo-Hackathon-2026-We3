@@ -1,0 +1,2639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GlobeTrotter — Dashboard</title>
+
+<style>
+
+:root{
+  --primary:#0e7c8c;
+  --primary-dark:#0a5f6b;
+  --accent:#ff7a59;
+  --cyan:#22d3ee;
+
+  --text:#1c2733;
+  --muted:#647084;
+  --border:#e2e8ee;
+
+  --success:#2e9e5b;
+  --white:#fff;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  margin:0;
+  width:100%;
+  min-height:100%;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+}
+
+body{
+  background:#101936;
+  overflow-x:hidden;
+}
+
+button,
+input{
+  font-family:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+
+/* =====================================================
+   PAGE
+===================================================== */
+
+.dashboard-page{
+
+  min-height:100vh;
+
+  position:relative;
+
+  overflow:hidden;
+
+  padding-bottom:100px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #1b2559 0%,
+      #3a3a86 22%,
+      #7a4f93 42%,
+      #c96b86 60%,
+      #f2a15f 78%,
+      #f7c873 100%
+    );
+}
+
+
+/* =====================================================
+   STARS
+===================================================== */
+
+.dashboard-stars{
+
+  position:absolute;
+
+  inset:0;
+
+  height:60%;
+
+  background-image:
+
+    radial-gradient(
+      1.5px 1.5px at 8% 20%,
+      #fff,
+      transparent 60%
+    ),
+
+    radial-gradient(
+      1.5px 1.5px at 22% 45%,
+      #fff,
+      transparent 60%
+    ),
+
+    radial-gradient(
+      1px 1px at 38% 15%,
+      #fff,
+      transparent 60%
+    ),
+
+    radial-gradient(
+      1.5px 1.5px at 55% 30%,
+      #fff,
+      transparent 60%
+    ),
+
+    radial-gradient(
+      1px 1px at 68% 12%,
+      #fff,
+      transparent 60%
+    ),
+
+    radial-gradient(
+      1.5px 1.5px at 82% 38%,
+      #fff,
+      transparent 60%
+    ),
+
+    radial-gradient(
+      1px 1px at 92% 18%,
+      #fff,
+      transparent 60%
+    );
+
+  opacity:.7;
+
+  animation:
+    starsMove 5s ease-in-out infinite alternate;
+}
+
+@keyframes starsMove{
+
+  from{
+    opacity:.4;
+    transform:scale(1);
+  }
+
+  to{
+    opacity:.9;
+    transform:scale(1.03);
+  }
+}
+
+
+/* =====================================================
+   CLOUDS
+===================================================== */
+
+.dashboard-cloud{
+
+  position:absolute;
+
+  width:110px;
+  height:32px;
+
+  background:
+    rgba(255,255,255,.55);
+
+  border-radius:50px;
+
+  filter:blur(.5px);
+
+  z-index:1;
+}
+
+.dashboard-cloud::before,
+.dashboard-cloud::after{
+
+  content:"";
+
+  position:absolute;
+
+  background:inherit;
+
+  border-radius:50%;
+}
+
+.dashboard-cloud::before{
+
+  width:52px;
+  height:52px;
+
+  top:-22px;
+  left:12px;
+}
+
+.dashboard-cloud::after{
+
+  width:40px;
+  height:40px;
+
+  top:-15px;
+  right:12px;
+}
+
+.dashboard-cloud.one{
+
+  top:13%;
+  left:-140px;
+
+  animation:
+    dashboardCloud 38s linear infinite;
+}
+
+.dashboard-cloud.two{
+
+  top:34%;
+  left:-180px;
+
+  transform:scale(.7);
+
+  opacity:.45;
+
+  animation:
+    dashboardCloud 52s linear infinite;
+
+  animation-delay:-18s;
+}
+
+.dashboard-cloud.three{
+
+  top:52%;
+  left:-160px;
+
+  transform:scale(.55);
+
+  opacity:.3;
+
+  animation:
+    dashboardCloud 65s linear infinite;
+
+  animation-delay:-30s;
+}
+
+@keyframes dashboardCloud{
+
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(135vw);
+  }
+}
+
+
+/* =====================================================
+   FLIGHT ROUTE
+===================================================== */
+
+.dashboard-route{
+
+  position:absolute;
+
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  z-index:1;
+
+  pointer-events:none;
+}
+
+.dashboard-route path{
+
+  fill:none;
+
+  stroke:
+    rgba(255,255,255,.42);
+
+  stroke-width:3;
+
+  stroke-dasharray:
+    2 16;
+
+  stroke-linecap:round;
+}
+
+.route-start{
+
+  fill:var(--accent);
+
+  animation:
+    routePulse 2s ease-in-out infinite;
+}
+
+.route-end{
+
+  fill:var(--cyan);
+
+  animation:
+    routePulse 2s ease-in-out infinite .5s;
+}
+
+@keyframes routePulse{
+
+  0%,
+  100%{
+    opacity:.65;
+    transform:scale(1);
+  }
+
+  50%{
+    opacity:1;
+    transform:scale(1.35);
+  }
+}
+
+
+/* =====================================================
+   FLYING PLANE
+===================================================== */
+
+.dashboard-plane{
+
+  position:absolute;
+
+  left:5%;
+
+  top:51%;
+
+  z-index:3;
+
+  font-size:28px;
+
+  animation:
+    flyPlane 12s cubic-bezier(.45,.05,.35,1) infinite;
+}
+
+@keyframes flyPlane{
+
+  0%{
+    left:3%;
+    top:72%;
+    transform:rotate(-8deg);
+  }
+
+  35%{
+    left:35%;
+    top:43%;
+    transform:rotate(-20deg);
+  }
+
+  65%{
+    left:66%;
+    top:34%;
+    transform:rotate(-13deg);
+  }
+
+  100%{
+    left:102%;
+    top:12%;
+    transform:rotate(-5deg);
+  }
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.dashboard-header{
+
+  position:relative;
+
+  z-index:20;
+
+  width:
+    min(1180px,calc(100% - 40px));
+
+  margin:auto;
+
+  padding-top:25px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+}
+
+.brand{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+
+  color:white;
+}
+
+.brand-logo{
+
+  width:55px;
+  height:55px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  border-radius:50%;
+
+  font-size:1.8rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--accent)
+    );
+
+  box-shadow:
+    0 10px 30px
+    rgba(14,124,140,.35);
+
+  animation:
+    logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+
+  0%,
+  100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-5px);
+  }
+}
+
+.brand-text{
+
+  font-size:1.25rem;
+
+  font-weight:800;
+
+  letter-spacing:.3px;
+}
+
+.brand-text span{
+
+  color:#5ee7f5;
+}
+
+.header-actions{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+}
+
+.notification{
+
+  width:42px;
+  height:42px;
+
+  border-radius:50%;
+
+  border:
+    1px solid
+    rgba(255,255,255,.25);
+
+  color:white;
+
+  background:
+    rgba(255,255,255,.12);
+
+  backdrop-filter:blur(10px);
+
+  position:relative;
+
+  transition:.2s;
+}
+
+.notification:hover{
+
+  transform:
+    translateY(-3px);
+
+  background:
+    rgba(255,255,255,.2);
+}
+
+.notification::after{
+
+  content:"";
+
+  position:absolute;
+
+  width:7px;
+  height:7px;
+
+  right:8px;
+  top:7px;
+
+  border-radius:50%;
+
+  background:var(--accent);
+
+  box-shadow:
+    0 0 10px
+    var(--accent);
+}
+
+.profile{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:9px;
+
+  padding:
+    6px
+    12px
+    6px
+    7px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.22);
+
+  border-radius:30px;
+
+  color:white;
+
+  background:
+    rgba(255,255,255,.12);
+
+  backdrop-filter:blur(10px);
+}
+
+.profile-avatar{
+
+  width:34px;
+  height:34px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--cyan),
+      var(--primary)
+    );
+}
+
+.profile-name{
+
+  font-size:.82rem;
+
+  font-weight:700;
+}
+
+.logout{
+
+  border:0;
+
+  padding:
+    10px
+    15px;
+
+  border-radius:10px;
+
+  background:#fff;
+
+  color:var(--primary-dark);
+
+  font-weight:700;
+
+  transition:.2s;
+}
+
+.logout:hover{
+
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 8px 20px
+    rgba(0,0,0,.2);
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.dashboard-main{
+
+  position:relative;
+
+  z-index:10;
+
+  width:
+    min(1180px,calc(100% - 40px));
+
+  margin:
+    35px auto 0;
+}
+
+
+/* =====================================================
+   WELCOME
+===================================================== */
+
+.welcome{
+
+  color:white;
+
+  margin-bottom:20px;
+
+  opacity:0;
+
+  transform:translateY(20px);
+
+  animation:
+    contentIn .8s ease forwards;
+
+  animation-delay:.15s;
+}
+
+.welcome h1{
+
+  margin:0;
+
+  font-size:
+    clamp(2rem,4vw,3rem);
+
+  line-height:1.1;
+
+  letter-spacing:-1px;
+}
+
+.welcome h1 span{
+
+  color:#5ee7f5;
+}
+
+.welcome p{
+
+  margin:
+    8px 0 0;
+
+  color:
+    rgba(255,255,255,.72);
+
+  font-size:.92rem;
+}
+
+@keyframes contentIn{
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+
+/* =====================================================
+   MAIN GLASS
+===================================================== */
+
+.dashboard-shell{
+
+  padding:24px;
+
+  border-radius:25px;
+
+  background:
+    rgba(255,255,255,.94);
+
+  border:
+    1px solid
+    rgba(255,255,255,.7);
+
+  box-shadow:
+
+    0 35px 90px
+    rgba(8,30,45,.3),
+
+    0 10px 30px
+    rgba(0,0,0,.08);
+
+  backdrop-filter:
+    blur(18px);
+
+  opacity:0;
+
+  transform:
+    translateY(35px)
+    scale(.98);
+
+  animation:
+    shellIn .9s
+    cubic-bezier(.16,1,.3,1)
+    forwards;
+
+  animation-delay:.25s;
+}
+
+@keyframes shellIn{
+
+  to{
+    opacity:1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =====================================================
+   TOP STATS
+===================================================== */
+
+.stats{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:13px;
+
+  margin-bottom:20px;
+}
+
+.stat{
+
+  position:relative;
+
+  overflow:hidden;
+
+  padding:17px;
+
+  border-radius:16px;
+
+  border:
+    1px solid
+    var(--border);
+
+  background:#f8fafc;
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+.stat::after{
+
+  content:"";
+
+  position:absolute;
+
+  width:90px;
+  height:90px;
+
+  right:-35px;
+  top:-35px;
+
+  border-radius:50%;
+
+  background:
+    rgba(34,211,238,.08);
+}
+
+.stat:hover{
+
+  transform:
+    translateY(-5px);
+
+  box-shadow:
+    0 15px 30px
+    rgba(14,124,140,.1);
+}
+
+.stat-icon{
+
+  width:43px;
+  height:43px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e7fbff,
+      #fff0ec
+    );
+
+  font-size:1.25rem;
+
+  margin-bottom:10px;
+}
+
+.stat-number{
+
+  font-size:1.5rem;
+
+  font-weight:800;
+
+  color:var(--text);
+}
+
+.stat-label{
+
+  color:var(--muted);
+
+  font-size:.72rem;
+
+  margin-top:2px;
+}
+
+
+/* =====================================================
+   CONTENT GRID
+===================================================== */
+
+.dashboard-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    1.25fr
+    .75fr;
+
+  gap:18px;
+}
+
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.card{
+
+  position:relative;
+
+  overflow:hidden;
+
+  padding:20px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius:18px;
+
+  background:#fff;
+}
+
+.card-title{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  margin-bottom:16px;
+}
+
+.card-title h2{
+
+  margin:0;
+
+  font-size:1rem;
+
+  color:var(--text);
+}
+
+.card-title button{
+
+  border:0;
+
+  background:none;
+
+  color:var(--primary);
+
+  font-size:.76rem;
+
+  font-weight:700;
+}
+
+
+/* =====================================================
+   TRIPS
+===================================================== */
+
+.trip-list{
+
+  display:grid;
+
+  gap:10px;
+}
+
+.trip{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+
+  padding:11px;
+
+  border-radius:13px;
+
+  border:
+    1px solid
+    #edf0f3;
+
+  background:#fbfcfd;
+
+  transition:.25s;
+}
+
+.trip:hover{
+
+  transform:
+    translateX(5px);
+
+  border-color:
+    rgba(14,124,140,.25);
+
+  box-shadow:
+    0 8px 20px
+    rgba(14,124,140,.07);
+}
+
+.trip-image{
+
+  width:52px;
+  height:52px;
+
+  flex-shrink:0;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:13px;
+
+  font-size:1.5rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e9fbff,
+      #fff0eb
+    );
+}
+
+.trip-info{
+
+  flex:1;
+
+  min-width:0;
+}
+
+.trip-info h3{
+
+  margin:0 0 4px;
+
+  font-size:.86rem;
+}
+
+.trip-info p{
+
+  margin:0;
+
+  color:var(--muted);
+
+  font-size:.7rem;
+}
+
+.trip-status{
+
+  padding:
+    5px
+    8px;
+
+  border-radius:20px;
+
+  color:var(--success);
+
+  background:#e9f7ee;
+
+  font-size:.62rem;
+
+  font-weight:700;
+}
+
+
+/* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+.actions{
+
+  display:grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap:10px;
+
+  margin-top:14px;
+}
+
+.action-btn{
+
+  border:0;
+
+  border-radius:10px;
+
+  padding:12px;
+
+  font-weight:700;
+
+  font-size:.78rem;
+
+  transition:.2s;
+}
+
+.action-primary{
+
+  color:#fff;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--primary-dark)
+    );
+
+  box-shadow:
+    0 8px 18px
+    rgba(14,124,140,.22);
+}
+
+.action-primary:hover{
+
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 12px 24px
+    rgba(14,124,140,.3);
+}
+
+.action-secondary{
+
+  color:var(--primary);
+
+  background:#eef8f9;
+}
+
+.action-secondary:hover{
+
+  background:#e4f4f5;
+
+  transform:
+    translateY(-2px);
+}
+
+
+/* =====================================================
+   DESTINATION MAP
+===================================================== */
+
+.destination-map{
+
+  position:relative;
+
+  height:205px;
+
+  overflow:hidden;
+
+  border-radius:15px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #252e65 0%,
+      #59407d 43%,
+      #b55f80 72%,
+      #ef996d 100%
+    );
+}
+
+.destination-map::before{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  background-image:
+
+    radial-gradient(
+      1px 1px at 15% 20%,
+      white,
+      transparent
+    ),
+
+    radial-gradient(
+      1px 1px at 32% 12%,
+      white,
+      transparent
+    ),
+
+    radial-gradient(
+      1px 1px at 68% 22%,
+      white,
+      transparent
+    ),
+
+    radial-gradient(
+      1px 1px at 86% 15%,
+      white,
+      transparent
+    );
+
+  opacity:.7;
+}
+
+.destination-map svg{
+
+  position:absolute;
+
+  inset:0;
+
+  width:100%;
+  height:100%;
+}
+
+.map-route{
+
+  fill:none;
+
+  stroke:
+    rgba(255,255,255,.7);
+
+  stroke-width:2;
+
+  stroke-dasharray:
+    3 10;
+
+  stroke-linecap:round;
+}
+
+.map-plane{
+
+  font-size:25px;
+
+  animation:
+    mapPlane 4s
+    ease-in-out infinite;
+}
+
+@keyframes mapPlane{
+
+  0%{
+    transform:
+      translate(0,0)
+      rotate(-15deg);
+  }
+
+  50%{
+    transform:
+      translate(15px,-8px)
+      rotate(-8deg);
+  }
+
+  100%{
+    transform:
+      translate(0,0)
+      rotate(-15deg);
+  }
+}
+
+.map-location{
+
+  position:absolute;
+
+  z-index:4;
+
+  padding:
+    6px
+    8px;
+
+  border-radius:7px;
+
+  color:var(--text);
+
+  background:
+    rgba(255,255,255,.94);
+
+  font-size:.62rem;
+
+  font-weight:700;
+
+  box-shadow:
+    0 5px 15px
+    rgba(0,0,0,.12);
+
+  animation:
+    locationFloat 3s
+    ease-in-out infinite;
+}
+
+.location-home{
+
+  left:7%;
+  bottom:18%;
+}
+
+.location-destination{
+
+  right:7%;
+  top:13%;
+
+  animation-delay:.8s;
+}
+
+@keyframes locationFloat{
+
+  0%,
+  100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-4px);
+  }
+}
+
+
+/* =====================================================
+   NEXT TRIP
+===================================================== */
+
+.next-trip{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+  margin-top:12px;
+
+  padding:12px;
+
+  border-radius:12px;
+
+  background:#f8fafc;
+
+  border:
+    1px solid
+    var(--border);
+}
+
+.next-trip-icon{
+
+  width:42px;
+  height:42px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e7fbff,
+      #fff0eb
+    );
+}
+
+.next-trip-info{
+
+  flex:1;
+}
+
+.next-trip-info small{
+
+  display:block;
+
+  color:var(--muted);
+
+  font-size:.58rem;
+
+  text-transform:uppercase;
+
+  letter-spacing:.5px;
+}
+
+.next-trip-info strong{
+
+  display:block;
+
+  margin-top:3px;
+
+  font-size:.8rem;
+}
+
+
+/* =====================================================
+   BOTTOM GRID
+===================================================== */
+
+.bottom-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    .7fr
+    1.3fr;
+
+  gap:18px;
+
+  margin-top:18px;
+}
+
+
+/* =====================================================
+   BUDGET
+===================================================== */
+
+.budget-value{
+
+  display:flex;
+
+  align-items:flex-end;
+
+  gap:5px;
+
+  margin-bottom:12px;
+}
+
+.budget-value strong{
+
+  font-size:1.8rem;
+}
+
+.budget-value span{
+
+  color:var(--muted);
+
+  font-size:.72rem;
+
+  padding-bottom:4px;
+}
+
+.progress{
+
+  height:8px;
+
+  overflow:hidden;
+
+  border-radius:20px;
+
+  background:#e9edf1;
+}
+
+.progress span{
+
+  display:block;
+
+  width:68%;
+
+  height:100%;
+
+  border-radius:20px;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--primary),
+      var(--cyan)
+    );
+
+  animation:
+    progressIn 1.3s
+    cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes progressIn{
+
+  from{
+    width:0;
+  }
+
+  to{
+    width:68%;
+  }
+}
+
+.budget-meta{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  margin-top:8px;
+
+  color:var(--muted);
+
+  font-size:.65rem;
+}
+
+
+/* =====================================================
+   ACTIVITY
+===================================================== */
+
+.activity-list{
+
+  display:grid;
+
+  gap:10px;
+}
+
+.activity{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+}
+
+.activity-icon{
+
+  width:34px;
+  height:34px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:#eef8f9;
+
+  font-size:.85rem;
+}
+
+.activity-info{
+
+  flex:1;
+}
+
+.activity-info strong{
+
+  display:block;
+
+  font-size:.72rem;
+}
+
+.activity-info span{
+
+  display:block;
+
+  color:var(--muted);
+
+  font-size:.62rem;
+
+  margin-top:2px;
+}
+
+
+/* =====================================================
+   FLOATING DECORATIONS
+===================================================== */
+
+.floating-card{
+
+  position:absolute;
+
+  z-index:4;
+
+  padding:10px 13px;
+
+  border-radius:12px;
+
+  color:white;
+
+  background:
+    rgba(255,255,255,.12);
+
+  border:
+    1px solid
+    rgba(255,255,255,.2);
+
+  backdrop-filter:blur(10px);
+
+  box-shadow:
+    0 12px 30px
+    rgba(0,0,0,.12);
+
+  font-size:.7rem;
+
+  animation:
+    floatingCard 4s ease-in-out infinite;
+}
+
+.float-one{
+
+  left:4%;
+
+  top:28%;
+}
+
+.float-two{
+
+  right:4%;
+
+  top:42%;
+
+  animation-delay:1s;
+}
+
+@keyframes floatingCard{
+
+  0%,
+  100%{
+    transform:
+      translateY(0)
+      rotate(0);
+  }
+
+  50%{
+    transform:
+      translateY(-8px)
+      rotate(1deg);
+  }
+}
+
+
+/* =====================================================
+   MOUNTAINS
+===================================================== */
+
+.dashboard-mountains{
+
+  position:absolute;
+
+  left:0;
+  right:0;
+
+  bottom:45px;
+
+  height:145px;
+
+  z-index:2;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15,22,45,.3),
+      rgba(10,16,32,.85)
+    );
+
+  clip-path:
+    polygon(
+      0 100%,
+      0 62%,
+      10% 38%,
+      20% 58%,
+      31% 15%,
+      43% 51%,
+      54% 30%,
+      66% 61%,
+      78% 21%,
+      89% 48%,
+      100% 32%,
+      100% 100%
+    );
+}
+
+
+/* =====================================================
+   ROAD
+===================================================== */
+
+.dashboard-road{
+
+  position:absolute;
+
+  left:0;
+  right:0;
+
+  bottom:0;
+
+  height:45px;
+
+  z-index:3;
+
+  background:
+    linear-gradient(
+      180deg,
+      #232c3a,
+      #12161e
+    );
+}
+
+.dashboard-road::before{
+
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  right:0;
+
+  top:50%;
+
+  height:4px;
+
+  transform:
+    translateY(-50%);
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.6) 0 22px,
+      transparent 22px 46px
+    );
+
+  animation:
+    roadMove 1s linear infinite;
+}
+
+@keyframes roadMove{
+
+  to{
+    background-position:
+      -46px 0;
+  }
+}
+
+.car{
+
+  position:absolute;
+
+  bottom:5px;
+
+  font-size:1.35rem;
+
+  animation:
+    carMove 11s linear infinite;
+}
+
+.bus{
+
+  position:absolute;
+
+  bottom:25px;
+
+  font-size:1.5rem;
+
+  animation:
+    carMove 16s linear infinite;
+}
+
+@keyframes carMove{
+
+  from{
+    transform:
+      translateX(-120px);
+  }
+
+  to{
+    transform:
+      translateX(110vw);
+  }
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:950px){
+
+  .stats{
+
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .dashboard-grid{
+
+    grid-template-columns:1fr;
+  }
+
+  .bottom-grid{
+
+    grid-template-columns:1fr;
+  }
+
+  .floating-card{
+
+    display:none;
+  }
+}
+
+
+@media(max-width:650px){
+
+  .dashboard-page{
+
+    padding-bottom:70px;
+  }
+
+  .dashboard-header{
+
+    width:
+      calc(100% - 25px);
+
+    padding-top:15px;
+  }
+
+  .brand-text{
+
+    font-size:1rem;
+  }
+
+  .brand-logo{
+
+    width:44px;
+    height:44px;
+
+    font-size:1.4rem;
+  }
+
+  .profile-name{
+
+    display:none;
+  }
+
+  .logout{
+
+    padding:
+      9px
+      12px;
+
+    font-size:.72rem;
+  }
+
+  .dashboard-main{
+
+    width:
+      calc(100% - 25px);
+
+    margin-top:30px;
+  }
+
+  .welcome h1{
+
+    font-size:2rem;
+  }
+
+  .dashboard-shell{
+
+    padding:14px;
+
+    border-radius:20px;
+  }
+
+  .stats{
+
+    grid-template-columns:1fr 1fr;
+
+    gap:9px;
+  }
+
+  .stat{
+
+    padding:13px;
+  }
+
+  .stat-number{
+
+    font-size:1.25rem;
+  }
+
+  .dashboard-grid{
+
+    gap:12px;
+  }
+
+  .bottom-grid{
+
+    gap:12px;
+
+    margin-top:12px;
+  }
+
+  .actions{
+
+    grid-template-columns:1fr;
+  }
+
+  .trip-status{
+
+    display:none;
+  }
+
+  .dashboard-mountains{
+
+    height:90px;
+
+    bottom:40px;
+  }
+
+  .dashboard-road{
+
+    height:40px;
+  }
+}
+
+
+@media(prefers-reduced-motion:reduce){
+
+  *,
+  *::before,
+  *::after{
+
+    animation:none!important;
+
+    transition:none!important;
+  }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="dashboard-page">
+
+
+  <!-- =================================================
+       BACKGROUND
+  ================================================== -->
+
+  <div class="dashboard-stars"></div>
+
+  <div class="dashboard-cloud one"></div>
+  <div class="dashboard-cloud two"></div>
+  <div class="dashboard-cloud three"></div>
+
+
+  <!-- =================================================
+       FLIGHT ROUTE
+  ================================================== -->
+
+  <svg
+    class="dashboard-route"
+    viewBox="0 0 1600 900"
+    preserveAspectRatio="xMidYMid slice"
+  >
+
+    <path
+      d="
+        M70 770
+        C400 350
+        1000 300
+        1530 110
+      "
+    />
+
+    <circle
+      class="route-start"
+      cx="70"
+      cy="770"
+      r="9"
+    />
+
+    <circle
+      class="route-end"
+      cx="1530"
+      cy="110"
+      r="9"
+    />
+
+  </svg>
+
+
+  <div class="dashboard-plane">
+    ✈️
+  </div>
+
+
+  <!-- =================================================
+       FLOATING DECORATIONS
+  ================================================== -->
+
+  <div class="floating-card float-one">
+    🌍 8 cities explored
+  </div>
+
+  <div class="floating-card float-two">
+    ✈️ Next stop: Paris
+  </div>
+
+
+  <!-- =================================================
+       HEADER
+  ================================================== -->
+
+  <header class="dashboard-header">
+
+
+    <div class="brand">
+
+      <div class="brand-logo">
+        🌍
+      </div>
+
+      <div class="brand-text">
+        Globe<span>Trotter</span>
+      </div>
+
+    </div>
+
+
+    <div class="header-actions">
+
+      <button
+        class="notification"
+        title="Notifications"
+      >
+        🔔
+      </button>
+
+
+      <div class="profile">
+
+        <div class="profile-avatar">
+          👤
+        </div>
+
+        <div
+          class="profile-name"
+          id="profileName"
+        >
+          Traveler
+        </div>
+
+      </div>
+
+
+      <button
+        class="logout"
+        onclick="logout()"
+      >
+        Log out
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- =================================================
+       MAIN
+  ================================================== -->
+
+  <main class="dashboard-main">
+
+
+    <section class="welcome">
+
+      <h1>
+        Welcome back,
+        <span id="welcomeName">
+          Traveler
+        </span>
+        ✈️
+      </h1>
+
+      <p>
+        Your next adventure is waiting for you.
+      </p>
+
+    </section>
+
+
+    <!-- =================================================
+         DASHBOARD SHELL
+    ================================================== -->
+
+    <section class="dashboard-shell">
+
+
+      <!-- =================================================
+           STATS
+      ================================================== -->
+
+      <div class="stats">
+
+
+        <div class="stat">
+
+          <div class="stat-icon">
+            🧳
+          </div>
+
+          <div class="stat-number">
+            03
+          </div>
+
+          <div class="stat-label">
+            Upcoming Trips
+          </div>
+
+        </div>
+
+
+        <div class="stat">
+
+          <div class="stat-icon">
+            🌎
+          </div>
+
+          <div class="stat-number">
+            08
+          </div>
+
+          <div class="stat-label">
+            Cities Visited
+          </div>
+
+        </div>
+
+
+        <div class="stat">
+
+          <div class="stat-icon">
+            ⭐
+          </div>
+
+          <div class="stat-number">
+            12
+          </div>
+
+          <div class="stat-label">
+            Saved Places
+          </div>
+
+        </div>
+
+
+        <div class="stat">
+
+          <div class="stat-icon">
+            💰
+          </div>
+
+          <div class="stat-number">
+            $2.4K
+          </div>
+
+          <div class="stat-label">
+            Trip Budget
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           MAIN GRID
+      ================================================== -->
+
+      <div class="dashboard-grid">
+
+
+        <!-- =================================================
+             UPCOMING TRIPS
+        ================================================== -->
+
+        <section class="card">
+
+          <div class="card-title">
+
+            <h2>
+              Upcoming Trips
+            </h2>
+
+            <button onclick="viewAllTrips()">
+              View all →
+            </button>
+
+          </div>
+
+
+          <div class="trip-list">
+
+
+            <div class="trip">
+
+              <div class="trip-image">
+                🗼
+              </div>
+
+              <div class="trip-info">
+
+                <h3>
+                  Paris, France
+                </h3>
+
+                <p>
+                  12 Sep — 18 Sep · 6 nights
+                </p>
+
+              </div>
+
+              <div class="trip-status">
+                Planned
+              </div>
+
+            </div>
+
+
+            <div class="trip">
+
+              <div class="trip-image">
+                🏯
+              </div>
+
+              <div class="trip-info">
+
+                <h3>
+                  Tokyo, Japan
+                </h3>
+
+                <p>
+                  04 Nov — 12 Nov · 8 nights
+                </p>
+
+              </div>
+
+              <div class="trip-status">
+                Planned
+              </div>
+
+            </div>
+
+
+            <div class="trip">
+
+              <div class="trip-image">
+                🏝️
+              </div>
+
+              <div class="trip-info">
+
+                <h3>
+                  Bali, Indonesia
+                </h3>
+
+                <p>
+                  20 Dec — 27 Dec · 7 nights
+                </p>
+
+              </div>
+
+              <div class="trip-status">
+                Planned
+              </div>
+
+            </div>
+
+
+          </div>
+
+
+          <div class="actions">
+
+            <button
+              class="action-btn action-primary"
+              onclick="newTrip()"
+            >
+              + Plan New Trip
+            </button>
+
+            <button
+              class="action-btn action-secondary"
+              onclick="viewAllTrips()"
+            >
+              🧳 My Trips
+            </button>
+
+          </div>
+
+        </section>
+
+
+        <!-- =================================================
+             DESTINATION
+        ================================================== -->
+
+        <section class="card">
+
+          <div class="card-title">
+
+            <h2>
+              Next Adventure
+            </h2>
+
+          </div>
+
+
+          <div class="destination-map">
+
+
+            <svg
+              viewBox="0 0 500 300"
+            >
+
+              <path
+                class="map-route"
+                d="
+                  M55 235
+                  C130 100
+                  260 260
+                  445 55
+                "
+              />
+
+              <circle
+                cx="55"
+                cy="235"
+                r="7"
+                fill="#ff7a59"
+              />
+
+              <circle
+                cx="445"
+                cy="55"
+                r="7"
+                fill="#22d3ee"
+              />
+
+              <text
+                class="map-plane"
+                x="235"
+                y="155"
+              >
+                ✈️
+              </text>
+
+            </svg>
+
+
+            <div
+              class="map-location location-home"
+            >
+              🏠 Home
+            </div>
+
+
+            <div
+              class="map-location location-destination"
+            >
+              🗼 Paris
+            </div>
+
+
+          </div>
+
+
+          <div class="next-trip">
+
+            <div class="next-trip-icon">
+              🗼
+            </div>
+
+            <div class="next-trip-info">
+
+              <small>
+                Next destination
+              </small>
+
+              <strong>
+                Paris, France
+              </strong>
+
+            </div>
+
+            <strong>
+              21d
+            </strong>
+
+          </div>
+
+        </section>
+
+
+      </div>
+
+
+      <!-- =================================================
+           BOTTOM GRID
+      ================================================== -->
+
+      <div class="bottom-grid">
+
+
+        <!-- =================================================
+             BUDGET
+        ================================================== -->
+
+        <section class="card">
+
+          <div class="card-title">
+
+            <h2>
+              Trip Budget
+            </h2>
+
+            <button>
+              Details
+            </button>
+
+          </div>
+
+
+          <div class="budget-value">
+
+            <strong>
+              $1,680
+            </strong>
+
+            <span>
+              / $2,400
+            </span>
+
+          </div>
+
+
+          <div class="progress">
+
+            <span></span>
+
+          </div>
+
+
+          <div class="budget-meta">
+
+            <span>
+              Used 68%
+            </span>
+
+            <span>
+              $720 left
+            </span>
+
+          </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ACTIVITY
+        ================================================== -->
+
+        <section class="card">
+
+          <div class="card-title">
+
+            <h2>
+              Recent Activity
+            </h2>
+
+            <button>
+              See all →
+            </button>
+
+          </div>
+
+
+          <div class="activity-list">
+
+
+            <div class="activity">
+
+              <div class="activity-icon">
+                ❤️
+              </div>
+
+              <div class="activity-info">
+
+                <strong>
+                  Saved Eiffel Tower
+                </strong>
+
+                <span>
+                  Paris · 2 hours ago
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="activity">
+
+              <div class="activity-icon">
+                🧳
+              </div>
+
+              <div class="activity-info">
+
+                <strong>
+                  Updated Tokyo itinerary
+                </strong>
+
+                <span>
+                  Tokyo · Yesterday
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="activity">
+
+              <div class="activity-icon">
+                💰
+              </div>
+
+              <div class="activity-info">
+
+                <strong>
+                  Added $350 to Bali budget
+                </strong>
+
+                <span>
+                  Bali · 2 days ago
+                </span>
+
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </section>
+
+      </div>
+
+
+    </section>
+
+  </main>
+
+
+  <!-- =================================================
+       MOUNTAINS + ROAD
+  ================================================== -->
+
+  <div class="dashboard-mountains"></div>
+
+
+  <div class="dashboard-road">
+
+    <div class="bus">
+      🚌
+    </div>
+
+    <div class="car">
+      🚗
+    </div>
+
+  </div>
+
+
+</div>
+
+
+<script>
+
+
+/* =====================================================
+   LOAD USER FROM LOGIN
+===================================================== */
+
+const savedUser =
+  localStorage.getItem(
+    "globetrotter_user"
+  );
+
+
+if(savedUser){
+
+  try{
+
+    const user =
+      JSON.parse(savedUser);
+
+    const name =
+      user.name ||
+      "Traveler";
+
+
+    document
+      .getElementById(
+        "profileName"
+      )
+      .textContent =
+      name;
+
+
+    document
+      .getElementById(
+        "welcomeName"
+      )
+      .textContent =
+      name.split(" ")[0];
+
+  }
+
+  catch(error){
+
+    console.log(
+      "User data error",
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout(){
+
+  localStorage.removeItem(
+    "globetrotter_token"
+  );
+
+  localStorage.removeItem(
+    "globetrotter_user"
+  );
+
+  window.location.href =
+    "index.html";
+}
+
+
+/* =====================================================
+   NEW TRIP
+===================================================== */
+
+function newTrip(){
+
+  alert(
+    "Trip Planner page coming next ✈️"
+  );
+
+}
+
+
+/* =====================================================
+   VIEW TRIPS
+===================================================== */
+
+function viewAllTrips(){
+
+  alert(
+    "My Trips page coming next 🌍"
+  );
+
+}
+
+
+</script>
+
+</body>
+</html>
